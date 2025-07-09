@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PageHeader } from "@/components/PageHeader";
-import { DataTable, Column, Filter, SmartFilter } from "@/components/DataTable";
+import { DataTable, Column, Filter } from "@/components/DataTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -32,6 +32,20 @@ import {
   Briefcase,
   CreditCard,
   User,
+  Eye,
+  Edit,
+  Trash2,
+  Download,
+  Search,
+  MoreHorizontal,
+  CheckCircle,
+  AlertCircle,
+  XCircle,
+  TrendingUp,
+  Award,
+  Target,
+  Zap,
+  Monitor,
 } from "lucide-react";
 
 // Mock data for employees with enhanced fields
@@ -276,11 +290,14 @@ const columns: Column[] = [
     key: "businessUnit",
     label: "Business Unit",
     render: (value) => (
-      <span
-        className={`status-tag ${value === "JNET" ? "status-active" : "status-pending"}`}
-      >
-        {value}
-      </span>
+      <div className="flex items-center gap-1">
+        {value === "JNET" ? (
+          <Monitor className="h-3 w-3 text-blue-600" />
+        ) : (
+          <Phone className="h-3 w-3 text-green-600" />
+        )}
+        <span className="text-sm font-medium">{value}</span>
+      </div>
     ),
   },
   {
@@ -288,17 +305,16 @@ const columns: Column[] = [
     label: "Type",
     hiddenOnMobile: true,
     render: (value) => (
-      <span
-        className={`status-tag ${
-          value === "Full-time"
-            ? "status-active"
-            : value === "Contract"
-              ? "status-pending"
-              : "status-inactive"
-        }`}
-      >
-        {value}
-      </span>
+      <div className="flex items-center gap-1">
+        {value === "Full-time" ? (
+          <UserCheck className="h-3 w-3 text-green-600" />
+        ) : value === "Contract" ? (
+          <Clock className="h-3 w-3 text-orange-600" />
+        ) : (
+          <UserX className="h-3 w-3 text-red-600" />
+        )}
+        <span className="text-sm font-medium">{value}</span>
+      </div>
     ),
   },
   {
@@ -306,10 +322,15 @@ const columns: Column[] = [
     label: "Status",
     render: (value) => (
       <span
-        className={`status-tag ${
+        className={`status-tag flex items-center gap-1 ${
           value === "Active" ? "status-active" : "status-inactive"
         }`}
       >
+        {value === "Active" ? (
+          <CheckCircle className="h-3 w-3" />
+        ) : (
+          <XCircle className="h-3 w-3" />
+        )}
         {value}
       </span>
     ),
@@ -385,49 +406,6 @@ const filters: Filter[] = [
   },
 ];
 
-const smartFilters: SmartFilter[] = [
-  {
-    key: "new_joiners",
-    label: "New Joiners",
-    filter: (data) => {
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-      return data.filter((emp) => new Date(emp.joiningDate) >= thirtyDaysAgo);
-    },
-  },
-  {
-    key: "high_performers",
-    label: "High Performers",
-    filter: (data) => data.filter((emp) => emp.salary >= 1500000),
-  },
-  {
-    key: "probation",
-    label: "On Probation",
-    filter: (data) => {
-      const sixMonthsAgo = new Date();
-      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-      return data.filter(
-        (emp) =>
-          new Date(emp.joiningDate) >= sixMonthsAgo && emp.status === "Active",
-      );
-    },
-  },
-  {
-    key: "upcoming_reviews",
-    label: "Review Due",
-    filter: (data) => {
-      const oneYearAgo = new Date();
-      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-      return data.filter((emp) => new Date(emp.joiningDate) <= oneYearAgo);
-    },
-  },
-  {
-    key: "tech_team",
-    label: "Tech Team",
-    filter: (data) => data.filter((emp) => emp.department === "Technology"),
-  },
-];
-
 export default function Employees() {
   const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -457,6 +435,7 @@ export default function Employees() {
       <PageHeader
         title="Employee Management"
         description="Manage employee information, profiles, and organizational structure"
+        icon={<Users className="h-6 w-6 text-blue-600" />}
       />
 
       <div className="px-6 space-y-6">
@@ -465,7 +444,6 @@ export default function Employees() {
           data={mockEmployees}
           columns={columns}
           filters={filters}
-          smartFilters={smartFilters}
           searchPlaceholder="Smart search: 'Tech Mumbai', 'Active Employees', 'High CTC'"
           onAdd={handleAdd}
           onView={handleView}
@@ -485,7 +463,7 @@ export default function Employees() {
           open={!!selectedEmployee}
           onOpenChange={() => setSelectedEmployee(null)}
         >
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3">
                 <Avatar className="h-10 w-10">
@@ -770,7 +748,7 @@ export default function Employees() {
 
       {/* Add Employee Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Add New Employee</DialogTitle>
           </DialogHeader>

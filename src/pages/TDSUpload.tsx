@@ -21,6 +21,17 @@ import {
   IndianRupee,
   User,
   Building,
+  CheckCircle,
+  Clock,
+  AlertCircle,
+  Target,
+  TrendingUp,
+  Eye,
+  Edit,
+  Trash2,
+  Settings,
+  Percent,
+  Zap,
 } from "lucide-react";
 
 // Mock TDS upload data
@@ -338,7 +349,15 @@ const columns: Column[] = [
     key: "taxRegime",
     label: "Tax Regime",
     render: (value) => (
-      <Badge variant={value === "New" ? "default" : "secondary"}>
+      <Badge
+        variant={value === "New" ? "default" : "secondary"}
+        className="flex items-center gap-1"
+      >
+        {value === "New" ? (
+          <TrendingUp className="h-3 w-3" />
+        ) : (
+          <Settings className="h-3 w-3" />
+        )}
         {value} Regime
       </Badge>
     ),
@@ -376,7 +395,15 @@ const columns: Column[] = [
     key: "status",
     label: "Status",
     render: (value) => (
-      <Badge variant={value === "Processed" ? "default" : "secondary"}>
+      <Badge
+        variant={value === "Processed" ? "default" : "secondary"}
+        className="flex items-center gap-1"
+      >
+        {value === "Processed" ? (
+          <CheckCircle className="h-3 w-3" />
+        ) : (
+          <Clock className="h-3 w-3" />
+        )}
         {value}
       </Badge>
     ),
@@ -499,6 +526,7 @@ export default function TDSUpload() {
       <PageHeader
         title="Taxes"
         description="Upload and manage TDS data for employees by fiscal year and month"
+        icon={<Percent className="h-6 w-6 text-blue-600" />}
       >
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
@@ -509,56 +537,7 @@ export default function TDSUpload() {
       </PageHeader>
 
       <div className="px-6 space-y-4">
-        {/* Month/Year Filter Controls */}
-        <Card className="p-4">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-slate-500" />
-              <span className="text-sm font-medium">Filter by:</span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Label className="text-sm">Fiscal Year:</Label>
-              <select
-                value={selectedFiscalYear}
-                onChange={(e) =>
-                  handleMonthYearFilter(selectedMonth, e.target.value)
-                }
-                className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="FY 2025-26">FY 2025-26</option>
-                <option value="FY 2024-25">FY 2024-25</option>
-              </select>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Label className="text-sm">Month:</Label>
-              <select
-                value={selectedMonth}
-                onChange={(e) =>
-                  handleMonthYearFilter(e.target.value, selectedFiscalYear)
-                }
-                className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="June">June 2025</option>
-                <option value="May">May 2025</option>
-                <option value="April">April 2025</option>
-                <option value="March">March 2025</option>
-                <option value="February">February 2025</option>
-                <option value="January">January 2025</option>
-                <option value="December">December 2024</option>
-                <option value="November">November 2024</option>
-              </select>
-            </div>
-
-            <div className="ml-auto text-sm text-slate-600">
-              Showing {totalUploads} records for {selectedMonth}{" "}
-              {selectedFiscalYear}
-            </div>
-          </div>
-        </Card>
-
-        {/* Data Table */}
+        {/* Data Table with Fiscal/Month filters in toolbar */}
         <DataTable
           data={filteredData}
           columns={columns}
@@ -571,13 +550,48 @@ export default function TDSUpload() {
           onEdit={handleEdit}
           onDelete={handleDelete}
           addButtonText="Upload TDS Data"
+          customToolbar={
+            <>
+              {/* Fiscal/Month Filters on the right side of search */}
+              <div className="flex items-center gap-2">
+                <Label className="text-xs text-slate-600">FY:</Label>
+                <select
+                  value={selectedFiscalYear}
+                  onChange={(e) =>
+                    handleMonthYearFilter(selectedMonth, e.target.value)
+                  }
+                  className="px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 w-24"
+                >
+                  <option value="FY 2025-26">2025-26</option>
+                  <option value="FY 2024-25">2024-25</option>
+                </select>
+                <Label className="text-xs text-slate-600">Month:</Label>
+                <select
+                  value={selectedMonth}
+                  onChange={(e) =>
+                    handleMonthYearFilter(e.target.value, selectedFiscalYear)
+                  }
+                  className="px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 w-20"
+                >
+                  <option value="June">Jun</option>
+                  <option value="May">May</option>
+                  <option value="April">Apr</option>
+                  <option value="March">Mar</option>
+                  <option value="February">Feb</option>
+                  <option value="January">Jan</option>
+                  <option value="December">Dec</option>
+                  <option value="November">Nov</option>
+                </select>
+              </div>
+            </>
+          }
         />
       </div>
 
       {/* TDS Details Dialog */}
       {selectedTDS && (
         <Dialog open={!!selectedTDS} onOpenChange={() => setSelectedTDS(null)}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 TDS Details - {selectedTDS.name} ({selectedTDS.empId})
@@ -587,37 +601,53 @@ export default function TDSUpload() {
             <div className="space-y-6">
               {/* Basic Info */}
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-sm font-medium text-slate-600">
-                    TDS ID
-                  </Label>
-                  <p className="font-mono">{selectedTDS.id}</p>
+                <div className="flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-blue-600" />
+                  <div>
+                    <Label className="text-sm font-medium text-slate-600">
+                      TDS ID
+                    </Label>
+                    <p className="font-mono">{selectedTDS.id}</p>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-sm font-medium text-slate-600">
-                    Department
-                  </Label>
-                  <p>{selectedTDS.department}</p>
+                <div className="flex items-center gap-2">
+                  <Building className="h-4 w-4 text-green-600" />
+                  <div>
+                    <Label className="text-sm font-medium text-slate-600">
+                      Department
+                    </Label>
+                    <p>{selectedTDS.department}</p>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-sm font-medium text-slate-600">
-                    Designation
-                  </Label>
-                  <p>{selectedTDS.designation}</p>
+                <div className="flex items-center gap-2">
+                  <Target className="h-4 w-4 text-purple-600" />
+                  <div>
+                    <Label className="text-sm font-medium text-slate-600">
+                      Designation
+                    </Label>
+                    <p>{selectedTDS.designation}</p>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-sm font-medium text-slate-600">
-                    Status
-                  </Label>
-                  <Badge
-                    variant={
-                      selectedTDS.status === "Processed"
-                        ? "default"
-                        : "secondary"
-                    }
-                  >
-                    {selectedTDS.status}
-                  </Badge>
+                <div className="flex items-center gap-2">
+                  {selectedTDS.status === "Processed" ? (
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                  ) : (
+                    <Clock className="h-4 w-4 text-orange-600" />
+                  )}
+                  <div>
+                    <Label className="text-sm font-medium text-slate-600">
+                      Status
+                    </Label>
+                    <Badge
+                      variant={
+                        selectedTDS.status === "Processed"
+                          ? "default"
+                          : "secondary"
+                      }
+                    >
+                      {selectedTDS.status}
+                    </Badge>
+                  </div>
                 </div>
               </div>
 
@@ -625,7 +655,10 @@ export default function TDSUpload() {
 
               {/* TDS Information */}
               <div>
-                <h3 className="text-lg font-semibold mb-4">TDS Information</h3>
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Zap className="h-5 w-5 text-blue-600" />
+                  TDS Information
+                </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label className="text-sm font-medium text-slate-600">

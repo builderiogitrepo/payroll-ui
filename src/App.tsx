@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AppLayout } from "./components/AppLayout";
 import Employees from "./pages/Employees";
 import Attendance from "./pages/Attendance";
-import SalaryStructure from "./pages/SalaryStructure";
+import SalaryConfiguration from "./pages/SalaryConfiguration";
 import PayheadMaster from "./pages/PayheadMaster";
 import Adjustments from "./pages/Adjustments";
 import VariablePay from "./pages/VariablePay";
@@ -30,7 +30,10 @@ const App = () => (
             <Route index element={<Navigate to="/employees" replace />} />
             <Route path="employees" element={<Employees />} />
             <Route path="attendance" element={<Attendance />} />
-            <Route path="salary-structure" element={<SalaryStructure />} />
+            <Route
+              path="salary-configuration"
+              element={<SalaryConfiguration />}
+            />
             <Route path="payheads" element={<PayheadMaster />} />
             <Route path="adjustments" element={<Adjustments />} />
             <Route path="variable-pay" element={<VariablePay />} />

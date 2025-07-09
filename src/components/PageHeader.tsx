@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 interface PageHeaderProps {
   title: string;
   description?: string;
+  icon?: ReactNode;
   children?: ReactNode;
   className?: string;
 }
@@ -12,29 +13,30 @@ interface PageHeaderProps {
 export function PageHeader({
   title,
   description,
+  icon,
   children,
   className,
 }: PageHeaderProps) {
   return (
     <div
-      className={cn("border-b border-slate-200 bg-white px-4 py-4", className)}
+      className={cn(
+        "border-b border-slate-200 bg-white px-6 py-6 shadow-sm",
+        className,
+      )}
     >
-      <div
-        className="flex items-center justify-between"
-        style={{ fontFamily: "Montserrat, sans-serif" }}
-      >
-        <div className="space-y-1">
-          <h1
-            className="text-slate-900"
-            style={{ font: "700 17.5px/24.5px Manrope, sans-serif" }}
-          >
+      <div className="flex items-center justify-between">
+        <div className="space-y-2">
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+            {icon && icon}
             {title}
           </h1>
           {description && (
-            <p className="text-sm text-slate-600">{description}</p>
+            <p className="text-slate-600 text-base leading-relaxed">
+              {description}
+            </p>
           )}
         </div>
-        {children && <div className="flex items-center gap-2">{children}</div>}
+        {children && <div className="flex items-center gap-3">{children}</div>}
       </div>
     </div>
   );

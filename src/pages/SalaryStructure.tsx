@@ -659,7 +659,7 @@ export default function SalaryStructure() {
           open={!!selectedStructure}
           onOpenChange={() => setSelectedStructure(null)}
         >
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 Salary Structure Details - {selectedStructure.structureName}
@@ -854,7 +854,7 @@ export default function SalaryStructure() {
 
       {/* Add/Configure Structure Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Create New Salary Structure</DialogTitle>
           </DialogHeader>

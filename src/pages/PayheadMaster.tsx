@@ -125,7 +125,7 @@ const mockAdjustmentPayheads = [
     unit: "Per Hour",
     defaultValue: 150,
     taxable: true,
-    section: "Adjustment",
+    section: "Additional",
     usage: 35,
   },
   {
@@ -137,7 +137,7 @@ const mockAdjustmentPayheads = [
     unit: "Per Year",
     defaultValue: 10,
     taxable: true,
-    section: "Adjustment",
+    section: "Additional",
     usage: 28,
   },
   {
@@ -149,7 +149,7 @@ const mockAdjustmentPayheads = [
     unit: "Per Day",
     defaultValue: 1.5,
     taxable: true,
-    section: "Adjustment",
+    section: "Additional",
     usage: 12,
   },
   {
@@ -161,7 +161,7 @@ const mockAdjustmentPayheads = [
     unit: "One-time",
     defaultValue: 5000,
     taxable: true,
-    section: "Adjustment",
+    section: "Additional",
     usage: 8,
   },
   {
@@ -173,7 +173,7 @@ const mockAdjustmentPayheads = [
     unit: "Monthly",
     defaultValue: 1250,
     taxable: false,
-    section: "Adjustment",
+    section: "Additional",
     usage: 15,
   },
   {
@@ -185,7 +185,7 @@ const mockAdjustmentPayheads = [
     unit: "Per Day",
     defaultValue: 1,
     taxable: false,
-    section: "Adjustment",
+    section: "Additional",
     usage: 18,
   },
   {
@@ -197,7 +197,7 @@ const mockAdjustmentPayheads = [
     unit: "Per Instance",
     defaultValue: 50,
     taxable: false,
-    section: "Adjustment",
+    section: "Additional",
     usage: 22,
   },
   {
@@ -209,7 +209,7 @@ const mockAdjustmentPayheads = [
     unit: "Monthly",
     defaultValue: 0,
     taxable: false,
-    section: "Adjustment",
+    section: "Additional",
     usage: 5,
   },
 ];
@@ -400,7 +400,7 @@ export default function PayheadMaster() {
         >
           <TabsList className="grid w-80 grid-cols-2">
             <TabsTrigger value="regular">Regular Payheads</TabsTrigger>
-            <TabsTrigger value="adjustment">Adjustment Payheads</TabsTrigger>
+            <TabsTrigger value="adjustment">Additional Payheads</TabsTrigger>
           </TabsList>
 
           <TabsContent value="regular">
@@ -427,7 +427,7 @@ export default function PayheadMaster() {
               onView={handleView}
               onEdit={handleEdit}
               onDelete={handleDelete}
-              addButtonText="Add Adjustment Payhead"
+              addButtonText="Add Additional Payhead"
             />
           </TabsContent>
         </Tabs>
@@ -486,7 +486,7 @@ export default function PayheadMaster() {
                     </span>
                   </div>
                 </div>
-                {selectedPayhead.section === "Adjustment" && (
+                {selectedPayhead.section === "Additional" && (
                   <>
                     <div>
                       <Label className="text-sm font-medium text-slate-600">
@@ -551,10 +551,10 @@ export default function PayheadMaster() {
 
       {/* Add Payhead Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              Add New {activeTab === "regular" ? "Regular" : "Adjustment"}{" "}
+              Add New {activeTab === "regular" ? "Regular" : "Additional"}{" "}
               Payhead
             </DialogTitle>
           </DialogHeader>
@@ -619,11 +619,11 @@ export default function PayheadMaster() {
               </div>
             )}
 
-            {/* Adjustment Payhead Fields */}
+            {/* Additional Payhead Fields */}
             {activeTab === "adjustment" && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">
-                  Adjustment Payhead Configuration
+                  Additional Payhead Configuration
                 </h3>
 
                 <div className="grid grid-cols-2 gap-4">

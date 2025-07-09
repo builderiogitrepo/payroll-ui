@@ -41,6 +41,15 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+} from "@/components/ui/pagination";
 
 export interface Column {
   key: string;
@@ -81,6 +90,7 @@ interface DataTableProps {
   onBulkAction?: (action: string, selectedItems: any[]) => void;
   enableMobileCards?: boolean;
   className?: string;
+  customToolbar?: React.ReactNode;
 }
 
 export function DataTable({
@@ -98,6 +108,7 @@ export function DataTable({
   onBulkAction,
   enableMobileCards = true,
   className,
+  customToolbar,
 }: DataTableProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
@@ -111,7 +122,7 @@ export function DataTable({
     null,
   );
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(25);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   // Filter and search data
   const filteredData = useMemo(() => {
@@ -243,7 +254,7 @@ export function DataTable({
   );
 
   return (
-    <div className={cn("space-y-4", className)}>
+    <div className={cn("p-4 space-y-4", className)}>
       {/* Header with Search and Smart Filters */}
       <div className="space-y-4">
         {/* Smart Filters Bar */}
@@ -280,62 +291,148 @@ export function DataTable({
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-1 items-center gap-3">
             <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
               <Input
                 placeholder={searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 rounded-xl"
               />
             </div>
 
-            {/* Quick Filters */}
-            {filters.map((filter) => (
-              <Select
-                key={filter.key}
-                value={activeFilters[filter.key] || "all"}
-                onValueChange={(value) =>
-                  setActiveFilters((prev) => ({
-                    ...prev,
-                    [filter.key]: value === "all" ? "" : value,
-                  }))
-                }
-              >
-                <SelectTrigger className="w-40">
-                  <SelectValue placeholder={filter.label} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All {filter.label}</SelectItem>
-                  {filter.options?.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            ))}
+            {/* Combined Filter Controls */}
+            {filters.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="rounded-xl">
+                    <Filter className="h-4 w-4 mr-2" />
+                    Filters
+                    {Object.values(activeFilters).some(
+                      (value) => value && value !== "all",
+                    ) && (
+                      <Badge
+                        variant="secondary"
+                        className="ml-2 h-5 w-5 p-0 text-xs"
+                      >
+                        {
+                          Object.values(activeFilters).filter(
+                            (value) => value && value !== "all",
+                          ).length
+                        }
+                      </Badge>
+                    )}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-64 p-4">
+                  <div className="space-y-3">
+                    <h4 className="font-medium text-sm">Filter Options</h4>
+                    {filters.map((filter) => (
+                      <div key={filter.key} className="space-y-2">
+                        <label className="text-xs font-medium text-slate-700">
+                          {filter.label}
+                        </label>
+                        {filter.type === "select" ? (
+                          <Select
+                            value={activeFilters[filter.key] || "all"}
+                            onValueChange={(value) =>
+                              setActiveFilters((prev) => ({
+                                ...prev,
+                                [filter.key]: value,
+                              }))
+                            }
+                          >
+                            <SelectTrigger className="w-full h-8 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All</SelectItem>
+                              {filter.options?.map((option) => (
+                                <SelectItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
+                                  {option.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        ) : filter.type === "text" ? (
+                          <Input
+                            placeholder={`Filter ${filter.label}`}
+                            value={activeFilters[filter.key] || ""}
+                            onChange={(e) =>
+                              setActiveFilters((prev) => ({
+                                ...prev,
+                                [filter.key]: e.target.value,
+                              }))
+                            }
+                            className="w-full h-8 text-xs"
+                          />
+                        ) : filter.type === "date" ? (
+                          <Input
+                            type="date"
+                            value={activeFilters[filter.key] || ""}
+                            onChange={(e) =>
+                              setActiveFilters((prev) => ({
+                                ...prev,
+                                [filter.key]: e.target.value,
+                              }))
+                            }
+                            className="w-full h-8 text-xs"
+                          />
+                        ) : null}
+                      </div>
+                    ))}
+                    {Object.values(activeFilters).some(
+                      (value) => value && value !== "all",
+                    ) && (
+                      <div className="pt-2 border-t">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            setActiveFilters(
+                              Object.fromEntries(
+                                filters.map((filter) => [filter.key, "all"]),
+                              ),
+                            )
+                          }
+                          className="w-full text-xs text-red-600 hover:text-red-700"
+                        >
+                          Clear All Filters
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
 
-            {/* Column Visibility */}
+          <div className="flex items-center gap-2">
+            {customToolbar}
+            {/* Manage Columns */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="rounded-xl">
                   <Settings className="h-4 w-4 mr-2" />
                   Columns
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuSeparator />
                 {columns.map((column) => (
                   <DropdownMenuCheckboxItem
                     key={column.key}
                     checked={visibleColumns.has(column.key)}
                     onCheckedChange={(checked) => {
-                      const newVisible = new Set(visibleColumns);
+                      const newVisibleColumns = new Set(visibleColumns);
                       if (checked) {
-                        newVisible.add(column.key);
+                        newVisibleColumns.add(column.key);
                       } else {
-                        newVisible.delete(column.key);
+                        newVisibleColumns.delete(column.key);
                       }
-                      setVisibleColumns(newVisible);
+                      setVisibleColumns(newVisibleColumns);
                     }}
                   >
                     {column.label}
@@ -343,16 +440,14 @@ export function DataTable({
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-          </div>
 
-          <div className="flex items-center gap-2">
             {/* Bulk Actions */}
             {showBulkActions && selectedItems.size > 0 && (
               <div className="flex items-center gap-2 mr-4">
                 <Badge variant="secondary">{selectedItems.size} selected</Badge>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="rounded-xl">
                       Bulk Actions
                       <ChevronDown className="ml-2 h-4 w-4" />
                     </Button>
@@ -375,13 +470,13 @@ export function DataTable({
               </div>
             )}
 
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="rounded-xl">
               <Download className="h-4 w-4 mr-2" />
               Export
             </Button>
 
             {onAdd && (
-              <Button onClick={onAdd} size="sm">
+              <Button onClick={onAdd} size="sm" className="rounded-xl">
                 <Plus className="h-4 w-4 mr-2" />
                 {addButtonText}
               </Button>
@@ -454,7 +549,9 @@ export function DataTable({
                           selectedItems.size === paginatedData.length &&
                           paginatedData.length > 0
                         }
-                        onCheckedChange={handleSelectAll}
+                        onCheckedChange={(checked) =>
+                          handleSelectAll(checked as boolean)
+                        }
                       />
                     </TableHead>
                   )}
@@ -542,19 +639,21 @@ export function DataTable({
 
       {/* Desktop View */}
       <div className="hidden md:block">
-        <div className="border rounded-lg overflow-hidden">
+        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow className="sticky-header">
+                <TableRow className="sticky-header bg-slate-50">
                   {showBulkActions && (
-                    <TableHead className="w-12">
+                    <TableHead className="w-12 bg-slate-50 font-semibold text-slate-700">
                       <Checkbox
                         checked={
                           selectedItems.size === paginatedData.length &&
                           paginatedData.length > 0
                         }
-                        onCheckedChange={handleSelectAll}
+                        onCheckedChange={(checked) =>
+                          handleSelectAll(checked as boolean)
+                        }
                       />
                     </TableHead>
                   )}
@@ -564,6 +663,7 @@ export function DataTable({
                       <TableHead
                         key={column.key}
                         className={cn(
+                          "bg-slate-50 font-semibold text-slate-700 py-4",
                           column.className,
                           column.sticky && "sticky-column",
                         )}
@@ -571,14 +671,16 @@ export function DataTable({
                         {column.label}
                       </TableHead>
                     ))}
-                  <TableHead className="w-20">Actions</TableHead>
+                  <TableHead className="w-20 bg-slate-50 font-semibold text-slate-700">
+                    Actions
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {paginatedData.map((item, index) => (
                   <TableRow
                     key={item.id || item.empId || index}
-                    className="hover:bg-gray-50"
+                    className="hover:bg-slate-50 transition-colors duration-150 border-b border-slate-100"
                     style={{ height: "var(--table-row-height)" }}
                   >
                     {showBulkActions && (
@@ -663,52 +765,122 @@ export function DataTable({
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-600">
-            Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-            {Math.min(currentPage * itemsPerPage, filteredData.length)} of{" "}
-            {filteredData.length} results
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </Button>
-            <div className="flex items-center gap-1">
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                const pageNum =
-                  Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
-                return (
-                  <Button
-                    key={pageNum}
-                    variant={pageNum === currentPage ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setCurrentPage(pageNum)}
-                    className="w-8 h-8 p-0"
-                  >
-                    {pageNum}
-                  </Button>
-                );
-              })}
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() =>
-                setCurrentPage(Math.min(totalPages, currentPage + 1))
-              }
-              disabled={currentPage === totalPages}
-            >
-              Next
-            </Button>
-          </div>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mt-4 gap-2">
+        {totalPages > 1 && (
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  aria-disabled={currentPage === 1}
+                  tabIndex={currentPage === 1 ? -1 : 0}
+                  style={{
+                    pointerEvents: currentPage === 1 ? "none" : undefined,
+                    opacity: currentPage === 1 ? 0.5 : 1,
+                  }}
+                />
+              </PaginationItem>
+              {/* Page numbers with ellipsis */}
+              {(() => {
+                const items = [];
+                let start = Math.max(1, currentPage - 2);
+                let end = Math.min(totalPages, currentPage + 2);
+                if (currentPage <= 3) {
+                  end = Math.min(5, totalPages);
+                } else if (currentPage >= totalPages - 2) {
+                  start = Math.max(1, totalPages - 4);
+                }
+                if (start > 1) {
+                  items.push(
+                    <PaginationItem key={1}>
+                      <PaginationLink
+                        isActive={currentPage === 1}
+                        onClick={() => setCurrentPage(1)}
+                      >
+                        {1}
+                      </PaginationLink>
+                    </PaginationItem>,
+                  );
+                  if (start > 2) {
+                    items.push(
+                      <PaginationItem key="start-ellipsis">
+                        <PaginationEllipsis />
+                      </PaginationItem>,
+                    );
+                  }
+                }
+                for (let i = start; i <= end; i++) {
+                  items.push(
+                    <PaginationItem key={i}>
+                      <PaginationLink
+                        isActive={currentPage === i}
+                        onClick={() => setCurrentPage(i)}
+                      >
+                        {i}
+                      </PaginationLink>
+                    </PaginationItem>,
+                  );
+                }
+                if (end < totalPages) {
+                  if (end < totalPages - 1) {
+                    items.push(
+                      <PaginationItem key="end-ellipsis">
+                        <PaginationEllipsis />
+                      </PaginationItem>,
+                    );
+                  }
+                  items.push(
+                    <PaginationItem key={totalPages}>
+                      <PaginationLink
+                        isActive={currentPage === totalPages}
+                        onClick={() => setCurrentPage(totalPages)}
+                      >
+                        {totalPages}
+                      </PaginationLink>
+                    </PaginationItem>,
+                  );
+                }
+                return items;
+              })()}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() =>
+                    setCurrentPage(Math.min(totalPages, currentPage + 1))
+                  }
+                  aria-disabled={currentPage === totalPages}
+                  tabIndex={currentPage === totalPages ? -1 : 0}
+                  style={{
+                    pointerEvents:
+                      currentPage === totalPages ? "none" : undefined,
+                    opacity: currentPage === totalPages ? 0.5 : 1,
+                  }}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
+        {/* Page size selector to the right of pagination */}
+        <div className="flex items-center gap-1 justify-end">
+          <span className="text-xs text-slate-500">Rows:</span>
+          <Select
+            value={String(itemsPerPage)}
+            onValueChange={(v) => {
+              setItemsPerPage(Number(v));
+              setCurrentPage(1);
+            }}
+          >
+            <SelectTrigger className="w-16 rounded-xl">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="5">5</SelectItem>
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="25">25</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-      )}
+      </div>
 
       {/* Empty State */}
       {filteredData.length === 0 && (

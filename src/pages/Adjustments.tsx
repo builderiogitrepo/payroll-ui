@@ -23,6 +23,18 @@ import {
   Clock,
   CheckCircle,
   XCircle,
+  Settings,
+  Building,
+  Calendar,
+  IndianRupee,
+  AlertCircle,
+  FileText,
+  Download,
+  Eye,
+  Edit,
+  Trash2,
+  Target,
+  Zap,
 } from "lucide-react";
 
 // Mock adjustment entry data
@@ -34,6 +46,7 @@ const mockAdjustmentEntries = [
     designation: "Software Engineer",
     department: "Technology",
     month: "Dec 2024",
+    fiscalYear: "FY 2024-25",
     adjustmentType: "Earning",
     payheadName: "Overtime Allowance",
     units: 8,
@@ -51,6 +64,7 @@ const mockAdjustmentEntries = [
     designation: "Senior Developer",
     department: "Technology",
     month: "Dec 2024",
+    fiscalYear: "FY 2024-25",
     adjustmentType: "Earning",
     payheadName: "Special Incentive",
     units: 1,
@@ -68,6 +82,7 @@ const mockAdjustmentEntries = [
     designation: "Sales Executive",
     department: "Sales",
     month: "Dec 2024",
+    fiscalYear: "FY 2024-25",
     adjustmentType: "Deduction",
     payheadName: "Loss of Pay",
     units: 2,
@@ -85,6 +100,7 @@ const mockAdjustmentEntries = [
     designation: "Team Lead",
     department: "Technology",
     month: "Dec 2024",
+    fiscalYear: "FY 2024-25",
     adjustmentType: "Earning",
     payheadName: "Referral Bonus",
     units: 1,
@@ -102,6 +118,7 @@ const mockAdjustmentEntries = [
     designation: "Sales Manager",
     department: "Sales",
     month: "Dec 2024",
+    fiscalYear: "FY 2024-25",
     adjustmentType: "Deduction",
     payheadName: "Late Coming Fine",
     units: 5,
@@ -119,6 +136,7 @@ const mockAdjustmentEntries = [
     designation: "Telecaller",
     department: "Operations",
     month: "Dec 2024",
+    fiscalYear: "FY 2024-25",
     adjustmentType: "Earning",
     payheadName: "Holiday Pay Allowance",
     units: 2,
@@ -136,6 +154,7 @@ const mockAdjustmentEntries = [
     designation: "QA Engineer",
     department: "Technology",
     month: "Dec 2024",
+    fiscalYear: "FY 2024-25",
     adjustmentType: "Deduction",
     payheadName: "Advance Salary Deduction",
     units: 1,
@@ -153,6 +172,7 @@ const mockAdjustmentEntries = [
     designation: "Software Engineer",
     department: "Technology",
     month: "Dec 2024",
+    fiscalYear: "FY 2024-25",
     adjustmentType: "Earning",
     payheadName: "Health Insurance Allowance",
     units: 1,
@@ -199,7 +219,12 @@ const columns: Column[] = [
   {
     key: "month",
     label: "Month",
-    render: (value) => <Badge variant="outline">{value}</Badge>,
+    render: (value) => (
+      <Badge variant="outline" className="flex items-center gap-1">
+        <Calendar className="h-3 w-3" />
+        {value}
+      </Badge>
+    ),
   },
   {
     key: "adjustmentType",
@@ -220,7 +245,12 @@ const columns: Column[] = [
   {
     key: "payheadName",
     label: "Payhead",
-    render: (value) => <span className="font-medium">{value}</span>,
+    render: (value) => (
+      <div className="flex items-center gap-2">
+        <Target className="h-3 w-3 text-blue-600" />
+        <span className="font-medium">{value}</span>
+      </div>
+    ),
   },
   {
     key: "units",
@@ -231,11 +261,15 @@ const columns: Column[] = [
     key: "amount",
     label: "Amount",
     render: (value, row) => (
-      <span
-        className={`font-medium ${row.adjustmentType === "Earning" ? "text-green-600" : "text-red-600"}`}
-      >
-        {row.adjustmentType === "Earning" ? "+" : "-"}₹{value.toLocaleString()}
-      </span>
+      <div className="flex items-center gap-1">
+        <IndianRupee className="h-3 w-3 text-slate-600" />
+        <span
+          className={`font-medium ${row.adjustmentType === "Earning" ? "text-green-600" : "text-red-600"}`}
+        >
+          {row.adjustmentType === "Earning" ? "+" : "-"}₹
+          {value.toLocaleString()}
+        </span>
+      </div>
     ),
   },
   {
@@ -305,6 +339,35 @@ export default function Adjustments() {
   const [selectedAdjustment, setSelectedAdjustment] = useState<any>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
+  // Get current month/year for default filtering
+  const currentMonth = "Dec 2024"; // Default to December
+  const currentFiscalYear = "FY 2024-25";
+
+  // Filter data to show current month by default
+  const getCurrentMonthData = () => {
+    return mockAdjustmentEntries.filter(
+      (adjustment) =>
+        adjustment.month === currentMonth &&
+        adjustment.fiscalYear === currentFiscalYear,
+    );
+  };
+
+  const [filteredData, setFilteredData] = useState(mockAdjustmentEntries);
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [selectedFiscalYear, setSelectedFiscalYear] =
+    useState(currentFiscalYear);
+
+  // Handle month/year filter changes
+  const handleMonthYearFilter = (month: string, fiscalYear: string) => {
+    const filtered = mockAdjustmentEntries.filter(
+      (adjustment) =>
+        adjustment.month === month && adjustment.fiscalYear === fiscalYear,
+    );
+    setFilteredData(filtered);
+    setSelectedMonth(month);
+    setSelectedFiscalYear(fiscalYear);
+  };
+
   const handleView = (adjustment: any) => {
     setSelectedAdjustment(adjustment);
   };
@@ -336,8 +399,9 @@ export default function Adjustments() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Adjustment Entry"
+        title="Additional Pay Components"
         description="Process salary adjustments and corrections for employees in December 2024"
+        icon={<Settings className="h-6 w-6 text-blue-600" />}
       >
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
@@ -347,10 +411,10 @@ export default function Adjustments() {
         </div>
       </PageHeader>
 
-      <div className="px-6">
-        {/* Data Table */}
+      <div className="px-6 space-y-4">
+        {/* Data Table with Fiscal/Month filters in toolbar */}
         <DataTable
-          data={mockAdjustmentEntries}
+          data={filteredData}
           columns={columns}
           filters={filters}
           searchPlaceholder="Search by Emp ID, Name..."
@@ -358,11 +422,46 @@ export default function Adjustments() {
           onView={handleView}
           onEdit={handleEdit}
           onDelete={handleDelete}
-          addButtonText="Add Adjustment"
+          addButtonText="Add Pay Component"
+          customToolbar={
+            <>
+              {/* Fiscal/Month Filters on the right side of search */}
+              <div className="flex items-center gap-2">
+                <Label className="text-xs text-slate-600">FY:</Label>
+                <select
+                  value={selectedFiscalYear}
+                  onChange={(e) =>
+                    handleMonthYearFilter(selectedMonth, e.target.value)
+                  }
+                  className="px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 w-24"
+                >
+                  <option value="FY 2025-26">2025-26</option>
+                  <option value="FY 2024-25">2024-25</option>
+                </select>
+                <Label className="text-xs text-slate-600">Month:</Label>
+                <select
+                  value={selectedMonth}
+                  onChange={(e) =>
+                    handleMonthYearFilter(e.target.value, selectedFiscalYear)
+                  }
+                  className="px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 w-20"
+                >
+                  <option value="June 2025">Jun</option>
+                  <option value="May 2025">May</option>
+                  <option value="April 2025">Apr</option>
+                  <option value="March 2025">Mar</option>
+                  <option value="February 2025">Feb</option>
+                  <option value="January 2025">Jan</option>
+                  <option value="Dec 2024">Dec</option>
+                  <option value="Nov 2024">Nov</option>
+                </select>
+              </div>
+            </>
+          }
         />
       </div>
 
-      {/* Adjustment Details Dialog */}
+      {/* Additional Details Dialog */}
       {selectedAdjustment && (
         <Dialog
           open={!!selectedAdjustment}
@@ -371,7 +470,7 @@ export default function Adjustments() {
           <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle>
-                Adjustment Details - {selectedAdjustment.name} (
+                Additional Details - {selectedAdjustment.name} (
                 {selectedAdjustment.empId})
               </DialogTitle>
             </DialogHeader>
@@ -379,42 +478,55 @@ export default function Adjustments() {
             <div className="space-y-6">
               {/* Basic Info */}
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-sm font-medium text-slate-600">
-                    Adjustment ID
-                  </Label>
-                  <p className="font-mono">{selectedAdjustment.id}</p>
+                <div className="flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-blue-600" />
+                  <div>
+                    <Label className="text-sm font-medium text-slate-600">
+                      Additional ID
+                    </Label>
+                    <p className="font-mono">{selectedAdjustment.id}</p>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-sm font-medium text-slate-600">
-                    Department
-                  </Label>
-                  <p>{selectedAdjustment.department}</p>
+                <div className="flex items-center gap-2">
+                  <Building className="h-4 w-4 text-green-600" />
+                  <div>
+                    <Label className="text-sm font-medium text-slate-600">
+                      Department
+                    </Label>
+                    <p>{selectedAdjustment.department}</p>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-sm font-medium text-slate-600">
-                    Month
-                  </Label>
-                  <p>{selectedAdjustment.month}</p>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-purple-600" />
+                  <div>
+                    <Label className="text-sm font-medium text-slate-600">
+                      Month
+                    </Label>
+                    <p>{selectedAdjustment.month}</p>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-sm font-medium text-slate-600">
-                    Created Date
-                  </Label>
-                  <p>
-                    {new Date(
-                      selectedAdjustment.createdDate,
-                    ).toLocaleDateString()}
-                  </p>
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-orange-600" />
+                  <div>
+                    <Label className="text-sm font-medium text-slate-600">
+                      Created Date
+                    </Label>
+                    <p>
+                      {new Date(
+                        selectedAdjustment.createdDate,
+                      ).toLocaleDateString()}
+                    </p>
+                  </div>
                 </div>
               </div>
 
               <Separator />
 
-              {/* Adjustment Details */}
+              {/* Additional Details */}
               <div>
-                <h3 className="text-lg font-semibold mb-4">
-                  Adjustment Information
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Zap className="h-5 w-5 text-blue-600" />
+                  Additional Information
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -528,7 +640,7 @@ export default function Adjustments() {
 
               {selectedAdjustment.status === "Draft" && (
                 <div className="flex justify-end gap-2 pt-4">
-                  <Button variant="outline">Edit Adjustment</Button>
+                  <Button variant="outline">Edit Additional</Button>
                   <Button>Approve & Finalize</Button>
                 </div>
               )}
@@ -537,11 +649,11 @@ export default function Adjustments() {
         </Dialog>
       )}
 
-      {/* Add Adjustment Dialog */}
+      {/* Add Additional Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Add New Adjustment Entry</DialogTitle>
+            <DialogTitle>Add New Additional Entry</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-6">
@@ -599,13 +711,13 @@ export default function Adjustments() {
               </div>
             </div>
 
-            {/* Adjustment Details */}
+            {/* Additional Details */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Adjustment Details</h3>
+              <h3 className="text-lg font-semibold">Additional Details</h3>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="adjustmentType">Adjustment Type *</Label>
+                  <Label htmlFor="adjustmentType">Additional Type *</Label>
                   <select
                     id="adjustmentType"
                     className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -618,7 +730,7 @@ export default function Adjustments() {
 
                 <div>
                   <Label htmlFor="adjustmentPayhead">
-                    Adjustment Payhead *
+                    Additional Payhead *
                   </Label>
                   <select
                     id="adjustmentPayhead"
@@ -755,7 +867,7 @@ export default function Adjustments() {
             {/* Examples Section */}
             <div className="bg-blue-50 p-4 rounded-lg">
               <h4 className="font-semibold text-blue-800 mb-2">
-                Common Adjustment Examples:
+                Common Additional Examples:
               </h4>
               <div className="grid grid-cols-1 gap-2 text-sm text-blue-700">
                 <div>
@@ -785,7 +897,7 @@ export default function Adjustments() {
                 Cancel
               </Button>
               <Button onClick={() => setIsAddDialogOpen(false)}>
-                Create Adjustment Entry
+                Create Additional Entry
               </Button>
             </div>
           </div>

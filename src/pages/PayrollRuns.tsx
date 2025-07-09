@@ -23,6 +23,18 @@ import {
   DollarSign,
   TrendingUp,
   AlertCircle,
+  CheckCircle,
+  Clock,
+  Eye,
+  Edit,
+  Download,
+  Plus,
+  Building,
+  Calendar,
+  IndianRupee,
+  Minus,
+  Target,
+  Zap,
 } from "lucide-react";
 
 // Mock data for payroll runs
@@ -41,6 +53,8 @@ const mockPayrollData = [
     netPay: 72000,
     payslipStatus: "Draft",
     status: "In-Progress",
+    month: "December",
+    fiscalYear: "FY 2024-25",
   },
   {
     empId: "E1002",
@@ -56,6 +70,8 @@ const mockPayrollData = [
     netPay: 85000,
     payslipStatus: "Draft",
     status: "In-Progress",
+    month: "December",
+    fiscalYear: "FY 2024-25",
   },
   {
     empId: "T1001",
@@ -71,6 +87,8 @@ const mockPayrollData = [
     netPay: 52000,
     payslipStatus: "Finalized",
     status: "Completed",
+    month: "December",
+    fiscalYear: "FY 2024-25",
   },
   {
     empId: "E1003",
@@ -86,6 +104,8 @@ const mockPayrollData = [
     netPay: 110000,
     payslipStatus: "Finalized",
     status: "Completed",
+    month: "December",
+    fiscalYear: "FY 2024-25",
   },
 ];
 
@@ -186,7 +206,15 @@ const payrollColumns: Column[] = [
     key: "payslipStatus",
     label: "Status",
     render: (value) => (
-      <Badge variant={value === "Finalized" ? "default" : "secondary"}>
+      <Badge
+        variant={value === "Finalized" ? "default" : "secondary"}
+        className="flex items-center gap-1"
+      >
+        {value === "Finalized" ? (
+          <CheckCircle className="h-3 w-3" />
+        ) : (
+          <Clock className="h-3 w-3" />
+        )}
         {value}
       </Badge>
     ),
@@ -220,6 +248,32 @@ export default function PayrollRuns() {
   const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("in-progress");
 
+  // Fiscal/Month filter state
+  const currentMonth = "December";
+  const currentFiscalYear = "FY 2024-25";
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [selectedFiscalYear, setSelectedFiscalYear] =
+    useState(currentFiscalYear);
+
+  // Filtered data for each tab
+  const filteredInProgressData = mockPayrollData.filter(
+    (item) =>
+      item.status === "In-Progress" &&
+      item.month === selectedMonth &&
+      item.fiscalYear === selectedFiscalYear,
+  );
+  const filteredCompletedData = mockPayrollData.filter(
+    (item) =>
+      item.status === "Completed" &&
+      item.month === selectedMonth &&
+      item.fiscalYear === selectedFiscalYear,
+  );
+
+  const handleMonthYearFilter = (month: string, fiscalYear: string) => {
+    setSelectedMonth(month);
+    setSelectedFiscalYear(fiscalYear);
+  };
+
   const handleView = (employee: any) => {
     setSelectedEmployee(employee);
   };
@@ -228,9 +282,11 @@ export default function PayrollRuns() {
     console.log("Edit payroll for:", employee);
   };
 
+  // Calculate stats for the current tab
   const currentData =
-    activeTab === "in-progress" ? inProgressData : completedData;
-
+    activeTab === "in-progress"
+      ? filteredInProgressData
+      : filteredCompletedData;
   const totalEarnings = currentData.reduce(
     (sum, item) => sum + item.earnings,
     0,
@@ -246,6 +302,7 @@ export default function PayrollRuns() {
       <PageHeader
         title="Payroll Runs"
         description="Execute and manage payroll processing for employees"
+        icon={<Calculator className="h-6 w-6 text-blue-600" />}
       >
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
@@ -288,24 +345,100 @@ export default function PayrollRuns() {
 
           <TabsContent value="in-progress">
             <DataTable
-              data={inProgressData}
+              data={filteredInProgressData}
               columns={payrollColumns}
               filters={filters}
               searchPlaceholder="Search by Emp ID, Name..."
               onView={handleView}
               onEdit={handleEdit}
               addButtonText="Add Employee"
+              customToolbar={
+                <>
+                  {/* Fiscal/Month Filters on the right side of search */}
+                  <div className="flex items-center gap-2">
+                    <Label className="text-xs text-slate-600">FY:</Label>
+                    <select
+                      value={selectedFiscalYear}
+                      onChange={(e) =>
+                        handleMonthYearFilter(selectedMonth, e.target.value)
+                      }
+                      className="px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 w-24"
+                    >
+                      <option value="FY 2025-26">2025-26</option>
+                      <option value="FY 2024-25">2024-25</option>
+                    </select>
+                    <Label className="text-xs text-slate-600">Month:</Label>
+                    <select
+                      value={selectedMonth}
+                      onChange={(e) =>
+                        handleMonthYearFilter(
+                          e.target.value,
+                          selectedFiscalYear,
+                        )
+                      }
+                      className="px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 w-20"
+                    >
+                      <option value="June">Jun</option>
+                      <option value="May">May</option>
+                      <option value="April">Apr</option>
+                      <option value="March">Mar</option>
+                      <option value="February">Feb</option>
+                      <option value="January">Jan</option>
+                      <option value="December">Dec</option>
+                      <option value="November">Nov</option>
+                    </select>
+                  </div>
+                </>
+              }
             />
           </TabsContent>
 
           <TabsContent value="completed">
             <DataTable
-              data={completedData}
+              data={filteredCompletedData}
               columns={payrollColumns}
               filters={filters}
               searchPlaceholder="Search by Emp ID, Name..."
               onView={handleView}
               addButtonText="Add Employee"
+              customToolbar={
+                <>
+                  {/* Fiscal/Month Filters on the right side of search */}
+                  <div className="flex items-center gap-2">
+                    <Label className="text-xs text-slate-600">FY:</Label>
+                    <select
+                      value={selectedFiscalYear}
+                      onChange={(e) =>
+                        handleMonthYearFilter(selectedMonth, e.target.value)
+                      }
+                      className="px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 w-24"
+                    >
+                      <option value="FY 2025-26">2025-26</option>
+                      <option value="FY 2024-25">2024-25</option>
+                    </select>
+                    <Label className="text-xs text-slate-600">Month:</Label>
+                    <select
+                      value={selectedMonth}
+                      onChange={(e) =>
+                        handleMonthYearFilter(
+                          e.target.value,
+                          selectedFiscalYear,
+                        )
+                      }
+                      className="px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 w-20"
+                    >
+                      <option value="June">Jun</option>
+                      <option value="May">May</option>
+                      <option value="April">Apr</option>
+                      <option value="March">Mar</option>
+                      <option value="February">Feb</option>
+                      <option value="January">Jan</option>
+                      <option value="December">Dec</option>
+                      <option value="November">Nov</option>
+                    </select>
+                  </div>
+                </>
+              }
             />
           </TabsContent>
         </Tabs>
@@ -317,7 +450,7 @@ export default function PayrollRuns() {
           open={!!selectedEmployee}
           onOpenChange={() => setSelectedEmployee(null)}
         >
-          <DialogContent className="max-w-3xl">
+          <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 Payroll Breakdown - {selectedEmployee.name} (
@@ -328,29 +461,41 @@ export default function PayrollRuns() {
             <div className="space-y-6">
               {/* Basic Info */}
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-sm font-medium text-slate-600">
-                    Department
-                  </Label>
-                  <p>{selectedEmployee.department}</p>
+                <div className="flex items-center gap-2">
+                  <Building className="h-4 w-4 text-blue-600" />
+                  <div>
+                    <Label className="text-sm font-medium text-slate-600">
+                      Department
+                    </Label>
+                    <p>{selectedEmployee.department}</p>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-sm font-medium text-slate-600">
-                    Designation
-                  </Label>
-                  <p>{selectedEmployee.designation}</p>
+                <div className="flex items-center gap-2">
+                  <Target className="h-4 w-4 text-green-600" />
+                  <div>
+                    <Label className="text-sm font-medium text-slate-600">
+                      Designation
+                    </Label>
+                    <p>{selectedEmployee.designation}</p>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-sm font-medium text-slate-600">
-                    Days Present
-                  </Label>
-                  <p>{selectedEmployee.daysPresent}</p>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-purple-600" />
+                  <div>
+                    <Label className="text-sm font-medium text-slate-600">
+                      Days Present
+                    </Label>
+                    <p>{selectedEmployee.daysPresent}</p>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-sm font-medium text-slate-600">
-                    Salary Days
-                  </Label>
-                  <p>{selectedEmployee.salaryDays}</p>
+                <div className="flex items-center gap-2">
+                  <IndianRupee className="h-4 w-4 text-orange-600" />
+                  <div>
+                    <Label className="text-sm font-medium text-slate-600">
+                      Salary Days
+                    </Label>
+                    <p>{selectedEmployee.salaryDays}</p>
+                  </div>
                 </div>
               </div>
 
@@ -358,7 +503,8 @@ export default function PayrollRuns() {
 
               {/* Earnings Breakdown */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-green-700">
+                <h3 className="text-lg font-semibold mb-4 text-green-700 flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5" />
                   Earnings
                 </h3>
                 <div className="space-y-3">
@@ -394,7 +540,8 @@ export default function PayrollRuns() {
 
               {/* Deductions Breakdown */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-red-700">
+                <h3 className="text-lg font-semibold mb-4 text-red-700 flex items-center gap-2">
+                  <Minus className="h-5 w-5" />
                   Deductions
                 </h3>
                 <div className="space-y-3">

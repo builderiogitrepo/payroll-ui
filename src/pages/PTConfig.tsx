@@ -11,7 +11,24 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { CreditCard, Plus, MapPin, IndianRupee, Calendar } from "lucide-react";
+import {
+  CreditCard,
+  Plus,
+  MapPin,
+  IndianRupee,
+  Calendar,
+  CheckCircle,
+  Clock,
+  AlertCircle,
+  Building,
+  Target,
+  Users,
+  Settings,
+  Eye,
+  Edit,
+  Trash2,
+  Zap,
+} from "lucide-react";
 
 // Mock PT configuration data
 const mockPTSlabs = [
@@ -361,13 +378,26 @@ const columns: Column[] = [
     key: "employees",
     label: "Employees",
     className: "text-center",
-    render: (value) => <span className="font-medium">{value}</span>,
+    render: (value) => (
+      <div className="flex items-center justify-center gap-1">
+        <Users className="h-3 w-3 text-blue-600" />
+        <span className="font-medium">{value}</span>
+      </div>
+    ),
   },
   {
     key: "status",
     label: "Status",
     render: (value) => (
-      <Badge variant={value === "Active" ? "default" : "secondary"}>
+      <Badge
+        variant={value === "Active" ? "default" : "secondary"}
+        className="flex items-center gap-1"
+      >
+        {value === "Active" ? (
+          <CheckCircle className="h-3 w-3" />
+        ) : (
+          <AlertCircle className="h-3 w-3" />
+        )}
         {value}
       </Badge>
     ),
@@ -431,6 +461,7 @@ export default function PTConfig() {
       <PageHeader
         title="PT Configuration"
         description="Configure Professional Tax slabs by state and salary ranges"
+        icon={<CreditCard className="h-6 w-6 text-blue-600" />}
       >
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
@@ -461,7 +492,7 @@ export default function PTConfig() {
           open={!!selectedSlab}
           onOpenChange={() => setSelectedSlab(null)}
         >
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>PT Slab Details - {selectedSlab.state}</DialogTitle>
             </DialogHeader>
@@ -469,46 +500,62 @@ export default function PTConfig() {
             <div className="space-y-6">
               {/* Basic Info */}
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-sm font-medium text-slate-600">
-                    Slab ID
-                  </Label>
-                  <p className="font-mono">{selectedSlab.id}</p>
+                <div className="flex items-center gap-2">
+                  <Target className="h-4 w-4 text-blue-600" />
+                  <div>
+                    <Label className="text-sm font-medium text-slate-600">
+                      Slab ID
+                    </Label>
+                    <p className="font-mono">{selectedSlab.id}</p>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-sm font-medium text-slate-600">
-                    Status
-                  </Label>
-                  <Badge
-                    variant={
-                      selectedSlab.status === "Active" ? "default" : "secondary"
-                    }
-                  >
-                    {selectedSlab.status}
-                  </Badge>
+                <div className="flex items-center gap-2">
+                  {selectedSlab.status === "Active" ? (
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                  ) : (
+                    <AlertCircle className="h-4 w-4 text-orange-600" />
+                  )}
+                  <div>
+                    <Label className="text-sm font-medium text-slate-600">
+                      Status
+                    </Label>
+                    <Badge
+                      variant={
+                        selectedSlab.status === "Active"
+                          ? "default"
+                          : "secondary"
+                      }
+                    >
+                      {selectedSlab.status}
+                    </Badge>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-sm font-medium text-slate-600">
-                    State
-                  </Label>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-blue-600" />
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-blue-600" />
+                  <div>
+                    <Label className="text-sm font-medium text-slate-600">
+                      State
+                    </Label>
                     <span className="font-medium">{selectedSlab.state}</span>
                   </div>
                 </div>
-                <div>
-                  <Label className="text-sm font-medium text-slate-600">
-                    Affected Employees
-                  </Label>
-                  <p className="text-lg font-semibold">
-                    {selectedSlab.employees}
-                  </p>
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4 text-purple-600" />
+                  <div>
+                    <Label className="text-sm font-medium text-slate-600">
+                      Affected Employees
+                    </Label>
+                    <p className="text-lg font-semibold">
+                      {selectedSlab.employees}
+                    </p>
+                  </div>
                 </div>
               </div>
 
               {/* Slab Configuration */}
               <div>
-                <h3 className="text-lg font-semibold mb-4">
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Settings className="h-5 w-5 text-blue-600" />
                   Slab Configuration
                 </h3>
                 <div className="bg-slate-50 p-4 rounded-lg space-y-3">

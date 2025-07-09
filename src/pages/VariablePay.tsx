@@ -36,6 +36,7 @@ const mockVariablePayData = [
     annualVariablePay: 120000,
     quarterlyAmount: 30000,
     fyPeriod: "FY 24-25 – Q3",
+    fiscalYear: "FY 2024-25",
     payablePercent: 85,
     payableAmount: 25500,
     manager: "Sarah Wilson",
@@ -52,6 +53,7 @@ const mockVariablePayData = [
     annualVariablePay: 180000,
     quarterlyAmount: 45000,
     fyPeriod: "FY 24-25 – Q3",
+    fiscalYear: "FY 2024-25",
     payablePercent: 90,
     payableAmount: 40500,
     manager: "Sarah Wilson",
@@ -68,6 +70,7 @@ const mockVariablePayData = [
     annualVariablePay: 120000,
     quarterlyAmount: 30000,
     fyPeriod: "FY 24-25 – Q3",
+    fiscalYear: "FY 2024-25",
     payablePercent: 75,
     payableAmount: 22500,
     manager: "Michael Chen",
@@ -84,6 +87,7 @@ const mockVariablePayData = [
     annualVariablePay: 400000,
     quarterlyAmount: 100000,
     fyPeriod: "FY 24-25 – Q3",
+    fiscalYear: "FY 2024-25",
     payablePercent: 95,
     payableAmount: 95000,
     manager: "David Brown",
@@ -100,6 +104,7 @@ const mockVariablePayData = [
     annualVariablePay: 324000,
     quarterlyAmount: 81000,
     fyPeriod: "FY 24-25 – Q3",
+    fiscalYear: "FY 2024-25",
     payablePercent: 80,
     payableAmount: 64800,
     manager: "David Brown",
@@ -116,6 +121,7 @@ const mockVariablePayData = [
     annualVariablePay: 32000,
     quarterlyAmount: 8000,
     fyPeriod: "FY 24-25 – Q3",
+    fiscalYear: "FY 2024-25",
     payablePercent: 70,
     payableAmount: 5600,
     manager: "Rajesh Kumar",
@@ -132,6 +138,7 @@ const mockVariablePayData = [
     annualVariablePay: 100000,
     quarterlyAmount: 25000,
     fyPeriod: "FY 24-25 – Q3",
+    fiscalYear: "FY 2024-25",
     payablePercent: 60,
     payableAmount: 15000,
     manager: "Sarah Wilson",
@@ -149,6 +156,7 @@ const mockVariablePayData = [
     annualVariablePay: 120000,
     quarterlyAmount: 30000,
     fyPeriod: "FY 24-25 – Q2",
+    fiscalYear: "FY 2024-25",
     payablePercent: 80,
     payableAmount: 24000,
     manager: "Sarah Wilson",
@@ -165,6 +173,7 @@ const mockVariablePayData = [
     annualVariablePay: 180000,
     quarterlyAmount: 45000,
     fyPeriod: "FY 24-25 – Q2",
+    fiscalYear: "FY 2024-25",
     payablePercent: 85,
     payableAmount: 38250,
     manager: "Sarah Wilson",
@@ -337,6 +346,36 @@ export default function VariablePay() {
   const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
   const [editingAward, setEditingAward] = useState<any>(null);
 
+  // Get current quarter/year for default filtering
+  const currentQuarter = "FY 24-25 – Q3"; // Default to Q3
+  const currentFiscalYear = "FY 2024-25";
+
+  // Filter data to show current quarter by default
+  const getCurrentQuarterData = () => {
+    return mockVariablePayData.filter(
+      (variablePay) =>
+        variablePay.fyPeriod === currentQuarter &&
+        variablePay.fiscalYear === currentFiscalYear,
+    );
+  };
+
+  const [filteredData, setFilteredData] = useState(mockVariablePayData);
+  const [selectedQuarter, setSelectedQuarter] = useState(currentQuarter);
+  const [selectedFiscalYear, setSelectedFiscalYear] =
+    useState(currentFiscalYear);
+
+  // Handle quarter/year filter changes
+  const handleQuarterYearFilter = (quarter: string, fiscalYear: string) => {
+    const filtered = mockVariablePayData.filter(
+      (variablePay) =>
+        variablePay.fyPeriod === quarter &&
+        variablePay.fiscalYear === fiscalYear,
+    );
+    setFilteredData(filtered);
+    setSelectedQuarter(quarter);
+    setSelectedFiscalYear(fiscalYear);
+  };
+
   const handleView = (employee: any) => {
     setSelectedEmployee(employee);
   };
@@ -367,51 +406,51 @@ export default function VariablePay() {
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
             <Upload className="h-4 w-4 mr-2" />
-            Upload Awards
+            Upload Variable Pay
           </Button>
         </div>
       </PageHeader>
 
-      <div className="px-6">
-        {/* HRMS Sync Info */}
-        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <div className="flex items-start gap-3">
-            <div className="bg-blue-500 rounded-full p-1">
-              <svg
-                className="h-4 w-4 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-            <div>
-              <h4 className="font-medium text-blue-900">
-                Data Source: HRMS Integration
-              </h4>
-              <p className="text-sm text-blue-700 mt-1">
-                Employee information (Name, CTC, Variable %) is automatically
-                synced from HRMS. Managers can set performance awards using
-                "Upload Awards" or edit individual ratings.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Data Table */}
+      <div className="px-6 space-y-4">
+        {/* Data Table with Fiscal/Quarter filters in toolbar */}
         <DataTable
-          data={mockVariablePayData}
+          data={filteredData}
           columns={columns}
           filters={filters}
           searchPlaceholder="Search by Emp ID, Name..."
           onView={handleView}
           onEdit={handleEdit}
+          customToolbar={
+            <>
+              {/* Fiscal/Quarter Filters on the right side of search */}
+              <div className="flex items-center gap-2">
+                <Label className="text-xs text-slate-600">FY:</Label>
+                <select
+                  value={selectedFiscalYear}
+                  onChange={(e) =>
+                    handleQuarterYearFilter(selectedQuarter, e.target.value)
+                  }
+                  className="px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 w-24"
+                >
+                  <option value="FY 2025-26">2025-26</option>
+                  <option value="FY 2024-25">2024-25</option>
+                </select>
+                <Label className="text-xs text-slate-600">Quarter:</Label>
+                <select
+                  value={selectedQuarter}
+                  onChange={(e) =>
+                    handleQuarterYearFilter(e.target.value, selectedFiscalYear)
+                  }
+                  className="px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 w-20"
+                >
+                  <option value="FY 24-25 – Q4">Q4</option>
+                  <option value="FY 24-25 – Q3">Q3</option>
+                  <option value="FY 24-25 – Q2">Q2</option>
+                  <option value="FY 24-25 – Q1">Q1</option>
+                </select>
+              </div>
+            </>
+          }
         />
       </div>
 
@@ -421,7 +460,7 @@ export default function VariablePay() {
           open={!!selectedEmployee}
           onOpenChange={() => setSelectedEmployee(null)}
         >
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 Variable Pay Details - {selectedEmployee.name} (
@@ -529,7 +568,7 @@ export default function VariablePay() {
           open={!!editingAward}
           onOpenChange={() => setEditingAward(null)}
         >
-          <DialogContent className="max-w-md">
+          <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 Edit Performance Award - {editingAward.name}
