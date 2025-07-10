@@ -606,16 +606,15 @@ export default function PaySchedule() {
                         <div className="space-y-3">
                           <div className="flex items-center justify-between py-2 border-b border-slate-100">
                             <span className="text-sm font-medium text-slate-600">
-                              Work Week
+                              Work Week Days
                             </span>
                             <span className="text-sm text-slate-900">
-                              {unitSettings.workWeekStartDay} -{" "}
-                              {unitSettings.workWeekEndDay}
+                              {unitSettings.workWeekDays.join(", ")}
                             </span>
                           </div>
                           <div className="flex items-center justify-between py-2 border-b border-slate-100">
                             <span className="text-sm font-medium text-slate-600">
-                              Salary Type
+                              Salary Calculation
                             </span>
                             <Badge variant="outline" className="text-xs">
                               {unitSettings.salaryCalculationType}
@@ -623,10 +622,10 @@ export default function PaySchedule() {
                           </div>
                           <div className="flex items-center justify-between py-2 border-b border-slate-100">
                             <span className="text-sm font-medium text-slate-600">
-                              Pay Frequency
+                              Working Days per Month
                             </span>
                             <span className="text-sm text-slate-900">
-                              {unitSettings.payFrequency}
+                              {unitSettings.payFrequency} days
                             </span>
                           </div>
                           <div className="flex items-center justify-between py-2 border-b border-slate-100">
@@ -639,7 +638,7 @@ export default function PaySchedule() {
                           </div>
                           <div className="flex items-center justify-between py-2 border-b border-slate-100">
                             <span className="text-sm font-medium text-slate-600">
-                              Time Zone
+                              First Payroll Period
                             </span>
                             <span className="text-sm text-slate-900">
                               {unitSettings.timeZone}
