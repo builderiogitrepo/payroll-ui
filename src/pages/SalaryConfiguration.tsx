@@ -997,26 +997,452 @@ export default function SalaryConfiguration() {
                     </TabsTrigger>
                   </TabsList>
 
-                  <TabsContent value="pf-config" className="space-y-4">
-                    <DataTable
-                      data={mockPFConfig}
-                      columns={pfColumns}
-                      onView={handleView}
-                      onEdit={handleEdit}
-                      onDelete={handleDelete}
-                      searchPlaceholder="Search PF configurations..."
-                      customToolbar={
-                        <div className="flex items-center gap-2">
-                          <Button
-                            onClick={handleAdd}
-                            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
-                          >
-                            <Plus className="h-4 w-4" />
-                            Add PF Config
-                          </Button>
+                  <TabsContent value="pf-config" className="space-y-6">
+                    {/* With Maximum Wage Rule Section */}
+                    <Card className="border-green-200 bg-green-50/30">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-green-100 rounded-lg">
+                              <Shield className="h-5 w-5 text-green-600" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-green-800">
+                                With Maximum Wage Rule
+                              </CardTitle>
+                              <p className="text-sm text-green-600 mt-1">
+                                PF contribution base is capped at the specified
+                                wage limit
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <Label
+                              htmlFor="withMaxWage"
+                              className="text-sm font-medium"
+                            >
+                              Enable Configuration
+                            </Label>
+                            <Checkbox
+                              id="withMaxWage"
+                              checked={pfWithMaxWageConfig.enabled}
+                              onCheckedChange={(checked) =>
+                                setPfWithMaxWageConfig((prev) => ({
+                                  ...prev,
+                                  enabled: !!checked,
+                                }))
+                              }
+                            />
+                          </div>
                         </div>
-                      }
-                    />
+                      </CardHeader>
+                      {pfWithMaxWageConfig.enabled && (
+                        <CardContent className="space-y-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="withMaxWageLimit">
+                                PF Wage Limit (₹) *
+                              </Label>
+                              <Input
+                                id="withMaxWageLimit"
+                                type="number"
+                                min="0"
+                                value={pfWithMaxWageConfig.pfWageLimit}
+                                onChange={(e) =>
+                                  setPfWithMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    pfWageLimit: parseInt(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label>PF Wage Calculation Basis *</Label>
+                              <Select
+                                value=""
+                                onValueChange={(value) => {
+                                  if (
+                                    value &&
+                                    !pfWithMaxWageConfig.pfBasisPayheads.includes(
+                                      value,
+                                    )
+                                  ) {
+                                    setPfWithMaxWageConfig((prev) => ({
+                                      ...prev,
+                                      pfBasisPayheads: [
+                                        ...prev.pfBasisPayheads,
+                                        value,
+                                      ],
+                                    }));
+                                  }
+                                }}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select payheads" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {mockPayheads
+                                    .filter(
+                                      (payhead) =>
+                                        !pfWithMaxWageConfig.pfBasisPayheads.includes(
+                                          payhead.name,
+                                        ),
+                                    )
+                                    .map((payhead) => (
+                                      <SelectItem
+                                        key={payhead.id}
+                                        value={payhead.name}
+                                      >
+                                        {payhead.name}
+                                      </SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
+                              <div className="flex flex-wrap gap-2 mt-2">
+                                {pfWithMaxWageConfig.pfBasisPayheads.map(
+                                  (payhead, index) => (
+                                    <Badge
+                                      key={index}
+                                      variant="secondary"
+                                      className="text-xs"
+                                    >
+                                      {payhead}
+                                      <button
+                                        type="button"
+                                        className="ml-1 text-xs hover:text-red-600"
+                                        onClick={() => {
+                                          setPfWithMaxWageConfig((prev) => ({
+                                            ...prev,
+                                            pfBasisPayheads:
+                                              prev.pfBasisPayheads.filter(
+                                                (p) => p !== payhead,
+                                              ),
+                                          }));
+                                        }}
+                                      >
+                                        ×
+                                      </button>
+                                    </Badge>
+                                  ),
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="withMaxWageEmployeeRate">
+                                Employee Contribution Rate (%) *
+                              </Label>
+                              <Input
+                                id="withMaxWageEmployeeRate"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                value={pfWithMaxWageConfig.employeeContribution}
+                                onChange={(e) =>
+                                  setPfWithMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    employeeContribution:
+                                      parseFloat(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label htmlFor="withMaxWageEmployerRate">
+                                Employer Contribution Rate (%) *
+                              </Label>
+                              <Input
+                                id="withMaxWageEmployerRate"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                value={pfWithMaxWageConfig.employerContribution}
+                                onChange={(e) =>
+                                  setPfWithMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    employerContribution:
+                                      parseFloat(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="withMaxWageEpsRate">
+                                EPS Contribution Rate (%) *
+                              </Label>
+                              <Input
+                                id="withMaxWageEpsRate"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                value={pfWithMaxWageConfig.epsContribution}
+                                onChange={(e) =>
+                                  setPfWithMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    epsContribution:
+                                      parseFloat(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label htmlFor="withMaxWageEpsCap">
+                                EPS Cap (₹) *
+                              </Label>
+                              <Input
+                                id="withMaxWageEpsCap"
+                                type="number"
+                                min="0"
+                                value={pfWithMaxWageConfig.epsCap}
+                                onChange={(e) =>
+                                  setPfWithMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    epsCap: parseInt(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+                          </div>
+
+                          <Alert className="border-green-200 bg-green-50">
+                            <Shield className="h-4 w-4 text-green-600" />
+                            <AlertDescription>
+                              <div className="text-green-700 text-sm">
+                                <strong>Note:</strong> The remaining employer
+                                contribution after EPS will be automatically
+                                adjusted towards EPF.
+                              </div>
+                            </AlertDescription>
+                          </Alert>
+                        </CardContent>
+                      )}
+                    </Card>
+
+                    {/* Without Maximum PF Wage Rule Section */}
+                    <Card className="border-blue-200 bg-blue-50/30">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-blue-100 rounded-lg">
+                              <Shield className="h-5 w-5 text-blue-600" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-blue-800">
+                                Without Maximum PF Wage Rule
+                              </CardTitle>
+                              <p className="text-sm text-blue-600 mt-1">
+                                PF contribution base uses actual wage
+                                calculation basis without any cap
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <Label
+                              htmlFor="withoutMaxWage"
+                              className="text-sm font-medium"
+                            >
+                              Enable Configuration
+                            </Label>
+                            <Checkbox
+                              id="withoutMaxWage"
+                              checked={pfWithoutMaxWageConfig.enabled}
+                              onCheckedChange={(checked) =>
+                                setPfWithoutMaxWageConfig((prev) => ({
+                                  ...prev,
+                                  enabled: !!checked,
+                                }))
+                              }
+                            />
+                          </div>
+                        </div>
+                      </CardHeader>
+                      {pfWithoutMaxWageConfig.enabled && (
+                        <CardContent className="space-y-4">
+                          <div className="space-y-2">
+                            <Label>PF Wage Calculation Basis *</Label>
+                            <Select
+                              value=""
+                              onValueChange={(value) => {
+                                if (
+                                  value &&
+                                  !pfWithoutMaxWageConfig.pfBasisPayheads.includes(
+                                    value,
+                                  )
+                                ) {
+                                  setPfWithoutMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    pfBasisPayheads: [
+                                      ...prev.pfBasisPayheads,
+                                      value,
+                                    ],
+                                  }));
+                                }
+                              }}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select payheads" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {mockPayheads
+                                  .filter(
+                                    (payhead) =>
+                                      !pfWithoutMaxWageConfig.pfBasisPayheads.includes(
+                                        payhead.name,
+                                      ),
+                                  )
+                                  .map((payhead) => (
+                                    <SelectItem
+                                      key={payhead.id}
+                                      value={payhead.name}
+                                    >
+                                      {payhead.name}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                              {pfWithoutMaxWageConfig.pfBasisPayheads.map(
+                                (payhead, index) => (
+                                  <Badge
+                                    key={index}
+                                    variant="secondary"
+                                    className="text-xs"
+                                  >
+                                    {payhead}
+                                    <button
+                                      type="button"
+                                      className="ml-1 text-xs hover:text-red-600"
+                                      onClick={() => {
+                                        setPfWithoutMaxWageConfig((prev) => ({
+                                          ...prev,
+                                          pfBasisPayheads:
+                                            prev.pfBasisPayheads.filter(
+                                              (p) => p !== payhead,
+                                            ),
+                                        }));
+                                      }}
+                                    >
+                                      ×
+                                    </button>
+                                  </Badge>
+                                ),
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="withoutMaxWageEmployeeRate">
+                                Employee Contribution Rate (%) *
+                              </Label>
+                              <Input
+                                id="withoutMaxWageEmployeeRate"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                value={
+                                  pfWithoutMaxWageConfig.employeeContribution
+                                }
+                                onChange={(e) =>
+                                  setPfWithoutMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    employeeContribution:
+                                      parseFloat(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label htmlFor="withoutMaxWageEmployerRate">
+                                Employer Contribution Rate (%) *
+                              </Label>
+                              <Input
+                                id="withoutMaxWageEmployerRate"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                value={
+                                  pfWithoutMaxWageConfig.employerContribution
+                                }
+                                onChange={(e) =>
+                                  setPfWithoutMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    employerContribution:
+                                      parseFloat(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="withoutMaxWageEpsRate">
+                                EPS Contribution Rate (%) *
+                              </Label>
+                              <Input
+                                id="withoutMaxWageEpsRate"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                value={pfWithoutMaxWageConfig.epsContribution}
+                                onChange={(e) =>
+                                  setPfWithoutMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    epsContribution:
+                                      parseFloat(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label htmlFor="withoutMaxWageEpsCap">
+                                EPS Cap (₹) *
+                              </Label>
+                              <Input
+                                id="withoutMaxWageEpsCap"
+                                type="number"
+                                min="0"
+                                value={pfWithoutMaxWageConfig.epsCap}
+                                onChange={(e) =>
+                                  setPfWithoutMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    epsCap: parseInt(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+                          </div>
+
+                          <Alert className="border-blue-200 bg-blue-50">
+                            <Shield className="h-4 w-4 text-blue-600" />
+                            <AlertDescription>
+                              <div className="text-blue-700 text-sm">
+                                <strong>Note:</strong> The remaining employer
+                                contribution after EPS will be automatically
+                                adjusted towards EPF.
+                              </div>
+                            </AlertDescription>
+                          </Alert>
+                        </CardContent>
+                      )}
+                    </Card>
                   </TabsContent>
 
                   <TabsContent value="pt-config" className="space-y-4">
