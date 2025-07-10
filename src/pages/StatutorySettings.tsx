@@ -430,7 +430,7 @@ export default function StatutorySettings() {
           open={!!selectedConfig}
           onOpenChange={() => setSelectedConfig(null)}
         >
-          <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-2xl lg:max-w-4xl">
             <DialogHeader>
               <DialogTitle>
                 {activeTab === "pf" && "EPF Configuration"}
