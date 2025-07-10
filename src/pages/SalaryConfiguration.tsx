@@ -1465,17 +1465,6 @@ export default function SalaryConfiguration() {
                       onEdit={handleEdit}
                       onDelete={handleDelete}
                       searchPlaceholder="Search ESIC configurations..."
-                      customToolbar={
-                        <div className="flex items-center gap-2">
-                          <Button
-                            onClick={handleAdd}
-                            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
-                          >
-                            <Plus className="h-4 w-4" />
-                            Add ESIC Config
-                          </Button>
-                        </div>
-                      }
                     />
                   </TabsContent>
                 </Tabs>
