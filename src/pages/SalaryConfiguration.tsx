@@ -1063,7 +1063,7 @@ export default function SalaryConfiguration() {
 
       {/* View Dialog */}
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-        <DialogContent className="w-auto max-w-xl h-auto max-h-[80vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-2xl lg:max-w-4xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Settings className="h-5 w-5 text-blue-600" />
@@ -1080,7 +1080,7 @@ export default function SalaryConfiguration() {
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="w-auto max-w-xl h-auto max-h-[80vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-2xl lg:max-w-3xl">
           <DialogHeader>
             <DialogTitle>Edit Configuration</DialogTitle>
           </DialogHeader>
@@ -1094,7 +1094,7 @@ export default function SalaryConfiguration() {
 
       {/* Add Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="w-auto max-w-4xl h-auto max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-3xl lg:max-w-5xl xl:max-w-6xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5 text-blue-600" />
