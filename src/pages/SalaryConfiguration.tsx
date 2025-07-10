@@ -679,10 +679,19 @@ export default function SalaryConfiguration() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
-  // PF Config Form State
-  const [pfFormData, setPfFormData] = useState({
-    ruleType: "",
+  // PF Config Form State for both rule types
+  const [pfWithMaxWageConfig, setPfWithMaxWageConfig] = useState({
+    enabled: false,
     pfWageLimit: 15000,
+    pfBasisPayheads: [] as string[],
+    employeeContribution: 12,
+    employerContribution: 12,
+    epsContribution: 8.33,
+    epsCap: 1250,
+  });
+
+  const [pfWithoutMaxWageConfig, setPfWithoutMaxWageConfig] = useState({
+    enabled: false,
     pfBasisPayheads: [] as string[],
     employeeContribution: 12,
     employerContribution: 12,
