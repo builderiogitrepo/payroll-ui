@@ -15,6 +15,15 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
   Settings,
   Plus,
   FileText,
@@ -288,19 +297,51 @@ const mockSalaryStructures = [
   },
 ];
 
+// Mock payhead data for multi-select
+const mockPayheads = [
+  { id: "PH001", name: "Basic Pay" },
+  { id: "PH002", name: "HRA" },
+  { id: "PH003", name: "Medical Allowance" },
+  { id: "PH004", name: "Conveyance" },
+  { id: "PH005", name: "Special Allowance" },
+  { id: "PH006", name: "Dearness Allowance" },
+];
+
 // Mock PF Configuration Data
 const mockPFConfig = [
   {
     id: "PF001",
     state: "All States",
+    ruleType: "With Minimum Wage Rule",
+    pfBasisPayheads: ["Basic Pay"],
     employeeContribution: 12,
     employerContribution: 12,
     salaryLimit: 15000,
     pensionLimit: 15000,
+    epsPercentage: 8.33,
+    epsCap: 1250,
     adminCharges: 0.5,
     edliCharges: 0.5,
+    autoAdjustEmployerShare: true,
     status: "Active",
     applicableEmployees: 85,
+  },
+  {
+    id: "PF002",
+    state: "Karnataka",
+    ruleType: "Without Minimum Wage Rule",
+    pfBasisPayheads: ["Basic Pay", "Dearness Allowance"],
+    employeeContribution: 12,
+    employerContribution: 12,
+    salaryLimit: 0, // No limit for actual basic
+    pensionLimit: 15000,
+    epsPercentage: 8.33,
+    epsCap: 1250,
+    adminCharges: 0.5,
+    edliCharges: 0.5,
+    autoAdjustEmployerShare: false,
+    status: "Active",
+    applicableEmployees: 42,
   },
 ];
 
@@ -453,20 +494,62 @@ const pfColumns: Column[] = [
     ),
   },
   {
+    key: "ruleType",
+    label: "Rule Type",
+    render: (value) => (
+      <Badge
+        variant="outline"
+        className={`text-xs ${
+          value === "With Minimum Wage Rule"
+            ? "border-green-200 text-green-700 bg-green-50"
+            : "border-blue-200 text-blue-700 bg-blue-50"
+        }`}
+      >
+        {value}
+      </Badge>
+    ),
+  },
+  {
+    key: "pfBasisPayheads",
+    label: "PF Basis Payheads",
+    render: (value) => (
+      <div className="flex flex-wrap gap-1 max-w-[150px]">
+        {value.map((payhead: string, index: number) => (
+          <Badge key={index} variant="secondary" className="text-xs">
+            {payhead}
+          </Badge>
+        ))}
+      </div>
+    ),
+  },
+  {
     key: "employeeContribution",
     label: "Employee %",
     render: (value) => <span className="font-medium">{value}%</span>,
   },
   {
-    key: "employerContribution",
-    label: "Employer %",
-    render: (value) => <span className="font-medium">{value}%</span>,
+    key: "epsPercentage",
+    label: "EPS %",
+    render: (value) => (
+      <span className="font-medium text-purple-600">{value}%</span>
+    ),
   },
   {
     key: "salaryLimit",
-    label: "Salary Limit",
+    label: "PF Base Limit",
     render: (value) => (
-      <span className="font-medium">₹{value.toLocaleString()}</span>
+      <span className="font-medium">
+        {value === 0 ? "No Limit" : `₹${value.toLocaleString()}`}
+      </span>
+    ),
+  },
+  {
+    key: "epsCap",
+    label: "EPS Cap",
+    render: (value) => (
+      <span className="font-medium text-purple-600">
+        ₹{value.toLocaleString()}
+      </span>
     ),
   },
   {
@@ -595,6 +678,18 @@ export default function SalaryConfiguration() {
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+
+  // PF Config Form State
+  const [pfFormData, setPfFormData] = useState({
+    state: "",
+    ruleType: "",
+    pfBasisPayheads: [] as string[],
+    employeeContribution: 12,
+    employerContribution: 12,
+    epsPercentage: 8.33,
+    epsCap: 1250,
+    autoAdjustEmployerShare: false,
+  });
 
   const handleView = (item: any) => {
     setSelectedStructure(item);
@@ -999,15 +1094,297 @@ export default function SalaryConfiguration() {
 
       {/* Add Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="w-auto max-w-xl h-auto max-h-[80vh] overflow-y-auto">
+        <DialogContent className="w-auto max-w-4xl h-auto max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Add New Configuration</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-blue-600" />
+              {selectedStatutoryTab === "pf-config"
+                ? "Add PF Configuration"
+                : "Add Configuration"}
+            </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <p className="text-gray-600">
-              Add functionality will be implemented here.
-            </p>
-          </div>
+
+          {selectedStatutoryTab === "pf-config" && (
+            <div className="space-y-6">
+              {/* Basic Configuration */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="state">State/Region *</Label>
+                  <Select
+                    value={pfFormData.state}
+                    onValueChange={(value) =>
+                      setPfFormData((prev) => ({ ...prev, state: value }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select state" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="All States">All States</SelectItem>
+                      <SelectItem value="Maharashtra">Maharashtra</SelectItem>
+                      <SelectItem value="Karnataka">Karnataka</SelectItem>
+                      <SelectItem value="Delhi">Delhi</SelectItem>
+                      <SelectItem value="Tamil Nadu">Tamil Nadu</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="ruleType">PF Rule Type *</Label>
+                  <Select
+                    value={pfFormData.ruleType}
+                    onValueChange={(value) =>
+                      setPfFormData((prev) => ({ ...prev, ruleType: value }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select rule type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="With Minimum Wage Rule">
+                        With Minimum Wage Rule
+                      </SelectItem>
+                      <SelectItem value="Without Minimum Wage Rule">
+                        Without Minimum Wage Rule
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* PF Basis Payheads */}
+              <div className="space-y-2">
+                <Label>PF Basis Payheads *</Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-3 border rounded-xl border-slate-200">
+                  {mockPayheads.map((payhead) => (
+                    <div
+                      key={payhead.id}
+                      className="flex items-center space-x-2"
+                    >
+                      <Checkbox
+                        id={payhead.id}
+                        checked={pfFormData.pfBasisPayheads.includes(
+                          payhead.name,
+                        )}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setPfFormData((prev) => ({
+                              ...prev,
+                              pfBasisPayheads: [
+                                ...prev.pfBasisPayheads,
+                                payhead.name,
+                              ],
+                            }));
+                          } else {
+                            setPfFormData((prev) => ({
+                              ...prev,
+                              pfBasisPayheads: prev.pfBasisPayheads.filter(
+                                (p) => p !== payhead.name,
+                              ),
+                            }));
+                          }
+                        }}
+                      />
+                      <Label
+                        htmlFor={payhead.id}
+                        className="text-sm font-normal"
+                      >
+                        {payhead.name}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Contribution Rates */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="employeeContribution">Employee PF % *</Label>
+                  <Input
+                    id="employeeContribution"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    max="100"
+                    value={pfFormData.employeeContribution}
+                    onChange={(e) =>
+                      setPfFormData((prev) => ({
+                        ...prev,
+                        employeeContribution: parseFloat(e.target.value) || 0,
+                      }))
+                    }
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="employerContribution">Employer PF % *</Label>
+                  <Input
+                    id="employerContribution"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    max="100"
+                    value={pfFormData.employerContribution}
+                    onChange={(e) =>
+                      setPfFormData((prev) => ({
+                        ...prev,
+                        employerContribution: parseFloat(e.target.value) || 0,
+                      }))
+                    }
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="epsPercentage">EPS % *</Label>
+                  <Input
+                    id="epsPercentage"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    max="100"
+                    value={pfFormData.epsPercentage}
+                    onChange={(e) =>
+                      setPfFormData((prev) => ({
+                        ...prev,
+                        epsPercentage: parseFloat(e.target.value) || 0,
+                      }))
+                    }
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="epsCap">EPS Cap (₹) *</Label>
+                  <Input
+                    id="epsCap"
+                    type="number"
+                    min="0"
+                    value={pfFormData.epsCap}
+                    onChange={(e) =>
+                      setPfFormData((prev) => ({
+                        ...prev,
+                        epsCap: parseInt(e.target.value) || 0,
+                      }))
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* Auto-adjust Option */}
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="autoAdjustEmployerShare"
+                  checked={pfFormData.autoAdjustEmployerShare}
+                  onCheckedChange={(checked) =>
+                    setPfFormData((prev) => ({
+                      ...prev,
+                      autoAdjustEmployerShare: !!checked,
+                    }))
+                  }
+                />
+                <Label htmlFor="autoAdjustEmployerShare" className="text-sm">
+                  Auto-adjust employer share when employee PF changes
+                </Label>
+              </div>
+
+              <Separator />
+
+              {/* Information Notes */}
+              <div className="space-y-4">
+                <h4 className="font-semibold text-slate-900">
+                  Rule Type Information
+                </h4>
+
+                <Alert className="border-green-200 bg-green-50">
+                  <Shield className="h-4 w-4 text-green-600" />
+                  <AlertDescription>
+                    <div className="font-medium text-green-800 mb-1">
+                      With Minimum Wage Rule
+                    </div>
+                    <div className="text-green-700 text-sm">
+                      • PF contribution base is capped at ₹15,000 regardless of
+                      actual basic salary
+                      <br />
+                      • EPS contribution is capped at ₹1,250 (8.33% of ₹15,000)
+                      <br />• Suitable for companies following statutory minimum
+                      wage guidelines
+                    </div>
+                  </AlertDescription>
+                </Alert>
+
+                <Alert className="border-blue-200 bg-blue-50">
+                  <Shield className="h-4 w-4 text-blue-600" />
+                  <AlertDescription>
+                    <div className="font-medium text-blue-800 mb-1">
+                      Without Minimum Wage Rule
+                    </div>
+                    <div className="text-blue-700 text-sm">
+                      • PF contribution base uses actual basic salary amount (no
+                      ₹15,000 cap)
+                      <br />
+                      • EPS contribution is still capped at ₹1,250 as per
+                      statutory requirements
+                      <br />• Allows higher PF contributions for employees with
+                      basic salary &gt; ₹15,000
+                    </div>
+                  </AlertDescription>
+                </Alert>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-end gap-3 pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setIsAddDialogOpen(false);
+                    setPfFormData({
+                      state: "",
+                      ruleType: "",
+                      pfBasisPayheads: [],
+                      employeeContribution: 12,
+                      employerContribution: 12,
+                      epsPercentage: 8.33,
+                      epsCap: 1250,
+                      autoAdjustEmployerShare: false,
+                    });
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="bg-blue-600 hover:bg-blue-700"
+                  onClick={() => {
+                    // Handle form submission
+                    console.log("PF Config Data:", pfFormData);
+                    setIsAddDialogOpen(false);
+                    setPfFormData({
+                      state: "",
+                      ruleType: "",
+                      pfBasisPayheads: [],
+                      employeeContribution: 12,
+                      employerContribution: 12,
+                      epsPercentage: 8.33,
+                      epsCap: 1250,
+                      autoAdjustEmployerShare: false,
+                    });
+                  }}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create PF Configuration
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {selectedStatutoryTab !== "pf-config" && (
+            <div className="space-y-4">
+              <p className="text-gray-600">
+                {selectedStatutoryTab === "pt-config"
+                  ? "Professional Tax"
+                  : "ESIC"}{" "}
+                configuration form will be implemented here.
+              </p>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>
