@@ -1479,15 +1479,290 @@ export default function SalaryConfiguration() {
                     />
                   </TabsContent>
 
-                  <TabsContent value="esic-config" className="space-y-4">
-                    <DataTable
-                      data={mockESICConfig}
-                      columns={esicColumns}
-                      onView={handleView}
-                      onEdit={handleEdit}
-                      onDelete={handleDelete}
-                      searchPlaceholder="Search ESIC configurations..."
-                    />
+                  <TabsContent value="esic-config" className="space-y-6">
+                    {/* ESIC Configuration Section */}
+                    <Card className="border-purple-200 bg-purple-50/30">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-purple-100 rounded-lg">
+                              <CreditCard className="h-5 w-5 text-purple-600" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-purple-800">
+                                ESIC Configuration
+                              </CardTitle>
+                              <p className="text-sm text-purple-600 mt-1">
+                                Configure Employee State Insurance Corporation
+                                settings
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <Label
+                              htmlFor="esicEnabled"
+                              className="text-sm font-medium"
+                            >
+                              Enable ESIC
+                            </Label>
+                            <Checkbox
+                              id="esicEnabled"
+                              checked={esicConfig.enabled}
+                              onCheckedChange={(checked) =>
+                                setEsicConfig((prev) => ({
+                                  ...prev,
+                                  enabled: !!checked,
+                                }))
+                              }
+                            />
+                          </div>
+                        </div>
+                      </CardHeader>
+                      {esicConfig.enabled && (
+                        <CardContent className="space-y-6">
+                          <TooltipProvider>
+                            {/* Employee Wage Ceiling */}
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <Label htmlFor="employeeWageCeiling">
+                                  Employee Wage Ceiling (₹) *
+                                </Label>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4 text-gray-500 cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>
+                                      Maximum salary to be eligible for ESIC
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <Input
+                                id="employeeWageCeiling"
+                                type="number"
+                                min="0"
+                                value={esicConfig.employeeWageCeiling}
+                                onChange={(e) =>
+                                  setEsicConfig((prev) => ({
+                                    ...prev,
+                                    employeeWageCeiling:
+                                      parseInt(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+
+                            {/* ESIC Calculation Basis */}
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <Label>ESIC Calculation Basis *</Label>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4 text-gray-500 cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>
+                                      Select the salary components used to
+                                      calculate ESI wages
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <Select
+                                value=""
+                                onValueChange={(value) => {
+                                  if (
+                                    value &&
+                                    !esicConfig.esicCalculationBasis.includes(
+                                      value,
+                                    )
+                                  ) {
+                                    setEsicConfig((prev) => ({
+                                      ...prev,
+                                      esicCalculationBasis: [
+                                        ...prev.esicCalculationBasis,
+                                        value,
+                                      ],
+                                    }));
+                                  }
+                                }}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select salary components" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {["Basic", "HRA", "DA", "Special Pay"]
+                                    .filter(
+                                      (component) =>
+                                        !esicConfig.esicCalculationBasis.includes(
+                                          component,
+                                        ),
+                                    )
+                                    .map((component) => (
+                                      <SelectItem
+                                        key={component}
+                                        value={component}
+                                      >
+                                        {component}
+                                      </SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
+                              <div className="flex flex-wrap gap-2 mt-2">
+                                {esicConfig.esicCalculationBasis.map(
+                                  (component, index) => (
+                                    <Badge
+                                      key={index}
+                                      variant="secondary"
+                                      className="text-xs"
+                                    >
+                                      {component}
+                                      <button
+                                        type="button"
+                                        className="ml-1 text-xs hover:text-red-600"
+                                        onClick={() => {
+                                          setEsicConfig((prev) => ({
+                                            ...prev,
+                                            esicCalculationBasis:
+                                              prev.esicCalculationBasis.filter(
+                                                (c) => c !== component,
+                                              ),
+                                          }));
+                                        }}
+                                      >
+                                        ×
+                                      </button>
+                                    </Badge>
+                                  ),
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Contribution Rates */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <Label htmlFor="employeeESICContribution">
+                                    Employee Contribution (%) *
+                                  </Label>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Info className="h-4 w-4 text-gray-500 cursor-help" />
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Employee's share of ESI deduction</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </div>
+                                <Input
+                                  id="employeeESICContribution"
+                                  type="number"
+                                  step="0.01"
+                                  min="0"
+                                  max="100"
+                                  value={esicConfig.employeeContribution}
+                                  onChange={(e) =>
+                                    setEsicConfig((prev) => ({
+                                      ...prev,
+                                      employeeContribution:
+                                        parseFloat(e.target.value) || 0,
+                                    }))
+                                  }
+                                />
+                              </div>
+
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <Label htmlFor="employerESICContribution">
+                                    Employer (Company) Contribution (%) *
+                                  </Label>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Info className="h-4 w-4 text-gray-500 cursor-help" />
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Company's share of ESI contribution</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </div>
+                                <Input
+                                  id="employerESICContribution"
+                                  type="number"
+                                  step="0.01"
+                                  min="0"
+                                  max="100"
+                                  value={esicConfig.employerContribution}
+                                  onChange={(e) =>
+                                    setEsicConfig((prev) => ({
+                                      ...prev,
+                                      employerContribution:
+                                        parseFloat(e.target.value) || 0,
+                                    }))
+                                  }
+                                />
+                              </div>
+                            </div>
+
+                            {/* Notes Section */}
+                            <div className="space-y-4">
+                              <h4 className="font-semibold text-purple-900">
+                                Important Notes
+                              </h4>
+                              <Alert className="border-purple-200 bg-purple-50">
+                                <Info className="h-4 w-4 text-purple-600" />
+                                <AlertDescription>
+                                  <div className="text-purple-700 text-sm space-y-1">
+                                    <div>
+                                      • ESI is applicable only if monthly gross
+                                      salary is ≤ ₹21,000.
+                                    </div>
+                                    <div>
+                                      • If salary increases above ₹21,000
+                                      mid-period, ESI continues until the end of
+                                      that 6-month contribution cycle.
+                                    </div>
+                                    <div>
+                                      • ESI contribution periods are:
+                                      April–September and October–March.
+                                    </div>
+                                  </div>
+                                </AlertDescription>
+                              </Alert>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex justify-end gap-3 pt-4 border-t">
+                              <Button
+                                variant="outline"
+                                onClick={() => {
+                                  setEsicConfig({
+                                    enabled: false,
+                                    employeeWageCeiling: 21000,
+                                    esicCalculationBasis: [],
+                                    employeeContribution: 0.75,
+                                    employerContribution: 3.25,
+                                  });
+                                }}
+                              >
+                                Cancel
+                              </Button>
+                              <Button
+                                className="bg-purple-600 hover:bg-purple-700"
+                                onClick={() => {
+                                  // Handle form submission
+                                  console.log("ESIC Config Data:", esicConfig);
+                                  // Here you would typically save to backend
+                                }}
+                              >
+                                <Save className="h-4 w-4 mr-2" />
+                                Save Settings
+                              </Button>
+                            </div>
+                          </TooltipProvider>
+                        </CardContent>
+                      )}
+                    </Card>
                   </TabsContent>
                 </Tabs>
               </div>
