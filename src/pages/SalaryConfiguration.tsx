@@ -698,6 +698,15 @@ export default function SalaryConfiguration() {
     epsCap: 1250,
   });
 
+  // ESIC Configuration State
+  const [esicConfig, setEsicConfig] = useState({
+    enabled: false,
+    employeeWageCeiling: 21000,
+    esicCalculationBasis: [] as string[],
+    employeeContribution: 0.75,
+    employerContribution: 3.25,
+  });
+
   const handleView = (item: any) => {
     setSelectedStructure(item);
     setIsViewDialogOpen(true);
