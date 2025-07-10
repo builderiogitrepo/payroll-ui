@@ -677,7 +677,6 @@ export default function SalaryConfiguration() {
   const [selectedConfig, setSelectedConfig] = useState<any>(null);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   // PF Config Form State for both rule types
   const [pfWithMaxWageConfig, setPfWithMaxWageConfig] = useState({
