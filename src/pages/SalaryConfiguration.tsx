@@ -713,6 +713,12 @@ export default function SalaryConfiguration() {
     console.log("Delete:", item);
   };
 
+  const handleAdd = () => {
+    // This function is still needed for PT Config and ESIC Config sections
+    // For now, we'll just log the action since those sections aren't fully implemented
+    console.log("Add functionality for", selectedStatutoryTab);
+  };
+
   const renderSalaryStructureView = () => {
     if (!selectedStructure) return null;
 
