@@ -249,172 +249,325 @@ export default function PaySchedule() {
                 </CardContent>
               </Card>
 
-              {/* Section 2: Work Week and Salary Settings */}
+              {/* Section 2: Work Week Configuration */}
               <Card className="shadow-sm border-slate-200">
-                <CardHeader>
-                  <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-purple-600" />
-                    Work Week and Salary Settings
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Work Week Start Day */}
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor="workWeekStart"
-                        className="text-sm font-medium text-slate-700"
-                      >
-                        Work Week Start Day
-                      </Label>
-                      <Select
-                        value={currentSettings.workWeekStartDay}
-                        onValueChange={(value) =>
-                          updateSetting("workWeekStartDay", value)
-                        }
-                      >
-                        <SelectTrigger id="workWeekStart">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {days.map((day) => (
-                            <SelectItem key={day} value={day}>
-                              {day}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                <CardContent className="pt-6 space-y-6">
+                  {/* Select your work week */}
+                  <div className="space-y-3">
+                    <div>
+                      <h3 className="text-sm font-medium text-slate-900">
+                        Select your work week
+                        <span className="text-red-500">*</span>
+                      </h3>
+                      <p className="text-sm text-slate-600 mt-1">
+                        The days worked in a calendar week
+                      </p>
                     </div>
 
-                    {/* Work Week End Day (Auto-calculated) */}
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-slate-700">
-                        Work Week End Day
-                      </Label>
-                      <div className="h-10 px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 flex items-center text-sm text-slate-600">
-                        {currentSettings.workWeekEndDay} (Auto-calculated)
+                    <div className="grid grid-cols-7 gap-2">
+                      {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map(
+                        (day, index) => {
+                          const isSelected =
+                            currentSettings.workWeekStartDay === day ||
+                            (currentSettings.workWeekStartDay === "Monday" &&
+                              (selectedBusinessUnit === "IT Business Unit"
+                                ? ["MON", "TUE", "WED", "THU", "FRI"].includes(
+                                    day,
+                                  )
+                                : [
+                                    "MON",
+                                    "TUE",
+                                    "WED",
+                                    "THU",
+                                    "FRI",
+                                    "SAT",
+                                  ].includes(day)));
+
+                          return (
+                            <button
+                              key={day}
+                              type="button"
+                              className={cn(
+                                "px-3 py-2 text-sm font-medium rounded-lg border transition-colors",
+                                isSelected
+                                  ? "bg-blue-100 border-blue-300 text-blue-700"
+                                  : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100",
+                              )}
+                              onClick={() =>
+                                updateSetting("workWeekStartDay", day)
+                              }
+                            >
+                              {day}
+                            </button>
+                          );
+                        },
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Calculate monthly salary based on */}
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-sm font-medium text-slate-900">
+                        Calculate monthly salary based on
+                        <span className="text-red-500">*</span>
+                      </h3>
+                      <AlertCircle className="h-4 w-4 text-blue-500" />
+                    </div>
+
+                    <div className="space-y-3">
+                      <label className="flex items-center gap-3 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="salaryCalculation"
+                          value="actual"
+                          checked={
+                            currentSettings.salaryCalculationType ===
+                            "Actual days in a month"
+                          }
+                          onChange={() =>
+                            updateSetting(
+                              "salaryCalculationType",
+                              "Actual days in a month",
+                            )
+                          }
+                          className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                        />
+                        <span className="text-sm text-slate-900">
+                          Actual days in a month
+                        </span>
+                      </label>
+
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="radio"
+                          name="salaryCalculation"
+                          value="organisation"
+                          checked={
+                            currentSettings.salaryCalculationType ===
+                            "Organisation working days"
+                          }
+                          onChange={() =>
+                            updateSetting(
+                              "salaryCalculationType",
+                              "Organisation working days",
+                            )
+                          }
+                          className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                        />
+                        <span className="text-sm text-slate-900">
+                          Organisation working days -
+                        </span>
+                        <Select
+                          value={currentSettings.payFrequency}
+                          onValueChange={(value) =>
+                            updateSetting("payFrequency", value)
+                          }
+                        >
+                          <SelectTrigger className="w-24 h-8">
+                            <SelectValue placeholder="Select" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="22">22</SelectItem>
+                            <SelectItem value="24">24</SelectItem>
+                            <SelectItem value="26">26</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <span className="text-sm text-slate-900">
+                          days per month
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Pay on */}
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-medium text-slate-900">
+                      Pay on
+                      <span className="text-red-500">*</span>
+                    </h3>
+
+                    <div className="space-y-3">
+                      <label className="flex items-center gap-3 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="payOn"
+                          value="lastWorkingDay"
+                          checked={
+                            currentSettings.payDay ===
+                            "the last working day of every month"
+                          }
+                          onChange={() =>
+                            updateSetting(
+                              "payDay",
+                              "the last working day of every month",
+                            )
+                          }
+                          className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                        />
+                        <span className="text-sm text-slate-900">
+                          the last working day of every month
+                        </span>
+                      </label>
+
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="radio"
+                          name="payOn"
+                          value="specificDay"
+                          checked={
+                            currentSettings.payDay !==
+                            "the last working day of every month"
+                          }
+                          onChange={() =>
+                            updateSetting("payDay", "1 of every month")
+                          }
+                          className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                        />
+                        <span className="text-sm text-slate-900">day</span>
+                        <Input
+                          type="number"
+                          min="1"
+                          max="31"
+                          defaultValue="1"
+                          className="w-16 h-8 text-center"
+                          onChange={(e) =>
+                            updateSetting(
+                              "payDay",
+                              `${e.target.value} of every month`,
+                            )
+                          }
+                        />
+                        <span className="text-sm text-slate-900">
+                          of every month
+                        </span>
                       </div>
                     </div>
 
-                    {/* Salary Calculation Type */}
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor="salaryType"
-                        className="text-sm font-medium text-slate-700"
-                      >
-                        Salary Calculation Type
-                      </Label>
-                      <Select
-                        value={currentSettings.salaryCalculationType}
-                        onValueChange={(value) =>
-                          updateSetting("salaryCalculationType", value)
-                        }
-                      >
-                        <SelectTrigger id="salaryType">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {salaryTypes.map((type) => (
-                            <SelectItem key={type} value={type}>
-                              <div className="flex items-center gap-2">
-                                <Calculator className="h-4 w-4" />
-                                {type}
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                    <p className="text-xs text-slate-600 bg-slate-50 p-3 rounded-lg">
+                      <strong>Note:</strong> When payday falls on a non-working
+                      day or a holiday, employees will get paid on the previous
+                      working day.
+                    </p>
+                  </div>
+
+                  {/* Start your first payroll from */}
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-medium text-slate-900">
+                      Start your first payroll from
+                      <span className="text-red-500">*</span>
+                    </h3>
+
+                    <Select
+                      value={currentSettings.timeZone}
+                      onValueChange={(value) =>
+                        updateSetting("timeZone", value)
+                      }
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="April-2025" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="April-2025">April-2025</SelectItem>
+                        <SelectItem value="May-2025">May-2025</SelectItem>
+                        <SelectItem value="June-2025">June-2025</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Select a pay date for your first payroll */}
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-medium text-slate-900">
+                      Select a pay date for your first payroll
+                      <span className="text-red-500">*</span>
+                    </h3>
+                    <p className="text-sm text-slate-600">
+                      Pay Period: April-2025
+                    </p>
+
+                    <div className="border border-slate-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="font-medium text-slate-900">
+                          April 2025
+                        </h4>
+                      </div>
+
+                      <div className="grid grid-cols-7 gap-1 text-center text-xs">
+                        <div className="font-medium text-slate-600 py-2">
+                          SUN
+                        </div>
+                        <div className="font-medium text-slate-600 py-2">
+                          MON
+                        </div>
+                        <div className="font-medium text-slate-600 py-2">
+                          TUE
+                        </div>
+                        <div className="font-medium text-slate-600 py-2">
+                          WED
+                        </div>
+                        <div className="font-medium text-slate-600 py-2">
+                          THU
+                        </div>
+                        <div className="font-medium text-slate-600 py-2">
+                          FRI
+                        </div>
+                        <div className="font-medium text-slate-600 py-2">
+                          SAT
+                        </div>
+
+                        {/* Calendar days */}
+                        <div className="py-2 text-slate-400">30</div>
+                        <div className="py-2 text-slate-400">31</div>
+                        <div className="py-2 text-slate-900">1</div>
+                        <div className="py-2 text-slate-900">2</div>
+                        <div className="py-2 text-slate-900">3</div>
+                        <div className="py-2 text-slate-900">4</div>
+                        <div className="py-2 text-slate-900">5</div>
+
+                        <div className="py-2 text-slate-900">6</div>
+                        <div className="py-2 text-slate-900">7</div>
+                        <div className="py-2 text-slate-900">8</div>
+                        <div className="py-2 text-slate-900">9</div>
+                        <div className="py-2 text-slate-900">10</div>
+                        <div className="py-2 text-slate-900">11</div>
+                        <div className="py-2 text-slate-900">12</div>
+
+                        <div className="py-2 text-slate-900">13</div>
+                        <div className="py-2 text-slate-900">14</div>
+                        <div className="py-2 text-slate-900">15</div>
+                        <div className="py-2 text-slate-900">16</div>
+                        <div className="py-2 text-slate-900">17</div>
+                        <div className="py-2 text-slate-900">18</div>
+                        <div className="py-2 text-slate-900">19</div>
+
+                        <div className="py-2 text-slate-900">20</div>
+                        <div className="py-2 text-slate-900">21</div>
+                        <div className="py-2 text-slate-900">22</div>
+                        <div className="py-2 text-slate-900">23</div>
+                        <div className="py-2 text-slate-900">24</div>
+                        <div className="py-2 text-slate-900">25</div>
+                        <div className="py-2 text-slate-900">26</div>
+
+                        <div className="py-2 text-slate-900">27</div>
+                        <div className="py-2 text-slate-900">28</div>
+                        <div className="py-2 text-slate-900">29</div>
+                        <div className="py-2 bg-green-500 text-white rounded">
+                          30
+                        </div>
+                        <div className="py-2 text-slate-900">1</div>
+                        <div className="py-2 text-slate-900">2</div>
+                        <div className="py-2 text-slate-900">3</div>
+                      </div>
                     </div>
 
-                    {/* Pay Frequency */}
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor="payFreq"
-                        className="text-sm font-medium text-slate-700"
-                      >
-                        Pay Frequency
-                      </Label>
-                      <Select
-                        value={currentSettings.payFrequency}
-                        onValueChange={(value) =>
-                          updateSetting("payFrequency", value)
-                        }
-                      >
-                        <SelectTrigger id="payFreq">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {payFrequencies.map((freq) => (
-                            <SelectItem key={freq} value={freq}>
-                              <div className="flex items-center gap-2">
-                                <CalendarDays className="h-4 w-4" />
-                                {freq}
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {/* Pay Day */}
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor="payDay"
-                        className="text-sm font-medium text-slate-700"
-                      >
-                        Pay Day
-                      </Label>
-                      <Select
-                        value={currentSettings.payDay}
-                        onValueChange={(value) =>
-                          updateSetting("payDay", value)
-                        }
-                      >
-                        <SelectTrigger id="payDay">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {days.map((day) => (
-                            <SelectItem key={day} value={day}>
-                              <div className="flex items-center gap-2">
-                                <DollarSign className="h-4 w-4" />
-                                {day}
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {/* Time Zone */}
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor="timeZone"
-                        className="text-sm font-medium text-slate-700"
-                      >
-                        Time Zone
-                      </Label>
-                      <Select
-                        value={currentSettings.timeZone}
-                        onValueChange={(value) =>
-                          updateSetting("timeZone", value)
-                        }
-                      >
-                        <SelectTrigger id="timeZone">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {timeZones.map((zone) => (
-                            <SelectItem key={zone} value={zone}>
-                              <div className="flex items-center gap-2">
-                                <Globe className="h-4 w-4" />
-                                {zone}
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    <Select value="30/04/2025" onValueChange={() => {}}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="30/04/2025" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="30/04/2025">30/04/2025</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   {/* Save Button */}
