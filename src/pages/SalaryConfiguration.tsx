@@ -713,10 +713,6 @@ export default function SalaryConfiguration() {
     console.log("Delete:", item);
   };
 
-  const handleAdd = () => {
-    setIsAddDialogOpen(true);
-  };
-
   const renderSalaryStructureView = () => {
     if (!selectedStructure) return null;
 
