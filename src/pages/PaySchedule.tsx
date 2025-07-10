@@ -264,36 +264,21 @@ export default function PaySchedule() {
 
                     <div className="grid grid-cols-7 gap-2">
                       {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map(
-                        (day, index) => {
+                        (day) => {
                           const isSelected =
-                            currentSettings.workWeekStartDay === day ||
-                            (currentSettings.workWeekStartDay === "Monday" &&
-                              (selectedBusinessUnit === "IT Business Unit"
-                                ? ["MON", "TUE", "WED", "THU", "FRI"].includes(
-                                    day,
-                                  )
-                                : [
-                                    "MON",
-                                    "TUE",
-                                    "WED",
-                                    "THU",
-                                    "FRI",
-                                    "SAT",
-                                  ].includes(day)));
+                            currentSettings.workWeekDays.includes(day);
 
                           return (
                             <button
                               key={day}
                               type="button"
                               className={cn(
-                                "px-3 py-2 text-sm font-medium rounded-lg border transition-colors",
+                                "px-3 py-2 text-sm font-medium rounded border transition-colors",
                                 isSelected
                                   ? "bg-blue-100 border-blue-300 text-blue-700"
                                   : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100",
                               )}
-                              onClick={() =>
-                                updateSetting("workWeekStartDay", day)
-                              }
+                              onClick={() => toggleWorkWeekDay(day)}
                             >
                               {day}
                             </button>
