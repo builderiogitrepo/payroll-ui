@@ -47,6 +47,8 @@ import {
   BarChart3,
   Layers,
   Zap,
+  Info,
+  Save,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
