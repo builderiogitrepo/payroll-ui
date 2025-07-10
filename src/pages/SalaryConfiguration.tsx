@@ -1314,15 +1314,13 @@ export default function SalaryConfiguration() {
                   <Shield className="h-4 w-4 text-green-600" />
                   <AlertDescription>
                     <div className="font-medium text-green-800 mb-1">
-                      With Minimum Wage Rule
+                      With Maximum Wage rule
                     </div>
                     <div className="text-green-700 text-sm">
-                      • PF contribution base is capped at ₹15,000 regardless of
-                      actual basic salary
-                      <br />
-                      • EPS contribution is capped at ₹1,250 (8.33% of ₹15,000)
-                      <br />• Suitable for companies following statutory minimum
-                      wage guidelines
+                      • PF contribution base is capped at the specified wage
+                      limit
+                      <br />• EPS contribution is calculated based on the
+                      configured rate and cap
                     </div>
                   </AlertDescription>
                 </Alert>
@@ -1331,16 +1329,13 @@ export default function SalaryConfiguration() {
                   <Shield className="h-4 w-4 text-blue-600" />
                   <AlertDescription>
                     <div className="font-medium text-blue-800 mb-1">
-                      Without Minimum Wage Rule
+                      Without Maximum PF Wage rule
                     </div>
                     <div className="text-blue-700 text-sm">
-                      • PF contribution base uses actual basic salary amount (no
-                      ₹15,000 cap)
-                      <br />
-                      • EPS contribution is still capped at ₹1,250 as per
-                      statutory requirements
-                      <br />• Allows higher PF contributions for employees with
-                      basic salary &gt; ₹15,000
+                      • PF contribution base uses actual wage calculation basis
+                      without any cap
+                      <br />• EPS contribution is still subject to the
+                      configured cap as per requirements
                     </div>
                   </AlertDescription>
                 </Alert>
