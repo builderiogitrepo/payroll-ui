@@ -551,7 +551,7 @@ export default function PayheadMaster() {
 
       {/* Add Payhead Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-2xl lg:max-w-3xl">
           <DialogHeader>
             <DialogTitle>
               Add New {activeTab === "regular" ? "Regular" : "Additional"}{" "}
