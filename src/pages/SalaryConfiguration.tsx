@@ -1140,11 +1140,11 @@ export default function SalaryConfiguration() {
                       <SelectValue placeholder="Select rule type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="With Minimum Wage Rule">
-                        With Minimum Wage Rule
+                      <SelectItem value="With Maximum Wage rule">
+                        With Maximum Wage rule
                       </SelectItem>
-                      <SelectItem value="Without Minimum Wage Rule">
-                        Without Minimum Wage Rule
+                      <SelectItem value="Without Maximum PF Wage rule">
+                        Without Maximum PF Wage rule
                       </SelectItem>
                     </SelectContent>
                   </Select>
