@@ -500,7 +500,7 @@ export default function StatutorySettings() {
                       Salary Range
                     </Label>
                     <p className="text-lg font-semibold">
-                      ₹{selectedConfig.slabFrom?.toLocaleString()} -
+                      ���{selectedConfig.slabFrom?.toLocaleString()} -
                       {selectedConfig.slabTo
                         ? ` ₹${selectedConfig.slabTo.toLocaleString()}`
                         : " No Limit"}
@@ -564,7 +564,7 @@ export default function StatutorySettings() {
 
       {/* Add Configuration Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="w-full max-w-md h-auto max-h-[80vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-xl lg:max-w-2xl">
           <DialogHeader>
             <DialogTitle>
               Add New{" "}
