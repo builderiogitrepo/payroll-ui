@@ -1302,23 +1302,6 @@ export default function SalaryConfiguration() {
                 </Alert>
               </div>
 
-              {/* Auto-adjust Option */}
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="autoAdjustEmployerShare"
-                  checked={pfFormData.autoAdjustEmployerShare}
-                  onCheckedChange={(checked) =>
-                    setPfFormData((prev) => ({
-                      ...prev,
-                      autoAdjustEmployerShare: !!checked,
-                    }))
-                  }
-                />
-                <Label htmlFor="autoAdjustEmployerShare" className="text-sm">
-                  Auto-adjust employer share when employee PF changes
-                </Label>
-              </div>
-
               <Separator />
 
               {/* Information Notes */}
