@@ -681,14 +681,13 @@ export default function SalaryConfiguration() {
 
   // PF Config Form State
   const [pfFormData, setPfFormData] = useState({
-    state: "",
     ruleType: "",
+    pfWageLimit: 15000,
     pfBasisPayheads: [] as string[],
     employeeContribution: 12,
     employerContribution: 12,
-    epsPercentage: 8.33,
+    epsContribution: 8.33,
     epsCap: 1250,
-    autoAdjustEmployerShare: false,
   });
 
   const handleView = (item: any) => {
