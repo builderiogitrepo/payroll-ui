@@ -33,8 +33,7 @@ import { cn } from "@/lib/utils";
 
 // Types for pay schedule settings
 interface PayScheduleSettings {
-  workWeekStartDay: string;
-  workWeekEndDay: string;
+  workWeekDays: string[];
   salaryCalculationType: string;
   payFrequency: string;
   payDay: string;
@@ -45,21 +44,19 @@ interface PayScheduleSettings {
 // Default settings for each business unit
 const defaultSettings: Record<string, PayScheduleSettings> = {
   "IT Business Unit": {
-    workWeekStartDay: "Monday",
-    workWeekEndDay: "Friday",
-    salaryCalculationType: "Fixed",
-    payFrequency: "Monthly",
-    payDay: "Friday",
-    timeZone: "America/New_York",
+    workWeekDays: ["MON", "TUE", "WED", "THU", "FRI"],
+    salaryCalculationType: "Actual days in a month",
+    payFrequency: "22",
+    payDay: "the last working day of every month",
+    timeZone: "April-2025",
     lastUpdated: new Date().toLocaleString(),
   },
   "Telecom Business Unit": {
-    workWeekStartDay: "Monday",
-    workWeekEndDay: "Saturday",
-    salaryCalculationType: "Hourly",
-    payFrequency: "Bi-weekly",
-    payDay: "Friday",
-    timeZone: "America/New_York",
+    workWeekDays: ["MON", "TUE", "WED", "THU", "FRI", "SAT"],
+    salaryCalculationType: "Actual days in a month",
+    payFrequency: "26",
+    payDay: "the last working day of every month",
+    timeZone: "April-2025",
     lastUpdated: new Date().toLocaleString(),
   },
 };
