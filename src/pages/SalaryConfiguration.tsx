@@ -1348,14 +1348,13 @@ export default function SalaryConfiguration() {
                   onClick={() => {
                     setIsAddDialogOpen(false);
                     setPfFormData({
-                      state: "",
                       ruleType: "",
+                      pfWageLimit: 15000,
                       pfBasisPayheads: [],
                       employeeContribution: 12,
                       employerContribution: 12,
-                      epsPercentage: 8.33,
+                      epsContribution: 8.33,
                       epsCap: 1250,
-                      autoAdjustEmployerShare: false,
                     });
                   }}
                 >
