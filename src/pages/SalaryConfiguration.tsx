@@ -1153,46 +1153,55 @@ export default function SalaryConfiguration() {
                 )}
               </div>
 
-              {/* PF Basis Payheads */}
+              {/* PF Wage Calculation Basis */}
               <div className="space-y-2">
-                <Label>PF Basis Payheads *</Label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-3 border rounded-xl border-slate-200">
-                  {mockPayheads.map((payhead) => (
-                    <div
-                      key={payhead.id}
-                      className="flex items-center space-x-2"
-                    >
-                      <Checkbox
-                        id={payhead.id}
-                        checked={pfFormData.pfBasisPayheads.includes(
-                          payhead.name,
-                        )}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            setPfFormData((prev) => ({
-                              ...prev,
-                              pfBasisPayheads: [
-                                ...prev.pfBasisPayheads,
-                                payhead.name,
-                              ],
-                            }));
-                          } else {
-                            setPfFormData((prev) => ({
-                              ...prev,
-                              pfBasisPayheads: prev.pfBasisPayheads.filter(
-                                (p) => p !== payhead.name,
-                              ),
-                            }));
-                          }
+                <Label>PF Wage Calculation Basis *</Label>
+                <Select
+                  value=""
+                  onValueChange={(value) => {
+                    if (value && !pfFormData.pfBasisPayheads.includes(value)) {
+                      setPfFormData((prev) => ({
+                        ...prev,
+                        pfBasisPayheads: [...prev.pfBasisPayheads, value],
+                      }));
+                    }
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select payheads for PF calculation" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {mockPayheads
+                      .filter(
+                        (payhead) =>
+                          !pfFormData.pfBasisPayheads.includes(payhead.name),
+                      )
+                      .map((payhead) => (
+                        <SelectItem key={payhead.id} value={payhead.name}>
+                          {payhead.name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {pfFormData.pfBasisPayheads.map((payhead, index) => (
+                    <Badge key={index} variant="secondary" className="text-xs">
+                      {payhead}
+                      <button
+                        type="button"
+                        className="ml-1 text-xs hover:text-red-600"
+                        onClick={() => {
+                          setPfFormData((prev) => ({
+                            ...prev,
+                            pfBasisPayheads: prev.pfBasisPayheads.filter(
+                              (p) => p !== payhead,
+                            ),
+                          }));
                         }}
-                      />
-                      <Label
-                        htmlFor={payhead.id}
-                        className="text-sm font-normal"
                       >
-                        {payhead.name}
-                      </Label>
-                    </div>
+                        ×
+                      </button>
+                    </Badge>
                   ))}
                 </div>
               </div>
