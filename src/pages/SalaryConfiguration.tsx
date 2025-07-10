@@ -1108,32 +1108,16 @@ export default function SalaryConfiguration() {
               {/* Basic Configuration */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="state">State/Region *</Label>
-                  <Select
-                    value={pfFormData.state}
-                    onValueChange={(value) =>
-                      setPfFormData((prev) => ({ ...prev, state: value }))
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select state" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="All States">All States</SelectItem>
-                      <SelectItem value="Maharashtra">Maharashtra</SelectItem>
-                      <SelectItem value="Karnataka">Karnataka</SelectItem>
-                      <SelectItem value="Delhi">Delhi</SelectItem>
-                      <SelectItem value="Tamil Nadu">Tamil Nadu</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
                   <Label htmlFor="ruleType">PF Rule Type *</Label>
                   <Select
                     value={pfFormData.ruleType}
                     onValueChange={(value) =>
-                      setPfFormData((prev) => ({ ...prev, ruleType: value }))
+                      setPfFormData((prev) => ({
+                        ...prev,
+                        ruleType: value,
+                        pfWageLimit:
+                          value === "With Maximum Wage rule" ? 15000 : 0,
+                      }))
                     }
                   >
                     <SelectTrigger>
@@ -1149,6 +1133,24 @@ export default function SalaryConfiguration() {
                     </SelectContent>
                   </Select>
                 </div>
+
+                {pfFormData.ruleType === "With Maximum Wage rule" && (
+                  <div className="space-y-2">
+                    <Label htmlFor="pfWageLimit">PF Wage Limit (₹) *</Label>
+                    <Input
+                      id="pfWageLimit"
+                      type="number"
+                      min="0"
+                      value={pfFormData.pfWageLimit}
+                      onChange={(e) =>
+                        setPfFormData((prev) => ({
+                          ...prev,
+                          pfWageLimit: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                    />
+                  </div>
+                )}
               </div>
 
               {/* PF Basis Payheads */}
