@@ -73,29 +73,38 @@ export default function PaySchedule() {
   const [activeTab, setActiveTab] = useState("configuration");
   const [isEditing, setIsEditing] = useState(false);
 
-  // Auto-calculate work week end day based on start day
-  const calculateEndDay = (startDay: string, unit: string) => {
-    const days = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-    const startIndex = days.indexOf(startDay);
-    if (unit === "IT Business Unit") {
-      // 5-day work week (Monday-Friday typically)
-      return days[(startIndex + 4) % 7];
-    } else {
-      // 6-day work week (Monday-Saturday typically)
-      return days[(startIndex + 5) % 7];
-    }
+  // Toggle work week day
+  const toggleWorkWeekDay = (day: string) => {
+    setSettings((prev) => {
+      const currentSettings =
+        prev[selectedBusinessUnit] || defaultSettings[selectedBusinessUnit];
+      const workWeekDays = [...currentSettings.workWeekDays];
+
+      if (workWeekDays.includes(day)) {
+        // Remove day
+        const index = workWeekDays.indexOf(day);
+        workWeekDays.splice(index, 1);
+      } else {
+        // Add day
+        workWeekDays.push(day);
+      }
+
+      return {
+        ...prev,
+        [selectedBusinessUnit]: {
+          ...currentSettings,
+          workWeekDays,
+          lastUpdated: new Date().toLocaleString(),
+        },
+      };
+    });
   };
 
   // Update settings for current business unit
-  const updateSetting = (key: keyof PayScheduleSettings, value: string) => {
+  const updateSetting = (
+    key: keyof PayScheduleSettings,
+    value: string | string[],
+  ) => {
     setSettings((prev) => {
       const newSettings = {
         ...prev,
@@ -105,14 +114,6 @@ export default function PaySchedule() {
           lastUpdated: new Date().toLocaleString(),
         },
       };
-
-      // Auto-calculate end day when start day changes
-      if (key === "workWeekStartDay") {
-        newSettings[selectedBusinessUnit].workWeekEndDay = calculateEndDay(
-          value,
-          selectedBusinessUnit,
-        );
-      }
 
       return newSettings;
     });
