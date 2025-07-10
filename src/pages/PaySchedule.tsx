@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,15 +6,17 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import {
-  Calendar,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Building,
   Settings,
   Save,
-  Info,
-  ChevronLeft,
-  ChevronRight,
   Monitor,
   Phone,
   Clock,
@@ -22,437 +24,541 @@ import {
   DollarSign,
   CalendarDays,
   Users,
-  Briefcase,
+  Edit3,
   CheckCircle,
   AlertCircle,
+  Globe,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-// Calendar helper functions
-const getMonthName = (monthIndex: number) => {
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  return months[monthIndex];
-};
+// Types for pay schedule settings
+interface PayScheduleSettings {
+  workWeekStartDay: string;
+  workWeekEndDay: string;
+  salaryCalculationType: string;
+  payFrequency: string;
+  payDay: string;
+  timeZone: string;
+  lastUpdated: string;
+}
 
-const getDaysInMonth = (year: number, month: number) => {
-  return new Date(year, month + 1, 0).getDate();
-};
-
-const getFirstDayOfMonth = (year: number, month: number) => {
-  return new Date(year, month, 1).getDay();
-};
-
-const generateCalendar = (year: number, month: number) => {
-  const daysInMonth = getDaysInMonth(year, month);
-  const firstDay = getFirstDayOfMonth(year, month);
-  const days = [];
-
-  // Add empty cells for days before month starts
-  for (let i = 0; i < firstDay; i++) {
-    days.push(null);
-  }
-
-  // Add all days of the month
-  for (let day = 1; day <= daysInMonth; day++) {
-    days.push(day);
-  }
-
-  return days;
+// Default settings for each business unit
+const defaultSettings: Record<string, PayScheduleSettings> = {
+  "IT Business Unit": {
+    workWeekStartDay: "Monday",
+    workWeekEndDay: "Friday",
+    salaryCalculationType: "Fixed",
+    payFrequency: "Monthly",
+    payDay: "Friday",
+    timeZone: "America/New_York",
+    lastUpdated: new Date().toLocaleString(),
+  },
+  "Telecom Business Unit": {
+    workWeekStartDay: "Monday",
+    workWeekEndDay: "Saturday",
+    salaryCalculationType: "Hourly",
+    payFrequency: "Bi-weekly",
+    payDay: "Friday",
+    timeZone: "America/New_York",
+    lastUpdated: new Date().toLocaleString(),
+  },
 };
 
 export default function PaySchedule() {
-  const [selectedBusinessUnit, setSelectedBusinessUnit] = useState("IT");
-  const [workingDaysMode, setWorkingDaysMode] = useState("actual");
-  const [payOnMode, setPayOnMode] = useState("lastWorkingDay");
-  const [customPayDay, setCustomPayDay] = useState("");
-  const [currentMonth, setCurrentMonth] = useState(3); // April = 3 (0-indexed)
-  const [currentYear, setCurrentYear] = useState(2025);
-  const [tab, setTab] = useState("business-unit");
+  const [selectedBusinessUnit, setSelectedBusinessUnit] =
+    useState("IT Business Unit");
+  const [settings, setSettings] = useState<Record<string, PayScheduleSettings>>(
+    () => {
+      const saved = localStorage.getItem("payScheduleSettings");
+      return saved ? JSON.parse(saved) : defaultSettings;
+    },
+  );
+  const [activeTab, setActiveTab] = useState("configuration");
+  const [isEditing, setIsEditing] = useState(false);
+
+  // Auto-calculate work week end day based on start day
+  const calculateEndDay = (startDay: string, unit: string) => {
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const startIndex = days.indexOf(startDay);
+    if (unit === "IT Business Unit") {
+      // 5-day work week (Monday-Friday typically)
+      return days[(startIndex + 4) % 7];
+    } else {
+      // 6-day work week (Monday-Saturday typically)
+      return days[(startIndex + 5) % 7];
+    }
+  };
+
+  // Update settings for current business unit
+  const updateSetting = (key: keyof PayScheduleSettings, value: string) => {
+    setSettings((prev) => {
+      const newSettings = {
+        ...prev,
+        [selectedBusinessUnit]: {
+          ...prev[selectedBusinessUnit],
+          [key]: value,
+          lastUpdated: new Date().toLocaleString(),
+        },
+      };
+
+      // Auto-calculate end day when start day changes
+      if (key === "workWeekStartDay") {
+        newSettings[selectedBusinessUnit].workWeekEndDay = calculateEndDay(
+          value,
+          selectedBusinessUnit,
+        );
+      }
+
+      return newSettings;
+    });
+  };
+
+  // Save settings to localStorage
+  const saveSettings = () => {
+    localStorage.setItem("payScheduleSettings", JSON.stringify(settings));
+    setIsEditing(false);
+  };
+
+  // Load settings when business unit changes
+  useEffect(() => {
+    if (!settings[selectedBusinessUnit]) {
+      setSettings((prev) => ({
+        ...prev,
+        [selectedBusinessUnit]:
+          defaultSettings[selectedBusinessUnit] ||
+          defaultSettings["IT Business Unit"],
+      }));
+    }
+  }, [selectedBusinessUnit, settings]);
+
+  const currentSettings =
+    settings[selectedBusinessUnit] || defaultSettings[selectedBusinessUnit];
+
+  const businessUnits = ["IT Business Unit", "Telecom Business Unit"];
+  const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+  const salaryTypes = ["Fixed", "Hourly", "Performance-based"];
+  const payFrequencies = ["Weekly", "Bi-weekly", "Monthly"];
+  const timeZones = [
+    "America/New_York",
+    "America/Chicago",
+    "America/Denver",
+    "America/Los_Angeles",
+    "Europe/London",
+    "Europe/Paris",
+    "Asia/Tokyo",
+    "Asia/Shanghai",
+    "Asia/Kolkata",
+  ];
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8">
-      <div className="w-full px-6">
-        <PageHeader title="Pay Schedule" />
+    <div className="min-h-screen bg-slate-50">
+      <div className="w-full px-6 py-8">
+        <PageHeader title="Pay Schedule Configuration" />
+
         <div className="mt-6">
-          <Tabs value={tab} onValueChange={setTab} className="w-full">
-            <TabsList className="flex border-b border-slate-200 bg-white p-0 gap-8">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
+            <TabsList className="grid w-full grid-cols-2 max-w-md">
               <TabsTrigger
-                value="business-unit"
-                className="relative px-0 pb-2 text-base font-medium text-slate-700 data-[state=active]:text-blue-700 data-[state=active]:font-semibold data-[state=active]:after:content-[''] data-[state=active]:after:absolute data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:bottom-0 data-[state=active]:after:h-1 data-[state=active]:after:bg-blue-600 data-[state=active]:after:rounded-full focus:outline-none"
+                value="configuration"
+                className="flex items-center gap-2"
               >
-                Business Unit
+                <Settings className="h-4 w-4" />
+                Configuration
               </TabsTrigger>
-              <TabsTrigger
-                value="work-week"
-                className="relative px-0 pb-2 text-base font-medium text-slate-700 data-[state=active]:text-blue-700 data-[state=active]:font-semibold data-[state=active]:after:content-[''] data-[state=active]:after:absolute data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:bottom-0 data-[state=active]:after:h-1 data-[state=active]:after:bg-blue-600 data-[state=active]:after:rounded-full focus:outline-none"
-              >
-                Work Week
-              </TabsTrigger>
-              <TabsTrigger
-                value="salary-calculation"
-                className="relative px-0 pb-2 text-base font-medium text-slate-700 data-[state=active]:text-blue-700 data-[state=active]:font-semibold data-[state=active]:after:content-[''] data-[state=active]:after:absolute data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:bottom-0 data-[state=active]:after:h-1 data-[state=active]:after:bg-blue-600 data-[state=active]:after:rounded-full focus:outline-none"
-              >
-                Salary Calculation
-              </TabsTrigger>
-              <TabsTrigger
-                value="pay-on"
-                className="relative px-0 pb-2 text-base font-medium text-slate-700 data-[state=active]:text-blue-700 data-[state=active]:font-semibold data-[state=active]:after:content-[''] data-[state=active]:after:absolute data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:bottom-0 data-[state=active]:after:h-1 data-[state=active]:after:bg-blue-600 data-[state=active]:after:rounded-full focus:outline-none"
-              >
-                Pay On
+              <TabsTrigger value="overview" className="flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                Overview
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="business-unit" className="pt-6">
-              {/* Business Unit Selection */}
-              <Card className="rounded-xl shadow-sm border-slate-200">
+
+            {/* Configuration Tab */}
+            <TabsContent value="configuration" className="mt-6 space-y-6">
+              {/* Section 1: Business Unit Selection */}
+              <Card className="shadow-sm border-slate-200">
                 <CardHeader>
-                  <CardTitle className="text-base font-semibold text-slate-900 flex items-center gap-2">
+                  <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
                     <Building className="h-5 w-5 text-blue-600" />
-                    Business Unit
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col gap-4">
-                    <div className="flex flex-col sm:flex-row gap-3 w-full">
-                      <label
-                        className={`flex items-center gap-3 cursor-pointer px-4 py-3 rounded-xl border transition-colors flex-1 ${selectedBusinessUnit === "IT" ? "border-blue-500 bg-blue-50" : "border-slate-200 bg-white hover:bg-slate-50"}`}
-                      >
-                        <input
-                          type="radio"
-                          name="businessUnit"
-                          value="IT"
-                          checked={selectedBusinessUnit === "IT"}
-                          onChange={(e) =>
-                            setSelectedBusinessUnit(e.target.value)
-                          }
-                          className="accent-blue-600 w-4 h-4"
-                        />
-                        <Monitor className="h-4 w-4 text-blue-600" />
-                        <span className="text-sm font-medium">
-                          IT Business Unit
-                        </span>
-                      </label>
-                      <label
-                        className={`flex items-center gap-3 cursor-pointer px-4 py-3 rounded-xl border transition-colors flex-1 ${selectedBusinessUnit === "Telecom" ? "border-blue-500 bg-blue-50" : "border-slate-200 bg-white hover:bg-slate-50"}`}
-                      >
-                        <input
-                          type="radio"
-                          name="businessUnit"
-                          value="Telecom"
-                          checked={selectedBusinessUnit === "Telecom"}
-                          onChange={(e) =>
-                            setSelectedBusinessUnit(e.target.value)
-                          }
-                          className="accent-blue-600 w-4 h-4"
-                        />
-                        <Phone className="h-4 w-4 text-green-600" />
-                        <span className="text-sm font-medium">
-                          Telecom Business Unit
-                        </span>
-                      </label>
-                    </div>
-                    <Badge
-                      variant="outline"
-                      className="bg-slate-100 text-slate-700 w-fit flex items-center gap-1"
-                    >
-                      <Clock className="h-3 w-3" />
-                      {selectedBusinessUnit === "IT"
-                        ? "5-day work week, 22 standard working days per month"
-                        : "6-day work week, 26 standard working days per month"}
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="work-week" className="pt-6">
-              {/* Work Week Selection */}
-              <Card className="rounded-xl shadow-sm border-slate-200">
-                <CardHeader>
-                  <CardTitle className="text-base font-semibold text-slate-900 flex items-center gap-2">
-                    <CalendarDays className="h-5 w-5 text-purple-600" />
-                    Work Week
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-4 text-sm text-slate-600 flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-purple-500" />
-                    Select your work week*
-                  </div>
-                  <div className="grid grid-cols-7 gap-3 text-center w-full">
-                    {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map(
-                      (day) => {
-                        const isSelected =
-                          selectedBusinessUnit === "IT"
-                            ? ["MON", "TUE", "WED", "THU", "FRI"].includes(day)
-                            : [
-                                "MON",
-                                "TUE",
-                                "WED",
-                                "THU",
-                                "FRI",
-                                "SAT",
-                              ].includes(day);
-                        return (
-                          <div key={day} className="flex flex-col items-center">
-                            <div className="text-xs font-medium text-slate-600 mb-2">
-                              {day}
-                            </div>
-                            <div
-                              className={`w-10 h-10 rounded-xl border-2 flex items-center justify-center transition-colors ${isSelected ? "bg-purple-500 border-purple-500" : "border-slate-300 bg-white"}`}
-                            >
-                              {isSelected && (
-                                <span className="w-4 h-4 rounded-full bg-white" />
-                              )}
-                            </div>
-                          </div>
-                        );
-                      },
-                    )}
-                  </div>
-                  <div className="mt-4 text-xs text-slate-500 text-center flex items-center justify-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    {selectedBusinessUnit === "IT"
-                      ? "Weekends: Saturday & Sunday"
-                      : "Weekend: Sunday only"}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="salary-calculation" className="pt-6">
-              {/* Salary Calculation Mode */}
-              <Card className="rounded-xl shadow-sm border-slate-200">
-                <CardHeader>
-                  <CardTitle className="text-base font-semibold text-slate-900 flex items-center gap-2">
-                    <Calculator className="h-5 w-5 text-orange-600" />
-                    <span>Salary Calculation</span>
-                    <Info className="h-4 w-4 text-blue-400" />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col lg:flex-row lg:items-start gap-6">
-                    <div className="space-y-4 flex-1">
-                      <label className="flex items-center gap-3 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="workingDays"
-                          value="actual"
-                          checked={workingDaysMode === "actual"}
-                          onChange={(e) => setWorkingDaysMode(e.target.value)}
-                          className="accent-blue-600 w-4 h-4"
-                        />
-                        <Calendar className="h-4 w-4 text-blue-500" />
-                        <span className="text-sm">Actual days in a month</span>
-                      </label>
-                      <label className="flex items-center gap-3 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="workingDays"
-                          value="organization"
-                          checked={workingDaysMode === "organization"}
-                          onChange={(e) => setWorkingDaysMode(e.target.value)}
-                          className="accent-blue-600 w-4 h-4"
-                        />
-                        <Users className="h-4 w-4 text-green-500" />
-                        <span className="text-sm">
-                          Organisation working days - varies by month
-                        </span>
-                      </label>
-                    </div>
-                    {workingDaysMode === "organization" && (
-                      <div className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-4">
-                        <div className="text-sm font-medium text-slate-700 mb-3 flex items-center gap-2">
-                          <Briefcase className="h-4 w-4 text-blue-600" />
-                          Monthly Working Days Breakdown -{" "}
-                          {selectedBusinessUnit}:
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-xs text-slate-600">
-                          {selectedBusinessUnit === "IT" ? (
-                            <>
-                              <div className="flex items-center gap-1">
-                                • January 2025: 23 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • February 2025: 20 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • March 2025: 21 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • April 2025: 22 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • May 2025: 22 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • June 2025: 21 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • July 2025: 23 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • August 2025: 21 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • September 2025: 22 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • October 2025: 23 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • November 2025: 20 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • December 2025: 22 working days
-                              </div>
-                            </>
-                          ) : (
-                            <>
-                              <div className="flex items-center gap-1">
-                                • January 2025: 27 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • February 2025: 24 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • March 2025: 26 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • April 2025: 26 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • May 2025: 26 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • June 2025: 25 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • July 2025: 27 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • August 2025: 26 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • September 2025: 26 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • October 2025: 27 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • November 2025: 25 working days
-                              </div>
-                              <div className="flex items-center gap-1">
-                                • December 2025: 26 working days
-                              </div>
-                            </>
-                          )}
-                        </div>
-                        <div className="mt-3 text-xs text-slate-500 flex items-center gap-1">
-                          <AlertCircle className="h-3 w-3" />
-                          <strong>Note:</strong>{" "}
-                          {selectedBusinessUnit === "IT"
-                            ? "Excludes weekends (Sat/Sun)"
-                            : "Excludes only Sundays"}{" "}
-                          and public holidays.
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="pay-on" className="pt-6">
-              {/* Pay On Section */}
-              <Card className="rounded-xl shadow-sm border-slate-200">
-                <CardHeader>
-                  <CardTitle className="text-base font-semibold text-slate-900 flex items-center gap-2">
-                    <DollarSign className="h-5 w-5 text-green-600" />
-                    Pay On
+                    Select Business Unit
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {selectedBusinessUnit === "Telecom" && (
-                      <label className="flex items-center gap-3 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="payOn"
-                          value="bimonthly"
-                          checked={payOnMode === "bimonthly"}
-                          onChange={(e) => setPayOnMode(e.target.value)}
-                          className="accent-blue-600 w-4 h-4"
-                        />
-                        <Calendar className="h-4 w-4 text-green-500" />
-                        <span className="text-sm">
-                          15th and last working day of every month
-                        </span>
-                      </label>
-                    )}
-                    <label className="flex items-center gap-3 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="payOn"
-                        value="lastWorkingDay"
-                        checked={payOnMode === "lastWorkingDay"}
-                        onChange={(e) => setPayOnMode(e.target.value)}
-                        className="accent-blue-600 w-4 h-4"
-                      />
-                      <CalendarDays className="h-4 w-4 text-blue-500" />
-                      <span className="text-sm">
-                        the last working day of every month
-                      </span>
-                    </label>
-                    <label className="flex items-center gap-3 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="payOn"
-                        value="customDay"
-                        checked={payOnMode === "customDay"}
-                        onChange={(e) => setPayOnMode(e.target.value)}
-                        className="accent-blue-600 w-4 h-4"
-                      />
-                      <Settings className="h-4 w-4 text-orange-500" />
-                      <span className="flex items-center gap-2 text-sm">
-                        day
-                        <input
-                          type="number"
-                          min="1"
-                          max="31"
-                          className="w-16 h-8 px-2 border border-slate-300 rounded-xl text-sm text-center focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition"
-                          value={customPayDay}
-                          onChange={(e) => setCustomPayDay(e.target.value)}
-                          disabled={payOnMode !== "customDay"}
-                        />
-                        of every month
-                      </span>
-                    </label>
-                  </div>
-                  <div className="mt-6 space-y-3">
-                    <Badge
-                      variant="outline"
-                      className="bg-blue-50 text-blue-700 w-fit flex items-center gap-1"
+                    <Select
+                      value={selectedBusinessUnit}
+                      onValueChange={setSelectedBusinessUnit}
                     >
-                      <CheckCircle className="h-3 w-3" />
-                      When payday falls on a non-working day or a holiday,
-                      employees will get paid on the previous working day.
-                    </Badge>
-                    {selectedBusinessUnit === "Telecom" && (
-                      <div className="text-xs text-blue-700 bg-blue-50 rounded-xl px-3 py-2 w-fit flex items-center gap-1">
-                        <Phone className="h-3 w-3" />
-                        <strong>Telecom:</strong> Bi-monthly payments help with
-                        cash flow management for field operations.
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a business unit" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {businessUnits.map((unit) => (
+                          <SelectItem key={unit} value={unit}>
+                            <div className="flex items-center gap-2">
+                              {unit === "IT Business Unit" ? (
+                                <Monitor className="h-4 w-4 text-blue-600" />
+                              ) : (
+                                <Phone className="h-4 w-4 text-green-600" />
+                              )}
+                              {unit}
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <div className="bg-slate-50 rounded-lg p-4">
+                      <div className="flex items-start gap-3">
+                        {selectedBusinessUnit === "IT Business Unit" ? (
+                          <Monitor className="h-5 w-5 text-blue-600 mt-0.5" />
+                        ) : (
+                          <Phone className="h-5 w-5 text-green-600 mt-0.5" />
+                        )}
+                        <div>
+                          <h4 className="font-medium text-slate-900">
+                            {selectedBusinessUnit}
+                          </h4>
+                          <p className="text-sm text-slate-600 mt-1">
+                            {selectedBusinessUnit === "IT Business Unit"
+                              ? "Technology services and software development teams with standard 5-day work week."
+                              : "Telecommunications operations with extended 6-day work coverage for field services."}
+                          </p>
+                        </div>
                       </div>
-                    )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Section 2: Work Week and Salary Settings */}
+              <Card className="shadow-sm border-slate-200">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                    <Clock className="h-5 w-5 text-purple-600" />
+                    Work Week and Salary Settings
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Work Week Start Day */}
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="workWeekStart"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Work Week Start Day
+                      </Label>
+                      <Select
+                        value={currentSettings.workWeekStartDay}
+                        onValueChange={(value) =>
+                          updateSetting("workWeekStartDay", value)
+                        }
+                      >
+                        <SelectTrigger id="workWeekStart">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {days.map((day) => (
+                            <SelectItem key={day} value={day}>
+                              {day}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Work Week End Day (Auto-calculated) */}
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-slate-700">
+                        Work Week End Day
+                      </Label>
+                      <div className="h-10 px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 flex items-center text-sm text-slate-600">
+                        {currentSettings.workWeekEndDay} (Auto-calculated)
+                      </div>
+                    </div>
+
+                    {/* Salary Calculation Type */}
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="salaryType"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Salary Calculation Type
+                      </Label>
+                      <Select
+                        value={currentSettings.salaryCalculationType}
+                        onValueChange={(value) =>
+                          updateSetting("salaryCalculationType", value)
+                        }
+                      >
+                        <SelectTrigger id="salaryType">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {salaryTypes.map((type) => (
+                            <SelectItem key={type} value={type}>
+                              <div className="flex items-center gap-2">
+                                <Calculator className="h-4 w-4" />
+                                {type}
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Pay Frequency */}
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="payFreq"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Pay Frequency
+                      </Label>
+                      <Select
+                        value={currentSettings.payFrequency}
+                        onValueChange={(value) =>
+                          updateSetting("payFrequency", value)
+                        }
+                      >
+                        <SelectTrigger id="payFreq">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {payFrequencies.map((freq) => (
+                            <SelectItem key={freq} value={freq}>
+                              <div className="flex items-center gap-2">
+                                <CalendarDays className="h-4 w-4" />
+                                {freq}
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Pay Day */}
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="payDay"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Pay Day
+                      </Label>
+                      <Select
+                        value={currentSettings.payDay}
+                        onValueChange={(value) =>
+                          updateSetting("payDay", value)
+                        }
+                      >
+                        <SelectTrigger id="payDay">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {days.map((day) => (
+                            <SelectItem key={day} value={day}>
+                              <div className="flex items-center gap-2">
+                                <DollarSign className="h-4 w-4" />
+                                {day}
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Time Zone */}
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="timeZone"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Time Zone
+                      </Label>
+                      <Select
+                        value={currentSettings.timeZone}
+                        onValueChange={(value) =>
+                          updateSetting("timeZone", value)
+                        }
+                      >
+                        <SelectTrigger id="timeZone">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {timeZones.map((zone) => (
+                            <SelectItem key={zone} value={zone}>
+                              <div className="flex items-center gap-2">
+                                <Globe className="h-4 w-4" />
+                                {zone}
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {/* Save Button */}
+                  <div className="flex items-center justify-between pt-4 border-t border-slate-200">
+                    <div className="flex items-center gap-2 text-sm text-slate-600">
+                      <Clock className="h-4 w-4" />
+                      Last updated: {currentSettings.lastUpdated}
+                    </div>
+                    <Button
+                      onClick={saveSettings}
+                      className="flex items-center gap-2"
+                    >
+                      <Save className="h-4 w-4" />
+                      Save Settings
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Overview Tab */}
+            <TabsContent value="overview" className="mt-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {businessUnits.map((unit) => {
+                  const unitSettings = settings[unit] || defaultSettings[unit];
+                  return (
+                    <Card key={unit} className="shadow-sm border-slate-200">
+                      <CardHeader>
+                        <CardTitle className="text-lg font-semibold text-slate-900 flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            {unit === "IT Business Unit" ? (
+                              <Monitor className="h-5 w-5 text-blue-600" />
+                            ) : (
+                              <Phone className="h-5 w-5 text-green-600" />
+                            )}
+                            {unit}
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedBusinessUnit(unit);
+                              setActiveTab("configuration");
+                            }}
+                            className="flex items-center gap-1"
+                          >
+                            <Edit3 className="h-3 w-3" />
+                            Edit
+                          </Button>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between py-2 border-b border-slate-100">
+                            <span className="text-sm font-medium text-slate-600">
+                              Work Week
+                            </span>
+                            <span className="text-sm text-slate-900">
+                              {unitSettings.workWeekStartDay} -{" "}
+                              {unitSettings.workWeekEndDay}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between py-2 border-b border-slate-100">
+                            <span className="text-sm font-medium text-slate-600">
+                              Salary Type
+                            </span>
+                            <Badge variant="outline" className="text-xs">
+                              {unitSettings.salaryCalculationType}
+                            </Badge>
+                          </div>
+                          <div className="flex items-center justify-between py-2 border-b border-slate-100">
+                            <span className="text-sm font-medium text-slate-600">
+                              Pay Frequency
+                            </span>
+                            <span className="text-sm text-slate-900">
+                              {unitSettings.payFrequency}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between py-2 border-b border-slate-100">
+                            <span className="text-sm font-medium text-slate-600">
+                              Pay Day
+                            </span>
+                            <span className="text-sm text-slate-900">
+                              {unitSettings.payDay}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between py-2 border-b border-slate-100">
+                            <span className="text-sm font-medium text-slate-600">
+                              Time Zone
+                            </span>
+                            <span className="text-sm text-slate-900">
+                              {unitSettings.timeZone}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="pt-3 flex items-center gap-2 text-xs text-slate-500">
+                          <CheckCircle className="h-3 w-3 text-green-500" />
+                          Last updated: {unitSettings.lastUpdated}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+
+              {/* Additional Information */}
+              <Card className="mt-6 shadow-sm border-slate-200">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                    <AlertCircle className="h-5 w-5 text-amber-600" />
+                    Important Notes
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 text-sm text-slate-600">
+                    <div className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span>
+                        Settings are saved locally and applied independently for
+                        each business unit.
+                      </span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span>
+                        Work week end day is automatically calculated based on
+                        the start day and business unit type.
+                      </span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span>
+                        Changes take effect immediately after saving and apply
+                        to future payroll calculations.
+                      </span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <AlertCircle className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                      <span>
+                        When pay day falls on a weekend or holiday, payment will
+                        be processed on the previous working day.
+                      </span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
