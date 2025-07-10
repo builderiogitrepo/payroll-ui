@@ -1207,9 +1207,11 @@ export default function SalaryConfiguration() {
               </div>
 
               {/* Contribution Rates */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="employeeContribution">Employee PF % *</Label>
+                  <Label htmlFor="employeeContribution">
+                    Employee Contribution Rate (%) *
+                  </Label>
                   <Input
                     id="employeeContribution"
                     type="number"
@@ -1227,7 +1229,9 @@ export default function SalaryConfiguration() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="employerContribution">Employer PF % *</Label>
+                  <Label htmlFor="employerContribution">
+                    Employer Contribution Rate (%) *
+                  </Label>
                   <Input
                     id="employerContribution"
                     type="number"
@@ -1243,40 +1247,59 @@ export default function SalaryConfiguration() {
                     }
                   />
                 </div>
+              </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="epsPercentage">EPS % *</Label>
-                  <Input
-                    id="epsPercentage"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    max="100"
-                    value={pfFormData.epsPercentage}
-                    onChange={(e) =>
-                      setPfFormData((prev) => ({
-                        ...prev,
-                        epsPercentage: parseFloat(e.target.value) || 0,
-                      }))
-                    }
-                  />
-                </div>
+              {/* EPS Configuration */}
+              <div className="space-y-4">
+                <h4 className="font-semibold text-slate-900">
+                  EPS Configuration
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="epsContribution">
+                      EPS Contribution Rate (%) *
+                    </Label>
+                    <Input
+                      id="epsContribution"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      max="100"
+                      value={pfFormData.epsContribution}
+                      onChange={(e) =>
+                        setPfFormData((prev) => ({
+                          ...prev,
+                          epsContribution: parseFloat(e.target.value) || 0,
+                        }))
+                      }
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="epsCap">EPS Cap (₹) *</Label>
-                  <Input
-                    id="epsCap"
-                    type="number"
-                    min="0"
-                    value={pfFormData.epsCap}
-                    onChange={(e) =>
-                      setPfFormData((prev) => ({
-                        ...prev,
-                        epsCap: parseInt(e.target.value) || 0,
-                      }))
-                    }
-                  />
+                  <div className="space-y-2">
+                    <Label htmlFor="epsCap">EPS Cap (₹) *</Label>
+                    <Input
+                      id="epsCap"
+                      type="number"
+                      min="0"
+                      value={pfFormData.epsCap}
+                      onChange={(e) =>
+                        setPfFormData((prev) => ({
+                          ...prev,
+                          epsCap: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                    />
+                  </div>
                 </div>
+                <Alert className="border-blue-200 bg-blue-50">
+                  <Shield className="h-4 w-4 text-blue-600" />
+                  <AlertDescription>
+                    <div className="text-blue-700 text-sm">
+                      <strong>Note:</strong> The remaining employer contribution
+                      after EPS will be automatically adjusted towards EPF.
+                    </div>
+                  </AlertDescription>
+                </Alert>
               </div>
 
               {/* Auto-adjust Option */}
