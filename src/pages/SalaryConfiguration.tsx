@@ -714,9 +714,14 @@ export default function SalaryConfiguration() {
   };
 
   const handleAdd = () => {
-    // This function is still needed for PT Config and ESIC Config sections
-    // For now, we'll just log the action since those sections aren't fully implemented
-    console.log("Add functionality for", selectedStatutoryTab);
+    // Handle add functionality based on current tab
+    if (selectedTab === "salary-structure") {
+      // Handle salary structure add - for now just log
+      console.log("Add new salary structure");
+    } else if (selectedTab === "statutory-components") {
+      // Handle statutory components add based on sub-tab
+      console.log("Add functionality for", selectedStatutoryTab);
+    }
   };
 
   const renderSalaryStructureView = () => {
