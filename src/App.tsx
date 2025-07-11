@@ -30,6 +30,7 @@ const App = () => (
           <Route path="/" element={<AppLayout />}>
             <Route index element={<Navigate to="/employees" replace />} />
             <Route path="employees" element={<Employees />} />
+            <Route path="employee-creation" element={<EmployeeCreation />} />
             <Route path="attendance" element={<Attendance />} />
             <Route
               path="salary-configuration"
