@@ -15,6 +15,21 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Settings,
   Plus,
   FileText,
@@ -32,6 +47,8 @@ import {
   BarChart3,
   Layers,
   Zap,
+  Info,
+  Save,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -288,19 +305,51 @@ const mockSalaryStructures = [
   },
 ];
 
+// Mock payhead data for multi-select
+const mockPayheads = [
+  { id: "PH001", name: "Basic Pay" },
+  { id: "PH002", name: "HRA" },
+  { id: "PH003", name: "Medical Allowance" },
+  { id: "PH004", name: "Conveyance" },
+  { id: "PH005", name: "Special Allowance" },
+  { id: "PH006", name: "Dearness Allowance" },
+];
+
 // Mock PF Configuration Data
 const mockPFConfig = [
   {
     id: "PF001",
     state: "All States",
+    ruleType: "With Minimum Wage Rule",
+    pfBasisPayheads: ["Basic Pay"],
     employeeContribution: 12,
     employerContribution: 12,
     salaryLimit: 15000,
     pensionLimit: 15000,
+    epsPercentage: 8.33,
+    epsCap: 1250,
     adminCharges: 0.5,
     edliCharges: 0.5,
+    autoAdjustEmployerShare: true,
     status: "Active",
     applicableEmployees: 85,
+  },
+  {
+    id: "PF002",
+    state: "Karnataka",
+    ruleType: "Without Minimum Wage Rule",
+    pfBasisPayheads: ["Basic Pay", "Dearness Allowance"],
+    employeeContribution: 12,
+    employerContribution: 12,
+    salaryLimit: 0, // No limit for actual basic
+    pensionLimit: 15000,
+    epsPercentage: 8.33,
+    epsCap: 1250,
+    adminCharges: 0.5,
+    edliCharges: 0.5,
+    autoAdjustEmployerShare: false,
+    status: "Active",
+    applicableEmployees: 42,
   },
 ];
 
@@ -453,20 +502,62 @@ const pfColumns: Column[] = [
     ),
   },
   {
+    key: "ruleType",
+    label: "Rule Type",
+    render: (value) => (
+      <Badge
+        variant="outline"
+        className={`text-xs ${
+          value === "With Minimum Wage Rule"
+            ? "border-green-200 text-green-700 bg-green-50"
+            : "border-blue-200 text-blue-700 bg-blue-50"
+        }`}
+      >
+        {value}
+      </Badge>
+    ),
+  },
+  {
+    key: "pfBasisPayheads",
+    label: "PF Basis Payheads",
+    render: (value) => (
+      <div className="flex flex-wrap gap-1 max-w-[150px]">
+        {value.map((payhead: string, index: number) => (
+          <Badge key={index} variant="secondary" className="text-xs">
+            {payhead}
+          </Badge>
+        ))}
+      </div>
+    ),
+  },
+  {
     key: "employeeContribution",
     label: "Employee %",
     render: (value) => <span className="font-medium">{value}%</span>,
   },
   {
-    key: "employerContribution",
-    label: "Employer %",
-    render: (value) => <span className="font-medium">{value}%</span>,
+    key: "epsPercentage",
+    label: "EPS %",
+    render: (value) => (
+      <span className="font-medium text-purple-600">{value}%</span>
+    ),
   },
   {
     key: "salaryLimit",
-    label: "Salary Limit",
+    label: "PF Base Limit",
     render: (value) => (
-      <span className="font-medium">₹{value.toLocaleString()}</span>
+      <span className="font-medium">
+        {value === 0 ? "No Limit" : `₹${value.toLocaleString()}`}
+      </span>
+    ),
+  },
+  {
+    key: "epsCap",
+    label: "EPS Cap",
+    render: (value) => (
+      <span className="font-medium text-purple-600">
+        ₹{value.toLocaleString()}
+      </span>
     ),
   },
   {
@@ -594,7 +685,35 @@ export default function SalaryConfiguration() {
   const [selectedConfig, setSelectedConfig] = useState<any>(null);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+
+  // PF Config Form State for both rule types
+  const [pfWithMaxWageConfig, setPfWithMaxWageConfig] = useState({
+    enabled: false,
+    pfWageLimit: 15000,
+    pfBasisPayheads: [] as string[],
+    employeeContribution: 12,
+    employerContribution: 12,
+    epsContribution: 8.33,
+    epsCap: 1250,
+  });
+
+  const [pfWithoutMaxWageConfig, setPfWithoutMaxWageConfig] = useState({
+    enabled: false,
+    pfBasisPayheads: [] as string[],
+    employeeContribution: 12,
+    employerContribution: 12,
+    epsContribution: 8.33,
+    epsCap: 1250,
+  });
+
+  // ESIC Configuration State
+  const [esicConfig, setEsicConfig] = useState({
+    enabled: false,
+    employeeWageCeiling: 21000,
+    esicCalculationBasis: [] as string[],
+    employeeContribution: 0.75,
+    employerContribution: 3.25,
+  });
 
   const handleView = (item: any) => {
     setSelectedStructure(item);
@@ -612,7 +731,14 @@ export default function SalaryConfiguration() {
   };
 
   const handleAdd = () => {
-    setIsAddDialogOpen(true);
+    // Handle add functionality based on current tab
+    if (selectedTab === "salary-structure") {
+      // Handle salary structure add - for now just log
+      console.log("Add new salary structure");
+    } else if (selectedTab === "statutory-components") {
+      // Handle statutory components add based on sub-tab
+      console.log("Add functionality for", selectedStatutoryTab);
+    }
   };
 
   const renderSalaryStructureView = () => {
@@ -894,26 +1020,452 @@ export default function SalaryConfiguration() {
                     </TabsTrigger>
                   </TabsList>
 
-                  <TabsContent value="pf-config" className="space-y-4">
-                    <DataTable
-                      data={mockPFConfig}
-                      columns={pfColumns}
-                      onView={handleView}
-                      onEdit={handleEdit}
-                      onDelete={handleDelete}
-                      searchPlaceholder="Search PF configurations..."
-                      customToolbar={
-                        <div className="flex items-center gap-2">
-                          <Button
-                            onClick={handleAdd}
-                            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
-                          >
-                            <Plus className="h-4 w-4" />
-                            Add PF Config
-                          </Button>
+                  <TabsContent value="pf-config" className="space-y-6">
+                    {/* With Maximum Wage Rule Section */}
+                    <Card className="border-green-200 bg-green-50/30">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-green-100 rounded-lg">
+                              <Shield className="h-5 w-5 text-green-600" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-green-800">
+                                With Maximum Wage Rule
+                              </CardTitle>
+                              <p className="text-sm text-green-600 mt-1">
+                                PF contribution base is capped at the specified
+                                wage limit
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <Label
+                              htmlFor="withMaxWage"
+                              className="text-sm font-medium"
+                            >
+                              Enable Configuration
+                            </Label>
+                            <Checkbox
+                              id="withMaxWage"
+                              checked={pfWithMaxWageConfig.enabled}
+                              onCheckedChange={(checked) =>
+                                setPfWithMaxWageConfig((prev) => ({
+                                  ...prev,
+                                  enabled: !!checked,
+                                }))
+                              }
+                            />
+                          </div>
                         </div>
-                      }
-                    />
+                      </CardHeader>
+                      {pfWithMaxWageConfig.enabled && (
+                        <CardContent className="space-y-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="withMaxWageLimit">
+                                PF Wage Limit (₹) *
+                              </Label>
+                              <Input
+                                id="withMaxWageLimit"
+                                type="number"
+                                min="0"
+                                value={pfWithMaxWageConfig.pfWageLimit}
+                                onChange={(e) =>
+                                  setPfWithMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    pfWageLimit: parseInt(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label>PF Wage Calculation Basis *</Label>
+                              <Select
+                                value=""
+                                onValueChange={(value) => {
+                                  if (
+                                    value &&
+                                    !pfWithMaxWageConfig.pfBasisPayheads.includes(
+                                      value,
+                                    )
+                                  ) {
+                                    setPfWithMaxWageConfig((prev) => ({
+                                      ...prev,
+                                      pfBasisPayheads: [
+                                        ...prev.pfBasisPayheads,
+                                        value,
+                                      ],
+                                    }));
+                                  }
+                                }}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select payheads" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {mockPayheads
+                                    .filter(
+                                      (payhead) =>
+                                        !pfWithMaxWageConfig.pfBasisPayheads.includes(
+                                          payhead.name,
+                                        ),
+                                    )
+                                    .map((payhead) => (
+                                      <SelectItem
+                                        key={payhead.id}
+                                        value={payhead.name}
+                                      >
+                                        {payhead.name}
+                                      </SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
+                              <div className="flex flex-wrap gap-2 mt-2">
+                                {pfWithMaxWageConfig.pfBasisPayheads.map(
+                                  (payhead, index) => (
+                                    <Badge
+                                      key={index}
+                                      variant="secondary"
+                                      className="text-xs"
+                                    >
+                                      {payhead}
+                                      <button
+                                        type="button"
+                                        className="ml-1 text-xs hover:text-red-600"
+                                        onClick={() => {
+                                          setPfWithMaxWageConfig((prev) => ({
+                                            ...prev,
+                                            pfBasisPayheads:
+                                              prev.pfBasisPayheads.filter(
+                                                (p) => p !== payhead,
+                                              ),
+                                          }));
+                                        }}
+                                      >
+                                        ×
+                                      </button>
+                                    </Badge>
+                                  ),
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="withMaxWageEmployeeRate">
+                                Employee Contribution Rate (%) *
+                              </Label>
+                              <Input
+                                id="withMaxWageEmployeeRate"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                value={pfWithMaxWageConfig.employeeContribution}
+                                onChange={(e) =>
+                                  setPfWithMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    employeeContribution:
+                                      parseFloat(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label htmlFor="withMaxWageEmployerRate">
+                                Employer Contribution Rate (%) *
+                              </Label>
+                              <Input
+                                id="withMaxWageEmployerRate"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                value={pfWithMaxWageConfig.employerContribution}
+                                onChange={(e) =>
+                                  setPfWithMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    employerContribution:
+                                      parseFloat(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="withMaxWageEpsRate">
+                                EPS Contribution Rate (%) *
+                              </Label>
+                              <Input
+                                id="withMaxWageEpsRate"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                value={pfWithMaxWageConfig.epsContribution}
+                                onChange={(e) =>
+                                  setPfWithMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    epsContribution:
+                                      parseFloat(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label htmlFor="withMaxWageEpsCap">
+                                EPS Cap (₹) *
+                              </Label>
+                              <Input
+                                id="withMaxWageEpsCap"
+                                type="number"
+                                min="0"
+                                value={pfWithMaxWageConfig.epsCap}
+                                onChange={(e) =>
+                                  setPfWithMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    epsCap: parseInt(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+                          </div>
+
+                          <Alert className="border-green-200 bg-green-50">
+                            <Shield className="h-4 w-4 text-green-600" />
+                            <AlertDescription>
+                              <div className="text-green-700 text-sm">
+                                <strong>Note:</strong> The remaining employer
+                                contribution after EPS will be automatically
+                                adjusted towards EPF.
+                              </div>
+                            </AlertDescription>
+                          </Alert>
+                        </CardContent>
+                      )}
+                    </Card>
+
+                    {/* Without Maximum PF Wage Rule Section */}
+                    <Card className="border-blue-200 bg-blue-50/30">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-blue-100 rounded-lg">
+                              <Shield className="h-5 w-5 text-blue-600" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-blue-800">
+                                Without Maximum PF Wage Rule
+                              </CardTitle>
+                              <p className="text-sm text-blue-600 mt-1">
+                                PF contribution base uses actual wage
+                                calculation basis without any cap
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <Label
+                              htmlFor="withoutMaxWage"
+                              className="text-sm font-medium"
+                            >
+                              Enable Configuration
+                            </Label>
+                            <Checkbox
+                              id="withoutMaxWage"
+                              checked={pfWithoutMaxWageConfig.enabled}
+                              onCheckedChange={(checked) =>
+                                setPfWithoutMaxWageConfig((prev) => ({
+                                  ...prev,
+                                  enabled: !!checked,
+                                }))
+                              }
+                            />
+                          </div>
+                        </div>
+                      </CardHeader>
+                      {pfWithoutMaxWageConfig.enabled && (
+                        <CardContent className="space-y-4">
+                          <div className="space-y-2">
+                            <Label>PF Wage Calculation Basis *</Label>
+                            <Select
+                              value=""
+                              onValueChange={(value) => {
+                                if (
+                                  value &&
+                                  !pfWithoutMaxWageConfig.pfBasisPayheads.includes(
+                                    value,
+                                  )
+                                ) {
+                                  setPfWithoutMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    pfBasisPayheads: [
+                                      ...prev.pfBasisPayheads,
+                                      value,
+                                    ],
+                                  }));
+                                }
+                              }}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select payheads" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {mockPayheads
+                                  .filter(
+                                    (payhead) =>
+                                      !pfWithoutMaxWageConfig.pfBasisPayheads.includes(
+                                        payhead.name,
+                                      ),
+                                  )
+                                  .map((payhead) => (
+                                    <SelectItem
+                                      key={payhead.id}
+                                      value={payhead.name}
+                                    >
+                                      {payhead.name}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                              {pfWithoutMaxWageConfig.pfBasisPayheads.map(
+                                (payhead, index) => (
+                                  <Badge
+                                    key={index}
+                                    variant="secondary"
+                                    className="text-xs"
+                                  >
+                                    {payhead}
+                                    <button
+                                      type="button"
+                                      className="ml-1 text-xs hover:text-red-600"
+                                      onClick={() => {
+                                        setPfWithoutMaxWageConfig((prev) => ({
+                                          ...prev,
+                                          pfBasisPayheads:
+                                            prev.pfBasisPayheads.filter(
+                                              (p) => p !== payhead,
+                                            ),
+                                        }));
+                                      }}
+                                    >
+                                      ×
+                                    </button>
+                                  </Badge>
+                                ),
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="withoutMaxWageEmployeeRate">
+                                Employee Contribution Rate (%) *
+                              </Label>
+                              <Input
+                                id="withoutMaxWageEmployeeRate"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                value={
+                                  pfWithoutMaxWageConfig.employeeContribution
+                                }
+                                onChange={(e) =>
+                                  setPfWithoutMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    employeeContribution:
+                                      parseFloat(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label htmlFor="withoutMaxWageEmployerRate">
+                                Employer Contribution Rate (%) *
+                              </Label>
+                              <Input
+                                id="withoutMaxWageEmployerRate"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                value={
+                                  pfWithoutMaxWageConfig.employerContribution
+                                }
+                                onChange={(e) =>
+                                  setPfWithoutMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    employerContribution:
+                                      parseFloat(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="withoutMaxWageEpsRate">
+                                EPS Contribution Rate (%) *
+                              </Label>
+                              <Input
+                                id="withoutMaxWageEpsRate"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                value={pfWithoutMaxWageConfig.epsContribution}
+                                onChange={(e) =>
+                                  setPfWithoutMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    epsContribution:
+                                      parseFloat(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label htmlFor="withoutMaxWageEpsCap">
+                                EPS Cap (₹) *
+                              </Label>
+                              <Input
+                                id="withoutMaxWageEpsCap"
+                                type="number"
+                                min="0"
+                                value={pfWithoutMaxWageConfig.epsCap}
+                                onChange={(e) =>
+                                  setPfWithoutMaxWageConfig((prev) => ({
+                                    ...prev,
+                                    epsCap: parseInt(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+                          </div>
+
+                          <Alert className="border-blue-200 bg-blue-50">
+                            <Shield className="h-4 w-4 text-blue-600" />
+                            <AlertDescription>
+                              <div className="text-blue-700 text-sm">
+                                <strong>Note:</strong> The remaining employer
+                                contribution after EPS will be automatically
+                                adjusted towards EPF.
+                              </div>
+                            </AlertDescription>
+                          </Alert>
+                        </CardContent>
+                      )}
+                    </Card>
                   </TabsContent>
 
                   <TabsContent value="pt-config" className="space-y-4">
@@ -924,40 +1476,293 @@ export default function SalaryConfiguration() {
                       onEdit={handleEdit}
                       onDelete={handleDelete}
                       searchPlaceholder="Search PT slabs..."
-                      customToolbar={
-                        <div className="flex items-center gap-2">
-                          <Button
-                            onClick={handleAdd}
-                            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
-                          >
-                            <Plus className="h-4 w-4" />
-                            Add PT Slab
-                          </Button>
-                        </div>
-                      }
                     />
                   </TabsContent>
 
-                  <TabsContent value="esic-config" className="space-y-4">
-                    <DataTable
-                      data={mockESICConfig}
-                      columns={esicColumns}
-                      onView={handleView}
-                      onEdit={handleEdit}
-                      onDelete={handleDelete}
-                      searchPlaceholder="Search ESIC configurations..."
-                      customToolbar={
-                        <div className="flex items-center gap-2">
-                          <Button
-                            onClick={handleAdd}
-                            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
-                          >
-                            <Plus className="h-4 w-4" />
-                            Add ESIC Config
-                          </Button>
+                  <TabsContent value="esic-config" className="space-y-6">
+                    {/* ESIC Configuration Section */}
+                    <Card className="border-purple-200 bg-purple-50/30">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-purple-100 rounded-lg">
+                              <CreditCard className="h-5 w-5 text-purple-600" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-purple-800">
+                                ESIC Configuration
+                              </CardTitle>
+                              <p className="text-sm text-purple-600 mt-1">
+                                Configure Employee State Insurance Corporation
+                                settings
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <Label
+                              htmlFor="esicEnabled"
+                              className="text-sm font-medium"
+                            >
+                              Enable ESIC
+                            </Label>
+                            <Checkbox
+                              id="esicEnabled"
+                              checked={esicConfig.enabled}
+                              onCheckedChange={(checked) =>
+                                setEsicConfig((prev) => ({
+                                  ...prev,
+                                  enabled: !!checked,
+                                }))
+                              }
+                            />
+                          </div>
                         </div>
-                      }
-                    />
+                      </CardHeader>
+                      {esicConfig.enabled && (
+                        <CardContent className="space-y-6">
+                          <TooltipProvider>
+                            {/* Employee Wage Ceiling */}
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <Label htmlFor="employeeWageCeiling">
+                                  Employee Wage Ceiling (₹) *
+                                </Label>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4 text-gray-500 cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>
+                                      Maximum salary to be eligible for ESIC
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <Input
+                                id="employeeWageCeiling"
+                                type="number"
+                                min="0"
+                                value={esicConfig.employeeWageCeiling}
+                                onChange={(e) =>
+                                  setEsicConfig((prev) => ({
+                                    ...prev,
+                                    employeeWageCeiling:
+                                      parseInt(e.target.value) || 0,
+                                  }))
+                                }
+                              />
+                            </div>
+
+                            {/* ESIC Calculation Basis */}
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <Label>ESIC Calculation Basis *</Label>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4 text-gray-500 cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>
+                                      Select the salary components used to
+                                      calculate ESI wages
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <Select
+                                value=""
+                                onValueChange={(value) => {
+                                  if (
+                                    value &&
+                                    !esicConfig.esicCalculationBasis.includes(
+                                      value,
+                                    )
+                                  ) {
+                                    setEsicConfig((prev) => ({
+                                      ...prev,
+                                      esicCalculationBasis: [
+                                        ...prev.esicCalculationBasis,
+                                        value,
+                                      ],
+                                    }));
+                                  }
+                                }}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select salary components" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {["Basic", "HRA", "DA", "Special Pay"]
+                                    .filter(
+                                      (component) =>
+                                        !esicConfig.esicCalculationBasis.includes(
+                                          component,
+                                        ),
+                                    )
+                                    .map((component) => (
+                                      <SelectItem
+                                        key={component}
+                                        value={component}
+                                      >
+                                        {component}
+                                      </SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
+                              <div className="flex flex-wrap gap-2 mt-2">
+                                {esicConfig.esicCalculationBasis.map(
+                                  (component, index) => (
+                                    <Badge
+                                      key={index}
+                                      variant="secondary"
+                                      className="text-xs"
+                                    >
+                                      {component}
+                                      <button
+                                        type="button"
+                                        className="ml-1 text-xs hover:text-red-600"
+                                        onClick={() => {
+                                          setEsicConfig((prev) => ({
+                                            ...prev,
+                                            esicCalculationBasis:
+                                              prev.esicCalculationBasis.filter(
+                                                (c) => c !== component,
+                                              ),
+                                          }));
+                                        }}
+                                      >
+                                        ×
+                                      </button>
+                                    </Badge>
+                                  ),
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Contribution Rates */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <Label htmlFor="employeeESICContribution">
+                                    Employee Contribution (%) *
+                                  </Label>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Info className="h-4 w-4 text-gray-500 cursor-help" />
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Employee's share of ESI deduction</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </div>
+                                <Input
+                                  id="employeeESICContribution"
+                                  type="number"
+                                  step="0.01"
+                                  min="0"
+                                  max="100"
+                                  value={esicConfig.employeeContribution}
+                                  onChange={(e) =>
+                                    setEsicConfig((prev) => ({
+                                      ...prev,
+                                      employeeContribution:
+                                        parseFloat(e.target.value) || 0,
+                                    }))
+                                  }
+                                />
+                              </div>
+
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <Label htmlFor="employerESICContribution">
+                                    Employer (Company) Contribution (%) *
+                                  </Label>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Info className="h-4 w-4 text-gray-500 cursor-help" />
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Company's share of ESI contribution</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </div>
+                                <Input
+                                  id="employerESICContribution"
+                                  type="number"
+                                  step="0.01"
+                                  min="0"
+                                  max="100"
+                                  value={esicConfig.employerContribution}
+                                  onChange={(e) =>
+                                    setEsicConfig((prev) => ({
+                                      ...prev,
+                                      employerContribution:
+                                        parseFloat(e.target.value) || 0,
+                                    }))
+                                  }
+                                />
+                              </div>
+                            </div>
+
+                            {/* Notes Section */}
+                            <div className="space-y-4">
+                              <h4 className="font-semibold text-purple-900">
+                                Important Notes
+                              </h4>
+                              <Alert className="border-purple-200 bg-purple-50">
+                                <Info className="h-4 w-4 text-purple-600" />
+                                <AlertDescription>
+                                  <div className="text-purple-700 text-sm space-y-1">
+                                    <div>
+                                      • ESI is applicable only if monthly gross
+                                      salary is ≤ ₹21,000.
+                                    </div>
+                                    <div>
+                                      • If salary increases above ₹21,000
+                                      mid-period, ESI continues until the end of
+                                      that 6-month contribution cycle.
+                                    </div>
+                                    <div>
+                                      • ESI contribution periods are:
+                                      April–September and October–March.
+                                    </div>
+                                  </div>
+                                </AlertDescription>
+                              </Alert>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex justify-end gap-3 pt-4 border-t">
+                              <Button
+                                variant="outline"
+                                onClick={() => {
+                                  setEsicConfig({
+                                    enabled: false,
+                                    employeeWageCeiling: 21000,
+                                    esicCalculationBasis: [],
+                                    employeeContribution: 0.75,
+                                    employerContribution: 3.25,
+                                  });
+                                }}
+                              >
+                                Cancel
+                              </Button>
+                              <Button
+                                className="bg-purple-600 hover:bg-purple-700"
+                                onClick={() => {
+                                  // Handle form submission
+                                  console.log("ESIC Config Data:", esicConfig);
+                                  // Here you would typically save to backend
+                                }}
+                              >
+                                <Save className="h-4 w-4 mr-2" />
+                                Save Settings
+                              </Button>
+                            </div>
+                          </TooltipProvider>
+                        </CardContent>
+                      )}
+                    </Card>
                   </TabsContent>
                 </Tabs>
               </div>
@@ -968,7 +1773,7 @@ export default function SalaryConfiguration() {
 
       {/* View Dialog */}
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-        <DialogContent className="w-auto max-w-xl h-auto max-h-[80vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-2xl lg:max-w-4xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Settings className="h-5 w-5 text-blue-600" />
@@ -985,27 +1790,13 @@ export default function SalaryConfiguration() {
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="w-auto max-w-xl h-auto max-h-[80vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-2xl lg:max-w-3xl">
           <DialogHeader>
             <DialogTitle>Edit Configuration</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <p className="text-gray-600">
               Edit functionality will be implemented here.
-            </p>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Add Dialog */}
-      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="w-auto max-w-xl h-auto max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Add New Configuration</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <p className="text-gray-600">
-              Add functionality will be implemented here.
             </p>
           </div>
         </DialogContent>
