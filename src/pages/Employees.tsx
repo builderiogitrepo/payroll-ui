@@ -16,6 +16,21 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Users,
   Building,
   MapPin,
@@ -29,9 +44,13 @@ import {
   UserX,
   Clock,
   Star,
-  Briefcase,
-  CreditCard,
   User,
+  CreditCard,
+  DollarSign,
+  Info,
+  Save,
+  X,
+  Briefcase,
   Eye,
   Edit,
   Trash2,
@@ -409,6 +428,63 @@ const filters: Filter[] = [
 export default function Employees() {
   const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("personal");
+
+  // Employee Creation Form State
+  const [formData, setFormData] = useState({
+    // Business Unit
+    businessUnit: "",
+
+    // Personal Information
+    name: "",
+    dateOfBirth: "",
+    gender: "",
+    maritalStatus: "",
+    bloodGroup: "",
+    fathersName: "",
+    educationQualification: "",
+    contactNumber: "",
+    personalEmail: "",
+    workEmail: "",
+
+    // Employment Information
+    offerType: "",
+    employmentType: "",
+    designation: "",
+    department: "",
+    reportingManager: "",
+    dateOfJoining: "",
+
+    // Telecom specific fields
+    category: "",
+    circle: "",
+    costingCircle: "",
+    baseLocation: "",
+
+    // JNET specific fields
+    location: "",
+
+    // Bank & Identity Details
+    panCard: "",
+    aadharCard: "",
+    bankAccountNumber: "",
+    bankName: "",
+    ifscCode: "",
+
+    // Statutory Details
+    previousCompanyESICNumber: "",
+    previousCompanyEPFUANNumber: "",
+    pfRuleType: "",
+    eligibleForEPS: false,
+
+    // Salary Setup
+    annualGross: 0,
+    variablePay: 0,
+    salaryStructure: "",
+    basic: 0,
+    hra: 0,
+    otherAllowance: 0,
+  });
 
   const handleView = (employee: any) => {
     setSelectedEmployee(employee);
@@ -424,6 +500,124 @@ export default function Employees() {
 
   const handleAdd = () => {
     setIsAddDialogOpen(true);
+  };
+
+  const handleInputChange = (
+    field: string,
+    value: string | number | boolean,
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+
+    // Auto-calculate salary components when gross changes
+    if (field === "annualGross" && typeof value === "number") {
+      const gross = value;
+      const basic = gross * 0.5; // 50% basic
+      const hra = formData.businessUnit === "JNET" ? basic * 0.4 : 0; // 40% of basic for JNET
+      const otherAllowance =
+        formData.businessUnit === "JNET" ? gross - basic - hra : gross - basic; // For Telecom: Gross - Wage Rate
+
+      setFormData((prev) => ({
+        ...prev,
+        basic,
+        hra,
+        otherAllowance,
+      }));
+    }
+  };
+
+  const handleSubmitEmployee = () => {
+    console.log("Employee Creation Data:", formData);
+    // Handle form submission
+    setIsAddDialogOpen(false);
+    // Reset form
+    setFormData({
+      businessUnit: "",
+      name: "",
+      dateOfBirth: "",
+      gender: "",
+      maritalStatus: "",
+      bloodGroup: "",
+      fathersName: "",
+      educationQualification: "",
+      contactNumber: "",
+      personalEmail: "",
+      workEmail: "",
+      offerType: "",
+      employmentType: "",
+      designation: "",
+      department: "",
+      reportingManager: "",
+      dateOfJoining: "",
+      category: "",
+      circle: "",
+      costingCircle: "",
+      baseLocation: "",
+      location: "",
+      panCard: "",
+      aadharCard: "",
+      bankAccountNumber: "",
+      bankName: "",
+      ifscCode: "",
+      previousCompanyESICNumber: "",
+      previousCompanyEPFUANNumber: "",
+      pfRuleType: "",
+      eligibleForEPS: false,
+      annualGross: 0,
+      variablePay: 0,
+      salaryStructure: "",
+      basic: 0,
+      hra: 0,
+      otherAllowance: 0,
+    });
+    setActiveTab("personal");
+  };
+
+  const handleCancelEmployee = () => {
+    setIsAddDialogOpen(false);
+    // Reset form
+    setFormData({
+      businessUnit: "",
+      name: "",
+      dateOfBirth: "",
+      gender: "",
+      maritalStatus: "",
+      bloodGroup: "",
+      fathersName: "",
+      educationQualification: "",
+      contactNumber: "",
+      personalEmail: "",
+      workEmail: "",
+      offerType: "",
+      employmentType: "",
+      designation: "",
+      department: "",
+      reportingManager: "",
+      dateOfJoining: "",
+      category: "",
+      circle: "",
+      costingCircle: "",
+      baseLocation: "",
+      location: "",
+      panCard: "",
+      aadharCard: "",
+      bankAccountNumber: "",
+      bankName: "",
+      ifscCode: "",
+      previousCompanyESICNumber: "",
+      previousCompanyEPFUANNumber: "",
+      pfRuleType: "",
+      eligibleForEPS: false,
+      annualGross: 0,
+      variablePay: 0,
+      salaryStructure: "",
+      basic: 0,
+      hra: 0,
+      otherAllowance: 0,
+    });
+    setActiveTab("personal");
   };
 
   const handleBulkAction = (action: string, employees: any[]) => {
@@ -748,106 +942,762 @@ export default function Employees() {
 
       {/* Add Employee Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-4xl lg:max-w-6xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Add New Employee</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Plus className="h-5 w-5 text-blue-600" />
+              Create New Employee
+            </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="name">
-                  Full Name <span className="text-red-500">*</span>
-                </Label>
-                <Input id="name" placeholder="Enter full name" />
-              </div>
-              <div>
-                <Label htmlFor="empId">
-                  Employee ID <span className="text-red-500">*</span>
-                </Label>
-                <Input id="empId" placeholder="Auto-generated" disabled />
-              </div>
-            </div>
+          <TooltipProvider>
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full"
+            >
+              <TabsList className="grid w-full grid-cols-5 mb-6">
+                <TabsTrigger
+                  value="personal"
+                  className="flex items-center gap-2"
+                >
+                  <User className="h-4 w-4" />
+                  Personal
+                </TabsTrigger>
+                <TabsTrigger
+                  value="employment"
+                  className="flex items-center gap-2"
+                >
+                  <Building className="h-4 w-4" />
+                  Employment
+                </TabsTrigger>
+                <TabsTrigger value="bank" className="flex items-center gap-2">
+                  <CreditCard className="h-4 w-4" />
+                  Bank & ID
+                </TabsTrigger>
+                <TabsTrigger
+                  value="statutory"
+                  className="flex items-center gap-2"
+                >
+                  <FileText className="h-4 w-4" />
+                  Statutory
+                </TabsTrigger>
+                <TabsTrigger value="salary" className="flex items-center gap-2">
+                  <DollarSign className="h-4 w-4" />
+                  Salary
+                </TabsTrigger>
+              </TabsList>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="department">
-                  Department <span className="text-red-500">*</span>
-                </Label>
-                <select className="w-full px-3 py-2 border border-gray-300 rounded-md">
-                  <option value="">Select Department</option>
-                  <option value="Technology">Technology</option>
-                  <option value="Sales">Sales</option>
-                  <option value="Operations">Operations</option>
-                  <option value="HR">HR</option>
-                  <option value="Finance">Finance</option>
-                </select>
+              {/* Business Unit Selection - Always visible */}
+              <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <Building className="h-5 w-5 text-blue-600" />
+                  <Label className="font-medium text-blue-800">
+                    Business Unit Selection *
+                  </Label>
+                </div>
+                <Select
+                  value={formData.businessUnit}
+                  onValueChange={(value) =>
+                    handleInputChange("businessUnit", value)
+                  }
+                >
+                  <SelectTrigger className="w-full max-w-md">
+                    <SelectValue placeholder="Select business unit" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="JNET">JNET</SelectItem>
+                    <SelectItem value="Telecom">Telecom</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <div>
-                <Label htmlFor="designation">
-                  Designation <span className="text-red-500">*</span>
-                </Label>
-                <Input id="designation" placeholder="e.g., Software Engineer" />
-              </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="businessUnit">
-                  Business Unit <span className="text-red-500">*</span>
-                </Label>
-                <select className="w-full px-3 py-2 border border-gray-300 rounded-md">
-                  <option value="">Select Business Unit</option>
-                  <option value="JNET">JNET</option>
-                  <option value="Telecom">Telecom</option>
-                </select>
-              </div>
-              <div>
-                <Label htmlFor="location">
-                  Location <span className="text-red-500">*</span>
-                </Label>
-                <select className="w-full px-3 py-2 border border-gray-300 rounded-md">
-                  <option value="">Select Location</option>
-                  <option value="Mumbai">Mumbai</option>
-                  <option value="Delhi">Delhi</option>
-                  <option value="Bangalore">Bangalore</option>
-                  <option value="Chennai">Chennai</option>
-                  <option value="Pune">Pune</option>
-                </select>
-              </div>
-            </div>
+              {/* Personal Information Tab */}
+              <TabsContent value="personal" className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Name *</Label>
+                    <Input
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) =>
+                        handleInputChange("name", e.target.value)
+                      }
+                      placeholder="Enter full name"
+                    />
+                  </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="email">
-                  Email <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="employee@company.com"
-                />
-              </div>
-              <div>
-                <Label htmlFor="phone">
-                  Phone <span className="text-red-500">*</span>
-                </Label>
-                <Input id="phone" placeholder="+91 9876543210" />
-              </div>
-            </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="dateOfBirth">Date of Birth *</Label>
+                    <Input
+                      id="dateOfBirth"
+                      type="date"
+                      value={formData.dateOfBirth}
+                      onChange={(e) =>
+                        handleInputChange("dateOfBirth", e.target.value)
+                      }
+                    />
+                  </div>
 
-            <div className="flex justify-end gap-2 pt-4 border-t">
-              <Button
-                variant="outline"
-                onClick={() => setIsAddDialogOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button onClick={() => setIsAddDialogOpen(false)}>
-                Add Employee
-              </Button>
-            </div>
-          </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="gender">Gender *</Label>
+                    <Select
+                      value={formData.gender}
+                      onValueChange={(value) =>
+                        handleInputChange("gender", value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="maritalStatus">Marital Status</Label>
+                    <Select
+                      value={formData.maritalStatus}
+                      onValueChange={(value) =>
+                        handleInputChange("maritalStatus", value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select marital status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="single">Single</SelectItem>
+                        <SelectItem value="married">Married</SelectItem>
+                        <SelectItem value="divorced">Divorced</SelectItem>
+                        <SelectItem value="widowed">Widowed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="bloodGroup">Blood Group</Label>
+                    <Select
+                      value={formData.bloodGroup}
+                      onValueChange={(value) =>
+                        handleInputChange("bloodGroup", value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select blood group" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="A+">A+</SelectItem>
+                        <SelectItem value="A-">A-</SelectItem>
+                        <SelectItem value="B+">B+</SelectItem>
+                        <SelectItem value="B-">B-</SelectItem>
+                        <SelectItem value="AB+">AB+</SelectItem>
+                        <SelectItem value="AB-">AB-</SelectItem>
+                        <SelectItem value="O+">O+</SelectItem>
+                        <SelectItem value="O-">O-</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="fathersName">Father's Name</Label>
+                    <Input
+                      id="fathersName"
+                      value={formData.fathersName}
+                      onChange={(e) =>
+                        handleInputChange("fathersName", e.target.value)
+                      }
+                      placeholder="Enter father's name"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="educationQualification">
+                      Education Qualification
+                    </Label>
+                    <Input
+                      id="educationQualification"
+                      value={formData.educationQualification}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "educationQualification",
+                          e.target.value,
+                        )
+                      }
+                      placeholder="Enter education qualification"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="contactNumber">Contact Number *</Label>
+                    <Input
+                      id="contactNumber"
+                      type="tel"
+                      value={formData.contactNumber}
+                      onChange={(e) =>
+                        handleInputChange("contactNumber", e.target.value)
+                      }
+                      placeholder="Enter contact number"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="personalEmail">Personal Email *</Label>
+                    <Input
+                      id="personalEmail"
+                      type="email"
+                      value={formData.personalEmail}
+                      onChange={(e) =>
+                        handleInputChange("personalEmail", e.target.value)
+                      }
+                      placeholder="Enter personal email"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="workEmail">
+                      {formData.businessUnit === "JNET"
+                        ? "Email JNET *"
+                        : "Work Email *"}
+                    </Label>
+                    <Input
+                      id="workEmail"
+                      type="email"
+                      value={formData.workEmail}
+                      onChange={(e) =>
+                        handleInputChange("workEmail", e.target.value)
+                      }
+                      placeholder={
+                        formData.businessUnit === "JNET"
+                          ? "Enter JNET email"
+                          : "Enter work email"
+                      }
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+
+              {/* Employment Information Tab */}
+              <TabsContent value="employment" className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="offerType">Offer Type *</Label>
+                    <Select
+                      value={formData.offerType}
+                      onValueChange={(value) =>
+                        handleInputChange("offerType", value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select offer type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="full-time">Full Time</SelectItem>
+                        <SelectItem value="part-time">Part Time</SelectItem>
+                        <SelectItem value="contract">Contract</SelectItem>
+                        <SelectItem value="intern">Internship</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="employmentType">Employment Type *</Label>
+                    <Select
+                      value={formData.employmentType}
+                      onValueChange={(value) =>
+                        handleInputChange("employmentType", value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select employment type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="permanent">Permanent</SelectItem>
+                        <SelectItem value="temporary">Temporary</SelectItem>
+                        <SelectItem value="probation">Probation</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="designation">Designation *</Label>
+                    <Select
+                      value={formData.designation}
+                      onValueChange={(value) =>
+                        handleInputChange("designation", value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select designation" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="software-engineer">
+                          Software Engineer
+                        </SelectItem>
+                        <SelectItem value="senior-software-engineer">
+                          Senior Software Engineer
+                        </SelectItem>
+                        <SelectItem value="tech-lead">Tech Lead</SelectItem>
+                        <SelectItem value="manager">Manager</SelectItem>
+                        <SelectItem value="sales-executive">
+                          Sales Executive
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="department">Department *</Label>
+                    <Select
+                      value={formData.department}
+                      onValueChange={(value) =>
+                        handleInputChange("department", value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select department" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="engineering">Engineering</SelectItem>
+                        <SelectItem value="sales">Sales</SelectItem>
+                        <SelectItem value="marketing">Marketing</SelectItem>
+                        <SelectItem value="hr">Human Resources</SelectItem>
+                        <SelectItem value="finance">Finance</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="reportingManager">
+                      Reporting Manager *
+                    </Label>
+                    <Select
+                      value={formData.reportingManager}
+                      onValueChange={(value) =>
+                        handleInputChange("reportingManager", value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select reporting manager" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="john-doe">John Doe</SelectItem>
+                        <SelectItem value="jane-smith">Jane Smith</SelectItem>
+                        <SelectItem value="mike-johnson">
+                          Mike Johnson
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="dateOfJoining">Date of Joining *</Label>
+                    <Input
+                      id="dateOfJoining"
+                      type="date"
+                      value={formData.dateOfJoining}
+                      onChange={(e) =>
+                        handleInputChange("dateOfJoining", e.target.value)
+                      }
+                    />
+                  </div>
+
+                  {/* Conditional fields based on Business Unit */}
+                  {formData.businessUnit === "Telecom" && (
+                    <>
+                      <div className="space-y-2">
+                        <Label htmlFor="category">Category *</Label>
+                        <Select
+                          value={formData.category}
+                          onValueChange={(value) =>
+                            handleInputChange("category", value)
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="field-executive">
+                              Field Executive
+                            </SelectItem>
+                            <SelectItem value="sales-executive">
+                              Sales Executive
+                            </SelectItem>
+                            <SelectItem value="supervisor">
+                              Supervisor
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="circle">Circle *</Label>
+                        <Select
+                          value={formData.circle}
+                          onValueChange={(value) =>
+                            handleInputChange("circle", value)
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select circle" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="mumbai">Mumbai</SelectItem>
+                            <SelectItem value="delhi">Delhi</SelectItem>
+                            <SelectItem value="bangalore">Bangalore</SelectItem>
+                            <SelectItem value="chennai">Chennai</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="costingCircle">Costing Circle *</Label>
+                        <Select
+                          value={formData.costingCircle}
+                          onValueChange={(value) =>
+                            handleInputChange("costingCircle", value)
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select costing circle" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="west">West</SelectItem>
+                            <SelectItem value="north">North</SelectItem>
+                            <SelectItem value="south">South</SelectItem>
+                            <SelectItem value="east">East</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="baseLocation">Base Location *</Label>
+                        <Input
+                          id="baseLocation"
+                          value={formData.baseLocation}
+                          onChange={(e) =>
+                            handleInputChange("baseLocation", e.target.value)
+                          }
+                          placeholder="Enter base location"
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  {formData.businessUnit === "JNET" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="location">Location *</Label>
+                      <Input
+                        id="location"
+                        value={formData.location}
+                        onChange={(e) =>
+                          handleInputChange("location", e.target.value)
+                        }
+                        placeholder="Enter location"
+                      />
+                    </div>
+                  )}
+                </div>
+              </TabsContent>
+
+              {/* Bank & Identity Details Tab */}
+              <TabsContent value="bank" className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="panCard">PAN Card *</Label>
+                    <Input
+                      id="panCard"
+                      value={formData.panCard}
+                      onChange={(e) =>
+                        handleInputChange("panCard", e.target.value)
+                      }
+                      placeholder="Enter PAN number"
+                      className="uppercase"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="aadharCard">Aadhar Card *</Label>
+                    <Input
+                      id="aadharCard"
+                      value={formData.aadharCard}
+                      onChange={(e) =>
+                        handleInputChange("aadharCard", e.target.value)
+                      }
+                      placeholder="Enter Aadhar number"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="bankAccountNumber">
+                      Bank Account Number *
+                    </Label>
+                    <Input
+                      id="bankAccountNumber"
+                      value={formData.bankAccountNumber}
+                      onChange={(e) =>
+                        handleInputChange("bankAccountNumber", e.target.value)
+                      }
+                      placeholder="Enter bank account number"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="bankName">Bank Name *</Label>
+                    <Select
+                      value={formData.bankName}
+                      onValueChange={(value) =>
+                        handleInputChange("bankName", value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select bank" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="sbi">State Bank of India</SelectItem>
+                        <SelectItem value="hdfc">HDFC Bank</SelectItem>
+                        <SelectItem value="icici">ICICI Bank</SelectItem>
+                        <SelectItem value="axis">Axis Bank</SelectItem>
+                        <SelectItem value="pnb">
+                          Punjab National Bank
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="ifscCode">IFSC Code *</Label>
+                    <Input
+                      id="ifscCode"
+                      value={formData.ifscCode}
+                      onChange={(e) =>
+                        handleInputChange("ifscCode", e.target.value)
+                      }
+                      placeholder="Enter IFSC code"
+                      className="uppercase"
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+
+              {/* Statutory Details Tab */}
+              <TabsContent value="statutory" className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="previousCompanyESICNumber">
+                      Previous Company ESIC Number
+                    </Label>
+                    <Input
+                      id="previousCompanyESICNumber"
+                      value={formData.previousCompanyESICNumber}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "previousCompanyESICNumber",
+                          e.target.value,
+                        )
+                      }
+                      placeholder="Enter previous ESIC number"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="previousCompanyEPFUANNumber">
+                      Previous Company EPF UAN Number
+                    </Label>
+                    <Input
+                      id="previousCompanyEPFUANNumber"
+                      value={formData.previousCompanyEPFUANNumber}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "previousCompanyEPFUANNumber",
+                          e.target.value,
+                        )
+                      }
+                      placeholder="Enter previous EPF UAN"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Label htmlFor="pfRuleType">PF Rule Type *</Label>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info className="h-4 w-4 text-gray-500 cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>
+                            Select the PF calculation rule for this employee
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                    <Select
+                      value={formData.pfRuleType}
+                      onValueChange={(value) =>
+                        handleInputChange("pfRuleType", value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select PF rule type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="with-minimum-wage">
+                          With Minimum Wage Rule
+                        </SelectItem>
+                        <SelectItem value="without-minimum-wage">
+                          Without Minimum Wage Rule
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="eligibleForEPS"
+                      checked={formData.eligibleForEPS}
+                      onCheckedChange={(checked) =>
+                        handleInputChange("eligibleForEPS", !!checked)
+                      }
+                    />
+                    <div className="flex items-center gap-2">
+                      <Label
+                        htmlFor="eligibleForEPS"
+                        className="text-sm font-normal"
+                      >
+                        Eligible for EPS?
+                      </Label>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info className="h-4 w-4 text-gray-500 cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Employee Pension Scheme eligibility</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+
+              {/* Salary Setup Tab */}
+              <TabsContent value="salary" className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="annualGross">Annual Gross (₹) *</Label>
+                    <Input
+                      id="annualGross"
+                      type="number"
+                      min="0"
+                      value={formData.annualGross}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "annualGross",
+                          parseFloat(e.target.value) || 0,
+                        )
+                      }
+                      placeholder="Enter annual gross salary"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="variablePay">Variable Pay (%) *</Label>
+                    <Input
+                      id="variablePay"
+                      type="number"
+                      min="0"
+                      max="100"
+                      step="0.1"
+                      value={formData.variablePay}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "variablePay",
+                          parseFloat(e.target.value) || 0,
+                        )
+                      }
+                      placeholder="Enter variable pay percentage"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="salaryStructure">Salary Structure</Label>
+                    <Input
+                      id="salaryStructure"
+                      value={`Auto-generated based on ${formData.businessUnit} ${formData.offerType}`}
+                      disabled
+                      className="bg-gray-50"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="basic">Basic (₹)</Label>
+                    <Input
+                      id="basic"
+                      type="number"
+                      value={formData.basic}
+                      disabled
+                      className="bg-gray-50"
+                    />
+                  </div>
+
+                  {formData.businessUnit === "JNET" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="hra">HRA (₹)</Label>
+                      <Input
+                        id="hra"
+                        type="number"
+                        value={formData.hra}
+                        disabled
+                        className="bg-gray-50"
+                      />
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <Label htmlFor="otherAllowance">
+                      Other Allowance (₹)
+                      {formData.businessUnit === "Telecom" &&
+                        " (Gross - Wage Rate)"}
+                    </Label>
+                    <Input
+                      id="otherAllowance"
+                      type="number"
+                      value={formData.otherAllowance}
+                      disabled
+                      className="bg-gray-50"
+                    />
+                  </div>
+                </div>
+
+                <Alert className="border-blue-200 bg-blue-50">
+                  <Info className="h-4 w-4 text-blue-600" />
+                  <AlertDescription>
+                    <div className="text-blue-700 text-sm">
+                      <strong>Info:</strong> Deductions and tax rules are
+                      auto-applied based on payroll configuration.
+                    </div>
+                  </AlertDescription>
+                </Alert>
+              </TabsContent>
+
+              {/* Footer Actions */}
+              <div className="flex justify-end gap-3 pt-4 border-t mt-6">
+                <Button variant="outline" onClick={handleCancelEmployee}>
+                  <X className="h-4 w-4 mr-2" />
+                  Cancel
+                </Button>
+                <Button
+                  className="bg-blue-600 hover:bg-blue-700"
+                  onClick={handleSubmitEmployee}
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  Save Employee
+                </Button>
+              </div>
+            </Tabs>
+          </TooltipProvider>
         </DialogContent>
       </Dialog>
     </div>
