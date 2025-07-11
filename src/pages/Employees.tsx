@@ -504,6 +504,124 @@ export default function Employees() {
     setIsAddDialogOpen(true);
   };
 
+  const handleInputChange = (
+    field: string,
+    value: string | number | boolean,
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+
+    // Auto-calculate salary components when gross changes
+    if (field === "annualGross" && typeof value === "number") {
+      const gross = value;
+      const basic = gross * 0.5; // 50% basic
+      const hra = formData.businessUnit === "JNET" ? basic * 0.4 : 0; // 40% of basic for JNET
+      const otherAllowance =
+        formData.businessUnit === "JNET" ? gross - basic - hra : gross - basic; // For Telecom: Gross - Wage Rate
+
+      setFormData((prev) => ({
+        ...prev,
+        basic,
+        hra,
+        otherAllowance,
+      }));
+    }
+  };
+
+  const handleSubmitEmployee = () => {
+    console.log("Employee Creation Data:", formData);
+    // Handle form submission
+    setIsAddDialogOpen(false);
+    // Reset form
+    setFormData({
+      businessUnit: "",
+      name: "",
+      dateOfBirth: "",
+      gender: "",
+      maritalStatus: "",
+      bloodGroup: "",
+      fathersName: "",
+      educationQualification: "",
+      contactNumber: "",
+      personalEmail: "",
+      workEmail: "",
+      offerType: "",
+      employmentType: "",
+      designation: "",
+      department: "",
+      reportingManager: "",
+      dateOfJoining: "",
+      category: "",
+      circle: "",
+      costingCircle: "",
+      baseLocation: "",
+      location: "",
+      panCard: "",
+      aadharCard: "",
+      bankAccountNumber: "",
+      bankName: "",
+      ifscCode: "",
+      previousCompanyESICNumber: "",
+      previousCompanyEPFUANNumber: "",
+      pfRuleType: "",
+      eligibleForEPS: false,
+      annualGross: 0,
+      variablePay: 0,
+      salaryStructure: "",
+      basic: 0,
+      hra: 0,
+      otherAllowance: 0,
+    });
+    setActiveTab("personal");
+  };
+
+  const handleCancelEmployee = () => {
+    setIsAddDialogOpen(false);
+    // Reset form
+    setFormData({
+      businessUnit: "",
+      name: "",
+      dateOfBirth: "",
+      gender: "",
+      maritalStatus: "",
+      bloodGroup: "",
+      fathersName: "",
+      educationQualification: "",
+      contactNumber: "",
+      personalEmail: "",
+      workEmail: "",
+      offerType: "",
+      employmentType: "",
+      designation: "",
+      department: "",
+      reportingManager: "",
+      dateOfJoining: "",
+      category: "",
+      circle: "",
+      costingCircle: "",
+      baseLocation: "",
+      location: "",
+      panCard: "",
+      aadharCard: "",
+      bankAccountNumber: "",
+      bankName: "",
+      ifscCode: "",
+      previousCompanyESICNumber: "",
+      previousCompanyEPFUANNumber: "",
+      pfRuleType: "",
+      eligibleForEPS: false,
+      annualGross: 0,
+      variablePay: 0,
+      salaryStructure: "",
+      basic: 0,
+      hra: 0,
+      otherAllowance: 0,
+    });
+    setActiveTab("personal");
+  };
+
   const handleBulkAction = (action: string, employees: any[]) => {
     console.log(`Bulk ${action} on ${employees.length} employees`);
   };
