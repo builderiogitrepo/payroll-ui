@@ -430,6 +430,63 @@ const filters: Filter[] = [
 export default function Employees() {
   const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("personal");
+
+  // Employee Creation Form State
+  const [formData, setFormData] = useState({
+    // Business Unit
+    businessUnit: "",
+
+    // Personal Information
+    name: "",
+    dateOfBirth: "",
+    gender: "",
+    maritalStatus: "",
+    bloodGroup: "",
+    fathersName: "",
+    educationQualification: "",
+    contactNumber: "",
+    personalEmail: "",
+    workEmail: "",
+
+    // Employment Information
+    offerType: "",
+    employmentType: "",
+    designation: "",
+    department: "",
+    reportingManager: "",
+    dateOfJoining: "",
+
+    // Telecom specific fields
+    category: "",
+    circle: "",
+    costingCircle: "",
+    baseLocation: "",
+
+    // JNET specific fields
+    location: "",
+
+    // Bank & Identity Details
+    panCard: "",
+    aadharCard: "",
+    bankAccountNumber: "",
+    bankName: "",
+    ifscCode: "",
+
+    // Statutory Details
+    previousCompanyESICNumber: "",
+    previousCompanyEPFUANNumber: "",
+    pfRuleType: "",
+    eligibleForEPS: false,
+
+    // Salary Setup
+    annualGross: 0,
+    variablePay: 0,
+    salaryStructure: "",
+    basic: 0,
+    hra: 0,
+    otherAllowance: 0,
+  });
 
   const handleView = (employee: any) => {
     setSelectedEmployee(employee);
