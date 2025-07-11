@@ -51,8 +51,6 @@ import {
   Save,
   X,
   Briefcase,
-  CreditCard,
-  User,
   Eye,
   Edit,
   Trash2,
