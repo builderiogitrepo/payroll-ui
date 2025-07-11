@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { PageHeader } from "@/components/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
@@ -21,10 +19,6 @@ import {
   Clock,
   Plus,
   Edit3,
-  CheckCircle,
-  AlertCircle,
-  Calendar,
-  Users,
   X,
   ArrowLeft,
 } from "lucide-react";
@@ -34,14 +28,17 @@ import { cn } from "@/lib/utils";
 interface PayScheduleSettings {
   id: string;
   businessUnit: string;
-  workWeekStart: string;
-  workWeekEnd: string;
+  workWeek: string[];
+  salaryCalcType: string;
+  orgWorkingDays?: string;
   payFrequency: string;
-  payDay: string;
+  payDayType: string;
+  payDayValue: string;
+  firstPayrollMonth: string;
+  firstPayrollDate: string;
   lastUpdated: string;
 }
 
-// Default business units
 const businessUnits = [
   { value: "it-business-unit", label: "IT Business Unit", icon: Monitor },
   {
@@ -49,7 +46,7 @@ const businessUnits = [
     label: "Telecom Business Unit",
     icon: Phone,
   },
-  { value: "hr-business-unit", label: "HR Business Unit", icon: Users },
+  { value: "hr-business-unit", label: "HR Business Unit", icon: Building },
   {
     value: "finance-business-unit",
     label: "Finance Business Unit",
@@ -58,20 +55,41 @@ const businessUnits = [
 ];
 
 const weekDays = [
-  { value: "MON", label: "Monday" },
-  { value: "TUE", label: "Tuesday" },
-  { value: "WED", label: "Wednesday" },
-  { value: "THU", label: "Thursday" },
-  { value: "FRI", label: "Friday" },
-  { value: "SAT", label: "Saturday" },
-  { value: "SUN", label: "Sunday" },
+  { value: "SUN", label: "SUN" },
+  { value: "MON", label: "MON" },
+  { value: "TUE", label: "TUE" },
+  { value: "WED", label: "WED" },
+  { value: "THU", label: "THU" },
+  { value: "FRI", label: "FRI" },
+  { value: "SAT", label: "SAT" },
 ];
 
 const payFrequencies = [
-  { value: "weekly", label: "Weekly" },
-  { value: "bi-weekly", label: "Bi-weekly" },
   { value: "monthly", label: "Monthly" },
+  { value: "bi-weekly", label: "Bi-weekly" },
+  { value: "weekly", label: "Weekly" },
 ];
+
+const payrollMonths = [
+  { value: "April-2025", label: "April-2025" },
+  { value: "May-2025", label: "May-2025" },
+  { value: "June-2025", label: "June-2025" },
+];
+
+const orgWorkingDaysOptions = ["22", "24", "26"];
+
+function getLastWorkingDay(
+  year: number,
+  month: number,
+  workWeek: string[],
+): Date {
+  // month is 1-based (April = 4)
+  let d = new Date(year, month, 0); // last day of month
+  while (!workWeek.includes(weekDays[d.getDay()].value)) {
+    d.setDate(d.getDate() - 1);
+  }
+  return d;
+}
 
 export default function PaySchedule() {
   const [configurations, setConfigurations] = useState<PayScheduleSettings[]>(
@@ -82,19 +100,103 @@ export default function PaySchedule() {
     useState<PayScheduleSettings | null>(null);
   const [formData, setFormData] = useState({
     businessUnit: "",
-    workWeekStart: "",
-    workWeekEnd: "",
-    payFrequency: "",
-    payDay: "",
+    workWeek: ["MON", "TUE", "WED", "THU", "FRI"],
+    salaryCalcType: "actual",
+    orgWorkingDays: "22",
+    payFrequency: "monthly",
+    payDayType: "lastWorkingDay",
+    payDayValue: "1",
+    firstPayrollMonth: "April-2025",
+    firstPayrollDate: "",
   });
+  const [calendarDates, setCalendarDates] = useState<string[]>([]);
 
   // Load configurations from localStorage
   useEffect(() => {
     const saved = localStorage.getItem("payScheduleConfigurations");
     if (saved) {
       setConfigurations(JSON.parse(saved));
+    } else {
+      // Add default configs for IT and Telecom
+      const defaults = [
+        {
+          id: `config-it-${Date.now()}`,
+          businessUnit: "it-business-unit",
+          workWeek: ["MON", "TUE", "WED", "THU", "FRI"],
+          salaryCalcType: "actual",
+          orgWorkingDays: "22",
+          payFrequency: "monthly",
+          payDayType: "lastWorkingDay",
+          payDayValue: "1",
+          firstPayrollMonth: "April-2025",
+          firstPayrollDate: "30/04/2025",
+          lastUpdated: new Date().toLocaleString(),
+        },
+        {
+          id: `config-telecom-${Date.now() + 1}`,
+          businessUnit: "telecom-business-unit",
+          workWeek: ["MON", "TUE", "WED", "THU", "FRI", "SAT"],
+          salaryCalcType: "actual",
+          orgWorkingDays: "26",
+          payFrequency: "monthly",
+          payDayType: "lastWorkingDay",
+          payDayValue: "1",
+          firstPayrollMonth: "April-2025",
+          firstPayrollDate: "30/04/2025",
+          lastUpdated: new Date().toLocaleString(),
+        },
+      ];
+      localStorage.setItem(
+        "payScheduleConfigurations",
+        JSON.stringify(defaults),
+      );
+      setConfigurations(defaults);
     }
   }, []);
+
+  // Calendar logic for pay date selection
+  useEffect(() => {
+    // Generate all possible pay dates for the selected month
+    const [monthStr, yearStr] = formData.firstPayrollMonth.split("-");
+    const month =
+      [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ].indexOf(monthStr) + 1;
+    const year = parseInt(yearStr, 10);
+    let payDate = "";
+    if (formData.payDayType === "lastWorkingDay") {
+      const d = getLastWorkingDay(year, month, formData.workWeek);
+      payDate = d.toLocaleDateString("en-GB");
+      setCalendarDates([payDate]);
+      setFormData((f) => ({ ...f, firstPayrollDate: payDate }));
+    } else {
+      // Specific day of month
+      const d = new Date(year, month - 1, parseInt(formData.payDayValue, 10));
+      // If not a working day, find previous working day
+      while (!formData.workWeek.includes(weekDays[d.getDay()].value)) {
+        d.setDate(d.getDate() - 1);
+      }
+      payDate = d.toLocaleDateString("en-GB");
+      setCalendarDates([payDate]);
+      setFormData((f) => ({ ...f, firstPayrollDate: payDate }));
+    }
+  }, [
+    formData.firstPayrollMonth,
+    formData.payDayType,
+    formData.payDayValue,
+    formData.workWeek,
+  ]);
 
   // Save configurations to localStorage
   const saveConfigurations = (configs: PayScheduleSettings[]) => {
@@ -106,10 +208,14 @@ export default function PaySchedule() {
   const resetForm = () => {
     setFormData({
       businessUnit: "",
-      workWeekStart: "",
-      workWeekEnd: "",
-      payFrequency: "",
-      payDay: "",
+      workWeek: ["MON", "TUE", "WED", "THU", "FRI"],
+      salaryCalcType: "actual",
+      orgWorkingDays: "22",
+      payFrequency: "monthly",
+      payDayType: "lastWorkingDay",
+      payDayValue: "1",
+      firstPayrollMonth: "April-2025",
+      firstPayrollDate: "",
     });
     setEditingConfig(null);
   };
@@ -124,10 +230,14 @@ export default function PaySchedule() {
   const openEditPanel = (config: PayScheduleSettings) => {
     setFormData({
       businessUnit: config.businessUnit,
-      workWeekStart: config.workWeekStart,
-      workWeekEnd: config.workWeekEnd,
+      workWeek: config.workWeek,
+      salaryCalcType: config.salaryCalcType,
+      orgWorkingDays: config.orgWorkingDays || "22",
       payFrequency: config.payFrequency,
-      payDay: config.payDay,
+      payDayType: config.payDayType,
+      payDayValue: config.payDayValue,
+      firstPayrollMonth: config.firstPayrollMonth,
+      firstPayrollDate: config.firstPayrollDate,
     });
     setEditingConfig(config);
     setIsPanelOpen(true);
@@ -144,15 +254,14 @@ export default function PaySchedule() {
     // Validation
     if (
       !formData.businessUnit ||
-      !formData.workWeekStart ||
-      !formData.workWeekEnd ||
+      formData.workWeek.length === 0 ||
       !formData.payFrequency ||
-      !formData.payDay
+      !formData.firstPayrollMonth ||
+      !formData.firstPayrollDate
     ) {
       alert("Please fill in all required fields");
       return;
     }
-
     // Check for duplicate business unit (except when editing)
     const existingConfig = configurations.find(
       (c) => c.businessUnit === formData.businessUnit,
@@ -164,28 +273,28 @@ export default function PaySchedule() {
       alert("Configuration for this business unit already exists");
       return;
     }
-
     const newConfig: PayScheduleSettings = {
       id: editingConfig?.id || `config-${Date.now()}`,
       businessUnit: formData.businessUnit,
-      workWeekStart: formData.workWeekStart,
-      workWeekEnd: formData.workWeekEnd,
+      workWeek: formData.workWeek,
+      salaryCalcType: formData.salaryCalcType,
+      orgWorkingDays:
+        formData.salaryCalcType === "org" ? formData.orgWorkingDays : undefined,
       payFrequency: formData.payFrequency,
-      payDay: formData.payDay,
+      payDayType: formData.payDayType,
+      payDayValue: formData.payDayValue,
+      firstPayrollMonth: formData.firstPayrollMonth,
+      firstPayrollDate: formData.firstPayrollDate,
       lastUpdated: new Date().toLocaleString(),
     };
-
     let updatedConfigs;
     if (editingConfig) {
-      // Update existing configuration
       updatedConfigs = configurations.map((c) =>
         c.id === editingConfig.id ? newConfig : c,
       );
     } else {
-      // Add new configuration
       updatedConfigs = [...configurations, newConfig];
     }
-
     saveConfigurations(updatedConfigs);
     closePanel();
   };
@@ -204,12 +313,6 @@ export default function PaySchedule() {
       businessUnits.find((unit) => unit.value === businessUnit) ||
       businessUnits[0]
     );
-  };
-
-  // Get display label for any option
-  const getDisplayLabel = (value: string, options: any[]) => {
-    const option = options.find((opt) => opt.value === value);
-    return option ? option.label : value;
   };
 
   return (
@@ -239,7 +342,6 @@ export default function PaySchedule() {
 
           {/* Configuration Grid */}
           {configurations.length === 0 ? (
-            // Empty State
             <Card className="shadow-sm border-slate-200">
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
@@ -262,14 +364,12 @@ export default function PaySchedule() {
               </CardContent>
             </Card>
           ) : (
-            // Configuration Cards Grid
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {configurations.map((config) => {
                 const businessUnitInfo = getBusinessUnitInfo(
                   config.businessUnit,
                 );
                 const BusinessUnitIcon = businessUnitInfo.icon;
-
                 return (
                   <Card
                     key={config.id}
@@ -308,8 +408,7 @@ export default function PaySchedule() {
                             Work Week
                           </span>
                           <p className="text-slate-900">
-                            {getDisplayLabel(config.workWeekStart, weekDays)} →{" "}
-                            {getDisplayLabel(config.workWeekEnd, weekDays)}
+                            {(config.workWeek || []).join(", ")}
                           </p>
                         </div>
                         <div>
@@ -317,10 +416,7 @@ export default function PaySchedule() {
                             Pay Frequency
                           </span>
                           <p className="text-slate-900">
-                            {getDisplayLabel(
-                              config.payFrequency,
-                              payFrequencies,
-                            )}
+                            {config.payFrequency}
                           </p>
                         </div>
                         <div>
@@ -328,7 +424,17 @@ export default function PaySchedule() {
                             Pay Day
                           </span>
                           <p className="text-slate-900">
-                            {getDisplayLabel(config.payDay, weekDays)}
+                            {config.payDayType === "lastWorkingDay"
+                              ? "Last working day"
+                              : `Day ${config.payDayValue}`}
+                          </p>
+                        </div>
+                        <div>
+                          <span className="text-xs font-medium text-slate-600">
+                            First Payroll
+                          </span>
+                          <p className="text-slate-900">
+                            {config.firstPayrollDate}
                           </p>
                         </div>
                       </div>
@@ -348,7 +454,7 @@ export default function PaySchedule() {
       {/* Side Panel */}
       <div
         className={cn(
-          "fixed top-0 right-0 h-full w-80 bg-white shadow-xl border-l border-slate-200 transform transition-transform duration-300 ease-in-out z-50",
+          "fixed top-0 right-0 h-full w-[32rem] bg-white shadow-xl border-l border-slate-200 transform transition-transform duration-300 ease-in-out z-50",
           isPanelOpen ? "translate-x-0" : "translate-x-full",
         )}
       >
@@ -400,109 +506,280 @@ export default function PaySchedule() {
                 </Select>
               </div>
 
-              {/* Work Week */}
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Work Week *</Label>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label
-                      htmlFor="workWeekStart"
-                      className="text-xs text-slate-600"
+              {/* Work Week Selection */}
+              <div className="space-y-1">
+                <Label className="text-sm font-medium">
+                  Select your work week<span className="text-red-500">*</span>
+                </Label>
+                <div className="text-xs text-slate-500 mb-1">
+                  The days worked in a calendar week
+                </div>
+                <div className="flex gap-1">
+                  {weekDays.map((d) => (
+                    <button
+                      key={d.value}
+                      type="button"
+                      className={cn(
+                        "px-3 py-1.5 rounded border text-xs font-medium transition-colors",
+                        formData.workWeek.includes(d.value)
+                          ? "bg-blue-100 border-blue-300 text-blue-700"
+                          : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100",
+                      )}
+                      onClick={() => {
+                        setFormData((f) => {
+                          const exists = f.workWeek.includes(d.value);
+                          return {
+                            ...f,
+                            workWeek: exists
+                              ? f.workWeek.filter((w) => w !== d.value)
+                              : [...f.workWeek, d.value],
+                          };
+                        });
+                      }}
                     >
-                      Start Day
-                    </Label>
-                    <Select
-                      value={formData.workWeekStart}
-                      onValueChange={(value) =>
-                        setFormData({ ...formData, workWeekStart: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Start day" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {weekDays.map((day) => (
-                          <SelectItem key={day.value} value={day.value}>
-                            {day.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor="workWeekEnd"
-                      className="text-xs text-slate-600"
-                    >
-                      End Day
-                    </Label>
-                    <Select
-                      value={formData.workWeekEnd}
-                      onValueChange={(value) =>
-                        setFormData({ ...formData, workWeekEnd: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="End day" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {weekDays.map((day) => (
-                          <SelectItem key={day.value} value={day.value}>
-                            {day.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                      {d.label}
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              {/* Pay Frequency */}
-              <div className="space-y-2">
-                <Label htmlFor="payFrequency" className="text-sm font-medium">
-                  Pay Frequency *
+              {/* Salary Calculation Type */}
+              <div className="space-y-1">
+                <Label className="text-sm font-medium">
+                  Calculate monthly salary based on
+                  <span className="text-red-500">*</span>
+                </Label>
+                <div className="flex items-center gap-2 mt-1">
+                  <label className="flex items-center gap-1 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="salaryCalcType"
+                      value="actual"
+                      checked={formData.salaryCalcType === "actual"}
+                      onChange={() =>
+                        setFormData((f) => ({ ...f, salaryCalcType: "actual" }))
+                      }
+                    />
+                    <span className="text-sm">Actual days in a month</span>
+                  </label>
+                  <label className="flex items-center gap-1 cursor-pointer ml-4">
+                    <input
+                      type="radio"
+                      name="salaryCalcType"
+                      value="org"
+                      checked={formData.salaryCalcType === "org"}
+                      onChange={() =>
+                        setFormData((f) => ({ ...f, salaryCalcType: "org" }))
+                      }
+                    />
+                    <span className="text-sm">Organisation working days -</span>
+                    <Select
+                      value={formData.orgWorkingDays}
+                      onValueChange={(value) =>
+                        setFormData((f) => ({ ...f, orgWorkingDays: value }))
+                      }
+                      disabled={formData.salaryCalcType !== "org"}
+                    >
+                      <SelectTrigger className="w-16 h-7 text-xs">
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {orgWorkingDaysOptions.map((v) => (
+                          <SelectItem key={v} value={v}>
+                            {v}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <span className="text-sm">days per month</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Pay On */}
+              <div className="space-y-1">
+                <Label className="text-sm font-medium">
+                  Pay on<span className="text-red-500">*</span>
+                </Label>
+                <div className="flex flex-col gap-1 mt-1">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="payDayType"
+                      value="lastWorkingDay"
+                      checked={formData.payDayType === "lastWorkingDay"}
+                      onChange={() =>
+                        setFormData((f) => ({
+                          ...f,
+                          payDayType: "lastWorkingDay",
+                        }))
+                      }
+                    />
+                    <span className="text-sm">
+                      the last working day of every month
+                    </span>
+                  </label>
+                  <div className="flex items-center gap-2 mt-1">
+                    <input
+                      type="radio"
+                      name="payDayType"
+                      value="specificDay"
+                      checked={formData.payDayType === "specificDay"}
+                      onChange={() =>
+                        setFormData((f) => ({
+                          ...f,
+                          payDayType: "specificDay",
+                        }))
+                      }
+                    />
+                    <span className="text-sm">day</span>
+                    <Input
+                      type="number"
+                      min="1"
+                      max="31"
+                      value={formData.payDayValue}
+                      className="w-16 h-7 text-center text-xs"
+                      onChange={(e) =>
+                        setFormData((f) => ({
+                          ...f,
+                          payDayValue: e.target.value,
+                        }))
+                      }
+                      disabled={formData.payDayType !== "specificDay"}
+                    />
+                    <span className="text-sm">of every month</span>
+                  </div>
+                </div>
+                <div className="text-xs text-slate-600 bg-slate-50 p-2 rounded mt-2">
+                  <b>Note:</b> When payday falls on a non-working day or a
+                  holiday, employees will get paid on the previous working day.
+                </div>
+              </div>
+
+              {/* Start your first payroll from */}
+              <div className="space-y-1">
+                <Label className="text-sm font-medium">
+                  Start your first payroll from
+                  <span className="text-red-500">*</span>
                 </Label>
                 <Select
-                  value={formData.payFrequency}
+                  value={formData.firstPayrollMonth}
                   onValueChange={(value) =>
-                    setFormData({ ...formData, payFrequency: value })
+                    setFormData((f) => ({ ...f, firstPayrollMonth: value }))
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select pay frequency" />
+                    <SelectValue placeholder="Select month" />
                   </SelectTrigger>
                   <SelectContent>
-                    {payFrequencies.map((freq) => (
-                      <SelectItem key={freq.value} value={freq.value}>
-                        {freq.label}
+                    {payrollMonths.map((m) => (
+                      <SelectItem key={m.value} value={m.value}>
+                        {m.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
 
-              {/* Pay Day */}
-              <div className="space-y-2">
-                <Label htmlFor="payDay" className="text-sm font-medium">
-                  Pay Day *
+              {/* Select a pay date for your first payroll */}
+              <div className="hidden space-y-1">
+                <Label className="text-sm font-medium">
+                  Select a pay date for your first payroll
+                  <span className="text-red-500">*</span>
                 </Label>
+                <div className="text-xs text-slate-600 mb-1">
+                  Pay Period: {formData.firstPayrollMonth}
+                </div>
                 <Select
-                  value={formData.payDay}
+                  value={formData.firstPayrollDate}
                   onValueChange={(value) =>
-                    setFormData({ ...formData, payDay: value })
+                    setFormData((f) => ({ ...f, firstPayrollDate: value }))
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select pay day" />
+                    <SelectValue placeholder="Select pay date" />
                   </SelectTrigger>
                   <SelectContent>
-                    {weekDays.map((day) => (
-                      <SelectItem key={day.value} value={day.value}>
-                        {day.label}
+                    {calendarDates.map((d) => (
+                      <SelectItem key={d} value={d}>
+                        {d}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+                {/* Calendar UI */}
+                <div className="mt-2 border rounded p-2 w-full">
+                  {/* Simple calendar for the selected month */}
+                  <div className="text-center text-xs font-medium mb-1">
+                    {formData.firstPayrollMonth}
+                  </div>
+                  <div className="grid grid-cols-7 gap-1 text-xs text-slate-500 mb-1">
+                    {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map(
+                      (d) => (
+                        <div key={d}>{d}</div>
+                      ),
+                    )}
+                  </div>
+                  {/* Render days */}
+                  <div className="grid grid-cols-7 gap-1">
+                    {(() => {
+                      const [monthStr, yearStr] =
+                        formData.firstPayrollMonth.split("-");
+                      const month =
+                        [
+                          "January",
+                          "February",
+                          "March",
+                          "April",
+                          "May",
+                          "June",
+                          "July",
+                          "August",
+                          "September",
+                          "October",
+                          "November",
+                          "December",
+                        ].indexOf(monthStr) + 1;
+                      const year = parseInt(yearStr, 10);
+                      const firstDay = new Date(year, month - 1, 1);
+                      const startDay = firstDay.getDay();
+                      const daysInMonth = new Date(year, month, 0).getDate();
+                      const days: JSX.Element[] = [];
+                      for (let i = 0; i < startDay; i++)
+                        days.push(<div key={"empty-" + i}></div>);
+                      for (let d = 1; d <= daysInMonth; d++) {
+                        const dateObj = new Date(year, month - 1, d);
+                        const dateStr = dateObj.toLocaleDateString("en-GB");
+                        const isSelected =
+                          formData.firstPayrollDate === dateStr;
+                        const isPayDate = calendarDates.includes(dateStr);
+                        days.push(
+                          <div
+                            key={d}
+                            className={cn(
+                              "w-7 h-7 flex items-center justify-center rounded cursor-pointer",
+                              isSelected
+                                ? "bg-green-200 border border-green-600 text-green-900 font-bold"
+                                : "",
+                              isPayDate
+                                ? "border border-green-600"
+                                : "hover:bg-slate-100",
+                            )}
+                            onClick={() =>
+                              setFormData((f) => ({
+                                ...f,
+                                firstPayrollDate: dateStr,
+                              }))
+                            }
+                          >
+                            {d}
+                          </div>,
+                        );
+                      }
+                      return days;
+                    })()}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

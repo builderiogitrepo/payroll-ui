@@ -158,8 +158,7 @@
   html {
     font-size: 16px;
     font-family:
-      "Inter",
-      "Manrope",
+      "Poppins",
       system-ui,
       -apple-system,
       sans-serif;
@@ -170,8 +169,7 @@
   body {
     @apply bg-background text-foreground;
     font-family:
-      "Inter",
-      "Manrope",
+      "Poppins",
       system-ui,
       -apple-system,
       sans-serif;
