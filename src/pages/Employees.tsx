@@ -756,7 +756,7 @@ export default function Employees() {
                                 : "status-inactive"
                             }`}
                           >
-                            {selectedEmployee.status === "Active" ? "✅" : "��"}{" "}
+                            {selectedEmployee.status === "Active" ? "✅" : "❌"}{" "}
                             {selectedEmployee.status}
                           </span>
                         </div>
@@ -1596,50 +1596,11 @@ export default function Employees() {
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="salaryStructure">Salary Structure</Label>
                     <Input
                       id="salaryStructure"
                       value={`Auto-generated based on ${formData.businessUnit} ${formData.offerType}`}
-                      disabled
-                      className="bg-gray-50"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="basic">Basic (₹)</Label>
-                    <Input
-                      id="basic"
-                      type="number"
-                      value={formData.basic}
-                      disabled
-                      className="bg-gray-50"
-                    />
-                  </div>
-
-                  {formData.businessUnit === "JNET" && (
-                    <div className="space-y-2">
-                      <Label htmlFor="hra">HRA (₹)</Label>
-                      <Input
-                        id="hra"
-                        type="number"
-                        value={formData.hra}
-                        disabled
-                        className="bg-gray-50"
-                      />
-                    </div>
-                  )}
-
-                  <div className="space-y-2">
-                    <Label htmlFor="otherAllowance">
-                      Other Allowance (₹)
-                      {formData.businessUnit === "Telecom" &&
-                        " (Gross - Wage Rate)"}
-                    </Label>
-                    <Input
-                      id="otherAllowance"
-                      type="number"
-                      value={formData.otherAllowance}
                       disabled
                       className="bg-gray-50"
                     />
@@ -1650,8 +1611,11 @@ export default function Employees() {
                   <Info className="h-4 w-4 text-blue-600" />
                   <AlertDescription>
                     <div className="text-blue-700 text-sm">
-                      <strong>Info:</strong> Deductions and tax rules are
-                      auto-applied based on payroll configuration.
+                      <strong>Info:</strong> Salary structure and component
+                      breakdown will be automatically determined based on the
+                      selected business unit and offer type. Deductions and tax
+                      rules are also auto-applied based on payroll
+                      configuration.
                     </div>
                   </AlertDescription>
                 </Alert>
