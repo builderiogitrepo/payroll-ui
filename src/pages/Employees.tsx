@@ -549,9 +549,6 @@ export default function Employees() {
       annualGross: 0,
       variablePay: 0,
       salaryStructure: "",
-      basic: 0,
-      hra: 0,
-      otherAllowance: 0,
     });
     setActiveTab("personal");
   };
