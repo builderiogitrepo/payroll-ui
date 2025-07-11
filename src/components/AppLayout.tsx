@@ -45,12 +45,6 @@ const navigationItems = [
     description: "Manage employee data and profiles",
   },
   {
-    title: "Employee Creation",
-    path: "/employee-creation",
-    icon: UserPlus,
-    description: "Create new employee profiles",
-  },
-  {
     title: "Attendance",
     path: "/attendance",
     icon: Calendar,
