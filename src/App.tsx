@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AppLayout } from "./components/AppLayout";
 import Employees from "./pages/Employees";
+import EmployeeCreation from "./pages/EmployeeCreation";
 import Attendance from "./pages/Attendance";
 import SalaryConfiguration from "./pages/SalaryConfiguration";
 import PayheadMaster from "./pages/PayheadMaster";
