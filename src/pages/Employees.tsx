@@ -507,22 +507,6 @@ export default function Employees() {
       ...prev,
       [field]: value,
     }));
-
-    // Auto-calculate salary components when gross changes
-    if (field === "annualGross" && typeof value === "number") {
-      const gross = value;
-      const basic = gross * 0.5; // 50% basic
-      const hra = formData.businessUnit === "JNET" ? basic * 0.4 : 0; // 40% of basic for JNET
-      const otherAllowance =
-        formData.businessUnit === "JNET" ? gross - basic - hra : gross - basic; // For Telecom: Gross - Wage Rate
-
-      setFormData((prev) => ({
-        ...prev,
-        basic,
-        hra,
-        otherAllowance,
-      }));
-    }
   };
 
   const handleSubmitEmployee = () => {
