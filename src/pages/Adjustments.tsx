@@ -36,6 +36,7 @@ import {
   Target,
   Zap,
 } from "lucide-react";
+import { BulkUploadAdditionalPay } from "@/components/additional-pay/BulkUploadAdditionalPay";
 
 // Mock adjustment entry data
 const mockAdjustmentEntries = [
@@ -338,6 +339,7 @@ const filters: Filter[] = [
 export default function Adjustments() {
   const [selectedAdjustment, setSelectedAdjustment] = useState<any>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
 
   // Get current month/year for default filtering
   const currentMonth = "Dec 2024"; // Default to December
@@ -396,7 +398,9 @@ export default function Adjustments() {
     (adj) => adj.status === "Draft",
   ).length;
 
-  return (
+  return showBulkUpload ? (
+    <BulkUploadAdditionalPay onClose={() => setShowBulkUpload(false)} />
+  ) : (
     <div className="space-y-6">
       <PageHeader
         title="Additional Pay Components"
@@ -404,7 +408,11 @@ export default function Adjustments() {
         icon={<Settings className="h-6 w-6 text-blue-600" />}
       >
         <div className="flex gap-2">
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowBulkUpload(true)}
+          >
             <Upload className="h-4 w-4 mr-2" />
             Bulk Upload
           </Button>

@@ -31,6 +31,7 @@ import {
   Target,
   Percent,
 } from "lucide-react";
+import { BulkUploadAttendance } from "@/components/attendance/BulkUploadAttendance";
 
 // Mock attendance data for December 2024
 const mockAttendanceData = [
@@ -312,6 +313,7 @@ const filters: Filter[] = [
 export default function Attendance() {
   const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
 
   // Get current month/year for default filtering
   const currentMonth = "December"; // Default to December
@@ -357,7 +359,9 @@ export default function Attendance() {
     (emp) => emp.attendancePercentage < 90,
   ).length;
 
-  return (
+  return showBulkUpload ? (
+    <BulkUploadAttendance onClose={() => setShowBulkUpload(false)} />
+  ) : (
     <div className="space-y-6">
       <PageHeader
         title="Attendance Management"
@@ -374,11 +378,10 @@ export default function Attendance() {
             Download Template
           </Button>
           <Button
-            variant="outline"
-            size="sm"
-            className="border-slate-200 hover:bg-slate-50"
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold flex items-center gap-2"
+            onClick={() => setShowBulkUpload(true)}
           >
-            <Upload className="h-4 w-4 mr-2" />
+            <Upload className="h-4 w-4" />
             Upload Attendance
           </Button>
         </div>
