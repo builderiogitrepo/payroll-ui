@@ -33,6 +33,7 @@ import {
   Percent,
   Zap,
 } from "lucide-react";
+import { BulkUploadTaxes } from "@/components/taxes/BulkUploadTaxes";
 
 // Mock TDS upload data
 const mockTDSData = [
@@ -465,6 +466,7 @@ const filters: Filter[] = [
 export default function TDSUpload() {
   const [selectedTDS, setSelectedTDS] = useState<any>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
 
   // Get current month/year for default filtering
   const currentMonth = "June"; // Default to June
@@ -521,17 +523,22 @@ export default function TDSUpload() {
     (tds) => tds.status === "Pending",
   ).length;
 
-  return (
+  return showBulkUpload ? (
+    <BulkUploadTaxes onClose={() => setShowBulkUpload(false)} />
+  ) : (
     <div className="space-y-6">
       <PageHeader
-        title="Taxes"
-        description="Upload and manage TDS data for employees by fiscal year and month"
-        icon={<Percent className="h-6 w-6 text-blue-600" />}
+        title="TDS Upload"
+        description="Upload and manage TDS data for employees."
       >
         <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
-            Download Template
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowBulkUpload(true)}
+          >
+            <Upload className="h-4 w-4 mr-2" />
+            Upload
           </Button>
         </div>
       </PageHeader>

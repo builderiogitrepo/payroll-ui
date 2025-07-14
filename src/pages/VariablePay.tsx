@@ -23,6 +23,7 @@ import {
   DollarSign,
   Percent,
 } from "lucide-react";
+import { BulkUploadVariablePay } from "@/components/variable-pay/BulkUploadVariablePay";
 
 // Mock variable pay data
 const mockVariablePayData = [
@@ -345,6 +346,7 @@ const filters: Filter[] = [
 export default function VariablePay() {
   const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
   const [editingAward, setEditingAward] = useState<any>(null);
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
 
   // Get current quarter/year for default filtering
   const currentQuarter = "FY 24-25 – Q3"; // Default to Q3
@@ -397,16 +399,21 @@ export default function VariablePay() {
   const avgAwardPercent =
     q3Data.reduce((sum, emp) => sum + emp.payablePercent, 0) / totalEmployees;
 
-  return (
+  return showBulkUpload ? (
+    <BulkUploadVariablePay onClose={() => setShowBulkUpload(false)} />
+  ) : (
     <div className="space-y-6">
       <PageHeader
-        title="Variable Pay Tracker"
+        title="Variable Pay"
         description="Track quarterly variable pay and set performance-based awards. Employee data synced from HRMS."
       >
         <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <Upload className="h-4 w-4 mr-2" />
-            Upload Variable Pay
+          <Button
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold flex items-center gap-2"
+            onClick={() => setShowBulkUpload(true)}
+          >
+            <Upload className="h-4 w-4" />
+            Upload Variable Pay Data
           </Button>
         </div>
       </PageHeader>
