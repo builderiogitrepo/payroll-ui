@@ -452,7 +452,7 @@ export default function PayheadMaster() {
                   <Label className="text-sm font-medium text-slate-600">
                     Payhead ID
                   </Label>
-                  <p className="font-mono">{selectedPayhead.id}</p>
+                  <p className="">{selectedPayhead.id}</p>
                 </div>
                 <div>
                   <Label className="text-sm font-medium text-slate-600">

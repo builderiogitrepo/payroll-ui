@@ -928,7 +928,7 @@ ${errorAdditionalPay
                               !additionalPay.isValid ? "bg-red-50" : ""
                             }
                           >
-                            <TableCell className="font-mono text-sm">
+                            <TableCell className=" text-sm">
                               {additionalPay.empId}
                             </TableCell>
                             <TableCell>

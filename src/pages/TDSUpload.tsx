@@ -301,7 +301,7 @@ const columns: Column[] = [
   {
     key: "empId",
     label: "Emp ID",
-    className: "font-mono text-sm",
+    className: " text-sm",
   },
   {
     key: "name",
@@ -319,7 +319,9 @@ const columns: Column[] = [
         </Avatar>
         <div>
           <div className="font-medium">{value}</div>
-          <div className="text-sm text-slate-500">{row.designation}</div>
+          <div className="text-sm text-slate-500 whitespace-nowrap">
+            {row.designation}
+          </div>
         </div>
       </div>
     ),
@@ -338,7 +340,7 @@ const columns: Column[] = [
     key: "month",
     label: "Month",
     render: (value, row) => (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 whitespace-nowrap">
         <Calendar className="h-4 w-4 text-blue-600" />
         <span>
           {value} {row.fiscalYear.split(" ")[1]}
@@ -614,7 +616,7 @@ export default function TDSUpload() {
                     <Label className="text-sm font-medium text-slate-600">
                       TDS ID
                     </Label>
-                    <p className="font-mono">{selectedTDS.id}</p>
+                    <p className="">{selectedTDS.id}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">

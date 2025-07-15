@@ -679,7 +679,7 @@ export default function SalaryStructure() {
                     <Label className="text-sm font-medium text-slate-600">
                       Structure ID
                     </Label>
-                    <p className="font-mono">{selectedStructure.id}</p>
+                    <p className="">{selectedStructure.id}</p>
                   </div>
                   <div>
                     <Label className="text-sm font-medium text-slate-600">

@@ -158,7 +158,7 @@
   html {
     font-size: 16px;
     font-family:
-      "Poppins",
+      "Montserrat",
       system-ui,
       -apple-system,
       sans-serif;
@@ -169,7 +169,7 @@
   body {
     @apply bg-background text-foreground;
     font-family:
-      "Poppins",
+      "Montserrat",
       system-ui,
       -apple-system,
       sans-serif;

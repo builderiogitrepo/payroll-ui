@@ -592,15 +592,13 @@ const ptColumns: Column[] = [
   {
     key: "slabFrom",
     label: "Slab From",
-    render: (value) => (
-      <span className="font-mono">₹{value.toLocaleString()}</span>
-    ),
+    render: (value) => <span className="">₹{value.toLocaleString()}</span>,
   },
   {
     key: "slabTo",
     label: "Slab To",
     render: (value) => (
-      <span className="font-mono">
+      <span className="">
         {value ? `₹${value.toLocaleString()}` : "No Limit"}
       </span>
     ),

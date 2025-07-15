@@ -847,7 +847,7 @@ ${errorTaxes
                             key={tax.id}
                             className={!tax.isValid ? "bg-red-50" : ""}
                           >
-                            <TableCell className="font-mono text-sm">
+                            <TableCell className=" text-sm">
                               {tax.empId}
                             </TableCell>
                             <TableCell>

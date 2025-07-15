@@ -260,13 +260,13 @@ const columns: Column[] = [
   {
     key: "empId",
     label: "Emp ID",
-    className: "font-mono text-xs",
-    sticky: true,
+    className: "",
+    // sticky: true,
   },
   {
     key: "name",
     label: "Employee",
-    sticky: true,
+    // sticky: true,
     render: (value, row) => (
       <div className="flex items-center gap-2">
         <Avatar className="h-7 w-7">
@@ -663,7 +663,7 @@ export default function Employees() {
           showBulkActions={true}
           onBulkAction={handleBulkAction}
           enableMobileCards={true}
-          className="bg-white rounded-lg border"
+          // className="bg-white rounded-lg border"
         />
       </div>
 
@@ -729,7 +729,7 @@ export default function Employees() {
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
                           <Label className="text-slate-600">Employee ID</Label>
-                          <p className="font-mono">{selectedEmployee.empId}</p>
+                          <p className="">{selectedEmployee.empId}</p>
                         </div>
                         <div>
                           <Label className="text-slate-600">Department</Label>

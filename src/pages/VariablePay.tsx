@@ -187,7 +187,7 @@ const columns: Column[] = [
   {
     key: "empId",
     label: "Emp ID",
-    className: "font-mono text-sm",
+    className: " text-sm",
   },
   {
     key: "name",

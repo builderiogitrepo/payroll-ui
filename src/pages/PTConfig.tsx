@@ -336,15 +336,13 @@ const columns: Column[] = [
   {
     key: "slabFrom",
     label: "Slab From",
-    render: (value) => (
-      <span className="font-mono">₹{value.toLocaleString()}</span>
-    ),
+    render: (value) => <span className="">₹{value.toLocaleString()}</span>,
   },
   {
     key: "slabTo",
     label: "Slab To",
     render: (value) => (
-      <span className="font-mono">
+      <span className="">
         {value ? `₹${value.toLocaleString()}` : "No Limit"}
       </span>
     ),
@@ -506,7 +504,7 @@ export default function PTConfig() {
                     <Label className="text-sm font-medium text-slate-600">
                       Slab ID
                     </Label>
-                    <p className="font-mono">{selectedSlab.id}</p>
+                    <p className="">{selectedSlab.id}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">

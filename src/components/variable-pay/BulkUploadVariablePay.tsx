@@ -892,7 +892,7 @@ ${errorVariablePay
                             key={variablePay.id}
                             className={!variablePay.isValid ? "bg-red-50" : ""}
                           >
-                            <TableCell className="font-mono text-sm">
+                            <TableCell className=" text-sm">
                               {variablePay.empId}
                             </TableCell>
                             <TableCell>

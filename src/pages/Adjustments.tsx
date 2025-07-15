@@ -190,7 +190,7 @@ const columns: Column[] = [
   {
     key: "empId",
     label: "Emp ID",
-    className: "font-mono text-sm",
+    className: " text-sm",
   },
   {
     key: "name",
@@ -492,7 +492,7 @@ export default function Adjustments() {
                     <Label className="text-sm font-medium text-slate-600">
                       Additional ID
                     </Label>
-                    <p className="font-mono">{selectedAdjustment.id}</p>
+                    <p className="">{selectedAdjustment.id}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
