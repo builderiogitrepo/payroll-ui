@@ -276,6 +276,7 @@ const columns: Column[] = [
   {
     key: "approvedBy",
     label: "Approved By",
+    className: "whitespace-nowrap",
   },
   {
     key: "status",
@@ -403,9 +404,9 @@ export default function Adjustments() {
   ) : (
     <div className="space-y-6">
       <PageHeader
-        title="Additional Pay Components"
-        description="Process salary adjustments and corrections for employees in December 2024"
-        icon={<Settings className="h-6 w-6 text-blue-600" />}
+        title="Additional Pay & Adjustments"
+        description="Manage additional payments, bonuses, and salary adjustments"
+        gradient="fire"
       >
         <div className="flex gap-2">
           <Button
@@ -489,7 +490,7 @@ export default function Adjustments() {
                 <div className="flex items-center gap-2">
                   <FileText className="h-4 w-4 text-blue-600" />
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Additional ID
                     </Label>
                     <p className="">{selectedAdjustment.id}</p>
@@ -498,7 +499,7 @@ export default function Adjustments() {
                 <div className="flex items-center gap-2">
                   <Building className="h-4 w-4 text-green-600" />
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Department
                     </Label>
                     <p>{selectedAdjustment.department}</p>
@@ -507,7 +508,7 @@ export default function Adjustments() {
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-purple-600" />
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Month
                     </Label>
                     <p>{selectedAdjustment.month}</p>

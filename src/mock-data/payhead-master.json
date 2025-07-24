@@ -1,0 +1,204 @@
+{
+  "regularPayheads": [
+    {
+      "id": "RP001",
+      "payheadName": "Basic Pay",
+      "description": "Core fixed salary component",
+      "type": "Earning",
+      "taxable": true,
+      "section": "Regular",
+      "usage": 95
+    },
+    {
+      "id": "RP002",
+      "payheadName": "House Rent Allowance",
+      "description": "Housing benefit for tax savings",
+      "type": "Earning",
+      "taxable": true,
+      "section": "Regular",
+      "usage": 85
+    },
+    {
+      "id": "RP003",
+      "payheadName": "Medical Allowance",
+      "description": "Monthly medical support",
+      "type": "Earning",
+      "taxable": true,
+      "section": "Regular",
+      "usage": 78
+    },
+    {
+      "id": "RP004",
+      "payheadName": "Conveyance Allowance",
+      "description": "Travel and transport allowance",
+      "type": "Earning",
+      "taxable": true,
+      "section": "Regular",
+      "usage": 62
+    },
+    {
+      "id": "RP005",
+      "payheadName": "Special Allowance",
+      "description": "Additional compensation component",
+      "type": "Earning",
+      "taxable": true,
+      "section": "Regular",
+      "usage": 45
+    },
+    {
+      "id": "RP006",
+      "payheadName": "Provident Fund",
+      "description": "Statutory Provident Fund deduction",
+      "type": "Deduction",
+      "taxable": false,
+      "section": "Regular",
+      "usage": 89
+    },
+    {
+      "id": "RP007",
+      "payheadName": "Employee State Insurance",
+      "description": "Employee insurance contribution",
+      "type": "Deduction",
+      "taxable": false,
+      "section": "Regular",
+      "usage": 45
+    },
+    {
+      "id": "RP008",
+      "payheadName": "Professional Tax",
+      "description": "State professional tax deduction",
+      "type": "Deduction",
+      "taxable": false,
+      "section": "Regular",
+      "usage": 92
+    },
+    {
+      "id": "RP009",
+      "payheadName": "Income Tax (TDS)",
+      "description": "Tax deducted at source",
+      "type": "Deduction",
+      "taxable": false,
+      "section": "Regular",
+      "usage": 67
+    },
+    {
+      "id": "RP010",
+      "payheadName": "Life Insurance Premium",
+      "description": "Employee life insurance deduction",
+      "type": "Deduction",
+      "taxable": false,
+      "section": "Regular",
+      "usage": 23
+    }
+  ],
+  "adjustmentPayheads": [
+    {
+      "id": "AP001",
+      "payheadName": "Overtime Allowance",
+      "description": "Additional payment for overtime work",
+      "calculationType": "Fixed",
+      "calculationBasis": "-",
+      "unit": "Per Hour",
+      "defaultValue": 150,
+      "taxable": true,
+      "section": "Additional",
+      "usage": 35
+    },
+    {
+      "id": "AP002",
+      "payheadName": "Special Incentive",
+      "description": "Performance-based incentive payment",
+      "calculationType": "Percentage",
+      "calculationBasis": "Gross",
+      "unit": "Per Year",
+      "defaultValue": 10,
+      "taxable": true,
+      "section": "Additional",
+      "usage": 28
+    },
+    {
+      "id": "AP003",
+      "payheadName": "Holiday Pay Allowance",
+      "description": "Additional pay for holiday work",
+      "calculationType": "Multiplier",
+      "calculationBasis": "Per Day Basic",
+      "unit": "Per Day",
+      "defaultValue": 1.5,
+      "taxable": true,
+      "section": "Additional",
+      "usage": 12
+    },
+    {
+      "id": "AP004",
+      "payheadName": "Referral Bonus",
+      "description": "Bonus for successful employee referrals",
+      "calculationType": "Fixed",
+      "calculationBasis": "-",
+      "unit": "One-time",
+      "defaultValue": 5000,
+      "taxable": true,
+      "section": "Additional",
+      "usage": 8
+    },
+    {
+      "id": "AP005",
+      "payheadName": "Health Insurance Allowance",
+      "description": "Reimbursement for health insurance",
+      "calculationType": "Fixed",
+      "calculationBasis": "-",
+      "unit": "Monthly",
+      "defaultValue": 1250,
+      "taxable": false,
+      "section": "Additional",
+      "usage": 15
+    },
+    {
+      "id": "AP006",
+      "payheadName": "Loss of Pay",
+      "description": "Deduction for absent days",
+      "calculationType": "Fixed",
+      "calculationBasis": "Per Day Basic",
+      "unit": "Per Day",
+      "defaultValue": 1,
+      "taxable": false,
+      "section": "Additional",
+      "usage": 18
+    },
+    {
+      "id": "AP007",
+      "payheadName": "Late Coming Fine",
+      "description": "Penalty for late arrivals",
+      "calculationType": "Fixed",
+      "calculationBasis": "-",
+      "unit": "Per Instance",
+      "defaultValue": 50,
+      "taxable": false,
+      "section": "Additional",
+      "usage": 22
+    },
+    {
+      "id": "AP008",
+      "payheadName": "Advance Salary Deduction",
+      "description": "Recovery of advance salary",
+      "calculationType": "Fixed",
+      "calculationBasis": "-",
+      "unit": "One-time",
+      "defaultValue": 0,
+      "taxable": false,
+      "section": "Additional",
+      "usage": 5
+    }
+  ],
+  "payheadTypes": ["Earning", "Deduction"],
+  "sections": ["Regular", "Additional"],
+  "calculationTypes": ["Fixed", "Percentage", "Multiplier"],
+  "calculationBasis": ["-", "Basic", "Gross", "CTC", "Per Day Basic"],
+  "units": [
+    "Per Hour",
+    "Per Day",
+    "Per Month",
+    "Per Year",
+    "One-time",
+    "Per Instance"
+  ]
+}

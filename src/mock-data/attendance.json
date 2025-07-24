@@ -1,0 +1,237 @@
+{
+  "attendanceData": [
+    {
+      "empId": "E1001",
+      "name": "John Smith",
+      "designation": "Software Engineer",
+      "department": "Technology",
+      "reportingManager": "Sarah Wilson",
+      "totalWorkingDays": 22,
+      "daysPresent": 21,
+      "weeklyOffs": 8,
+      "holidays": 1,
+      "approvedPaidLeaves": 1,
+      "lopDays": 0,
+      "payableDays": 22,
+      "businessUnit": "JNET",
+      "attendancePercentage": 95.45,
+      "month": "December",
+      "fiscalYear": "FY 2024-25"
+    },
+    {
+      "empId": "E1002",
+      "name": "Priya Sharma",
+      "designation": "Senior Developer",
+      "department": "Technology",
+      "reportingManager": "Sarah Wilson",
+      "totalWorkingDays": 22,
+      "daysPresent": 20,
+      "weeklyOffs": 8,
+      "holidays": 1,
+      "approvedPaidLeaves": 2,
+      "lopDays": 0,
+      "payableDays": 22,
+      "businessUnit": "JNET",
+      "attendancePercentage": 90.91,
+      "month": "December",
+      "fiscalYear": "FY 2024-25"
+    },
+    {
+      "empId": "T1001",
+      "name": "Rajesh Kumar",
+      "designation": "Sales Executive",
+      "department": "Sales",
+      "reportingManager": "Michael Chen",
+      "totalWorkingDays": 26,
+      "daysPresent": 24,
+      "weeklyOffs": 4,
+      "holidays": 0,
+      "approvedPaidLeaves": 2,
+      "lopDays": 0,
+      "payableDays": 26,
+      "businessUnit": "Telecom",
+      "attendancePercentage": 92.31,
+      "month": "December",
+      "fiscalYear": "FY 2024-25"
+    },
+    {
+      "empId": "E1003",
+      "name": "Sarah Wilson",
+      "designation": "Team Lead",
+      "department": "Technology",
+      "reportingManager": "David Brown",
+      "totalWorkingDays": 22,
+      "daysPresent": 22,
+      "weeklyOffs": 8,
+      "holidays": 1,
+      "approvedPaidLeaves": 0,
+      "lopDays": 0,
+      "payableDays": 22,
+      "businessUnit": "JNET",
+      "attendancePercentage": 100,
+      "month": "December",
+      "fiscalYear": "FY 2024-25"
+    },
+    {
+      "empId": "E1004",
+      "name": "Michael Chen",
+      "designation": "Sales Manager",
+      "department": "Sales",
+      "reportingManager": "David Brown",
+      "totalWorkingDays": 22,
+      "daysPresent": 19,
+      "weeklyOffs": 8,
+      "holidays": 1,
+      "approvedPaidLeaves": 0,
+      "lopDays": 3,
+      "payableDays": 19,
+      "businessUnit": "JNET",
+      "attendancePercentage": 86.36,
+      "month": "December",
+      "fiscalYear": "FY 2024-25"
+    },
+    {
+      "empId": "T1002",
+      "name": "Anita Desai",
+      "designation": "Telecaller",
+      "department": "Operations",
+      "reportingManager": "Rajesh Kumar",
+      "totalWorkingDays": 26,
+      "daysPresent": 25,
+      "weeklyOffs": 4,
+      "holidays": 0,
+      "approvedPaidLeaves": 1,
+      "lopDays": 0,
+      "payableDays": 26,
+      "businessUnit": "Telecom",
+      "attendancePercentage": 96.15,
+      "month": "December",
+      "fiscalYear": "FY 2024-25"
+    },
+    {
+      "empId": "E1005",
+      "name": "Ravi Patel",
+      "designation": "QA Engineer",
+      "department": "Technology",
+      "reportingManager": "Sarah Wilson",
+      "totalWorkingDays": 22,
+      "daysPresent": 18,
+      "weeklyOffs": 8,
+      "holidays": 1,
+      "approvedPaidLeaves": 1,
+      "lopDays": 3,
+      "payableDays": 19,
+      "businessUnit": "JNET",
+      "attendancePercentage": 81.82,
+      "month": "December",
+      "fiscalYear": "FY 2024-25"
+    }
+  ],
+  "attendanceHistory": [
+    {
+      "empId": "E1001",
+      "month": "November",
+      "fiscalYear": "FY 2024-25",
+      "totalWorkingDays": 22,
+      "daysPresent": 20,
+      "attendancePercentage": 90.91
+    },
+    {
+      "empId": "E1001",
+      "month": "October",
+      "fiscalYear": "FY 2024-25",
+      "totalWorkingDays": 23,
+      "daysPresent": 22,
+      "attendancePercentage": 95.65
+    },
+    {
+      "empId": "E1002",
+      "month": "November",
+      "fiscalYear": "FY 2024-25",
+      "totalWorkingDays": 22,
+      "daysPresent": 21,
+      "attendancePercentage": 95.45
+    },
+    {
+      "empId": "E1002",
+      "month": "October",
+      "fiscalYear": "FY 2024-25",
+      "totalWorkingDays": 23,
+      "daysPresent": 23,
+      "attendancePercentage": 100
+    }
+  ],
+  "leaveTypes": [
+    {
+      "id": "LT001",
+      "name": "Casual Leave",
+      "code": "CL",
+      "maxDays": 12,
+      "paid": true,
+      "status": "Active"
+    },
+    {
+      "id": "LT002",
+      "name": "Sick Leave",
+      "code": "SL",
+      "maxDays": 15,
+      "paid": true,
+      "status": "Active"
+    },
+    {
+      "id": "LT003",
+      "name": "Earned Leave",
+      "code": "EL",
+      "maxDays": 30,
+      "paid": true,
+      "status": "Active"
+    },
+    {
+      "id": "LT004",
+      "name": "Maternity Leave",
+      "code": "ML",
+      "maxDays": 180,
+      "paid": true,
+      "status": "Active"
+    },
+    {
+      "id": "LT005",
+      "name": "Paternity Leave",
+      "code": "PL",
+      "maxDays": 15,
+      "paid": true,
+      "status": "Active"
+    }
+  ],
+  "holidays": [
+    {
+      "id": "H001",
+      "date": "2024-12-25",
+      "name": "Christmas Day",
+      "type": "National Holiday",
+      "applicableStates": ["All States"]
+    },
+    {
+      "id": "H002",
+      "date": "2024-12-26",
+      "name": "Boxing Day",
+      "type": "Optional Holiday",
+      "applicableStates": ["Maharashtra"]
+    }
+  ],
+  "months": [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ],
+  "fiscalYears": ["FY 2023-24", "FY 2024-25", "FY 2025-26"]
+}

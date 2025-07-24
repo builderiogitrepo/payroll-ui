@@ -1,0 +1,221 @@
+{
+  "variablePayData": [
+    {
+      "empId": "E1001",
+      "name": "John Smith",
+      "designation": "Software Engineer",
+      "department": "Technology",
+      "grossCTC": 1200000,
+      "variablePercent": 10,
+      "annualVariablePay": 120000,
+      "quarterlyAmount": 30000,
+      "fyPeriod": "FY 24-25 – Q3",
+      "fiscalYear": "FY 2024-25",
+      "payablePercent": 85,
+      "payableAmount": 25500,
+      "manager": "Sarah Wilson",
+      "performance": "Exceeded Expectations",
+      "businessUnit": "JNET"
+    },
+    {
+      "empId": "E1002",
+      "name": "Priya Sharma",
+      "designation": "Senior Developer",
+      "department": "Technology",
+      "grossCTC": 1500000,
+      "variablePercent": 12,
+      "annualVariablePay": 180000,
+      "quarterlyAmount": 45000,
+      "fyPeriod": "FY 24-25 – Q3",
+      "fiscalYear": "FY 2024-25",
+      "payablePercent": 90,
+      "payableAmount": 40500,
+      "manager": "Sarah Wilson",
+      "performance": "Outstanding",
+      "businessUnit": "JNET"
+    },
+    {
+      "empId": "T1001",
+      "name": "Rajesh Kumar",
+      "designation": "Sales Executive",
+      "department": "Sales",
+      "grossCTC": 800000,
+      "variablePercent": 15,
+      "annualVariablePay": 120000,
+      "quarterlyAmount": 30000,
+      "fyPeriod": "FY 24-25 – Q3",
+      "fiscalYear": "FY 2024-25",
+      "payablePercent": 75,
+      "payableAmount": 22500,
+      "manager": "Michael Chen",
+      "performance": "Met Expectations",
+      "businessUnit": "Telecom"
+    },
+    {
+      "empId": "E1003",
+      "name": "Sarah Wilson",
+      "designation": "Team Lead",
+      "department": "Technology",
+      "grossCTC": 2000000,
+      "variablePercent": 20,
+      "annualVariablePay": 400000,
+      "quarterlyAmount": 100000,
+      "fyPeriod": "FY 24-25 – Q3",
+      "fiscalYear": "FY 2024-25",
+      "payablePercent": 95,
+      "payableAmount": 95000,
+      "manager": "David Brown",
+      "performance": "Outstanding",
+      "businessUnit": "JNET"
+    },
+    {
+      "empId": "E1004",
+      "name": "Michael Chen",
+      "designation": "Sales Manager",
+      "department": "Sales",
+      "grossCTC": 1800000,
+      "variablePercent": 18,
+      "annualVariablePay": 324000,
+      "quarterlyAmount": 81000,
+      "fyPeriod": "FY 24-25 – Q3",
+      "fiscalYear": "FY 2024-25",
+      "payablePercent": 80,
+      "payableAmount": 64800,
+      "manager": "David Brown",
+      "performance": "Exceeded Expectations",
+      "businessUnit": "JNET"
+    },
+    {
+      "empId": "T1002",
+      "name": "Anita Desai",
+      "designation": "Telecaller",
+      "department": "Operations",
+      "grossCTC": 400000,
+      "variablePercent": 8,
+      "annualVariablePay": 32000,
+      "quarterlyAmount": 8000,
+      "fyPeriod": "FY 24-25 – Q3",
+      "fiscalYear": "FY 2024-25",
+      "payablePercent": 70,
+      "payableAmount": 5600,
+      "manager": "Rajesh Kumar",
+      "performance": "Met Expectations",
+      "businessUnit": "Telecom"
+    },
+    {
+      "empId": "E1005",
+      "name": "Ravi Patel",
+      "designation": "QA Engineer",
+      "department": "Technology",
+      "grossCTC": 1000000,
+      "variablePercent": 10,
+      "annualVariablePay": 100000,
+      "quarterlyAmount": 25000,
+      "fyPeriod": "FY 24-25 – Q3",
+      "fiscalYear": "FY 2024-25",
+      "payablePercent": 60,
+      "payableAmount": 15000,
+      "manager": "Sarah Wilson",
+      "performance": "Below Expectations",
+      "businessUnit": "JNET"
+    }
+  ],
+  "variablePayHistory": [
+    {
+      "empId": "E1001",
+      "fyPeriod": "FY 24-25 – Q2",
+      "fiscalYear": "FY 2024-25",
+      "payablePercent": 80,
+      "payableAmount": 24000,
+      "performance": "Met Expectations"
+    },
+    {
+      "empId": "E1001",
+      "fyPeriod": "FY 24-25 – Q1",
+      "fiscalYear": "FY 2024-25",
+      "payablePercent": 75,
+      "payableAmount": 22500,
+      "performance": "Met Expectations"
+    },
+    {
+      "empId": "E1002",
+      "fyPeriod": "FY 24-25 – Q2",
+      "fiscalYear": "FY 2024-25",
+      "payablePercent": 85,
+      "payableAmount": 38250,
+      "performance": "Exceeded Expectations"
+    },
+    {
+      "empId": "E1002",
+      "fyPeriod": "FY 24-25 – Q1",
+      "fiscalYear": "FY 2024-25",
+      "payablePercent": 90,
+      "payableAmount": 40500,
+      "performance": "Outstanding"
+    },
+    {
+      "empId": "T1001",
+      "fyPeriod": "FY 24-25 – Q2",
+      "fiscalYear": "FY 2024-25",
+      "payablePercent": 70,
+      "payableAmount": 21000,
+      "performance": "Met Expectations"
+    },
+    {
+      "empId": "T1001",
+      "fyPeriod": "FY 24-25 – Q1",
+      "fiscalYear": "FY 2024-25",
+      "payablePercent": 65,
+      "payableAmount": 19500,
+      "performance": "Below Expectations"
+    }
+  ],
+  "performanceLevels": [
+    {
+      "id": "PL001",
+      "name": "Outstanding",
+      "code": "O",
+      "payablePercent": 95,
+      "description": "Exceptional performance exceeding all expectations"
+    },
+    {
+      "id": "PL002",
+      "name": "Exceeded Expectations",
+      "code": "EE",
+      "payablePercent": 85,
+      "description": "Performance significantly above expectations"
+    },
+    {
+      "id": "PL003",
+      "name": "Met Expectations",
+      "code": "ME",
+      "payablePercent": 75,
+      "description": "Performance meeting all expectations"
+    },
+    {
+      "id": "PL004",
+      "name": "Below Expectations",
+      "code": "BE",
+      "payablePercent": 60,
+      "description": "Performance below expectations"
+    },
+    {
+      "id": "PL005",
+      "name": "Unsatisfactory",
+      "code": "U",
+      "payablePercent": 0,
+      "description": "Performance significantly below expectations"
+    }
+  ],
+  "quarters": ["Q1", "Q2", "Q3", "Q4"],
+  "fiscalYears": ["FY 2023-24", "FY 2024-25", "FY 2025-26"],
+  "departments": [
+    "Technology",
+    "Sales",
+    "Operations",
+    "HR",
+    "Finance",
+    "Marketing"
+  ],
+  "businessUnits": ["JNET", "Telecom"]
+}

@@ -584,17 +584,19 @@ ${errorTaxes
   }, [filterType, taxData.length]);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-background">
       {/* Fixed Header */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4">
+      <div className="bg-card border-b border-border px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" onClick={onClose} className="p-2">
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <div className="flex items-center gap-2">
-              <IndianRupee className="h-6 w-6 text-blue-600" />
-              <h1 className="text-xl font-semibold">Bulk Upload Taxes</h1>
+              <FileText className="h-6 w-6 text-primary" />
+              <h1 className="text-xl font-semibold text-foreground">
+                Bulk Upload Taxes
+              </h1>
             </div>
           </div>
           <Button variant="ghost" size="sm" onClick={onClose} className="p-2">
@@ -604,7 +606,7 @@ ${errorTaxes
       </div>
 
       {/* Step Indicators */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4">
+      <div className="bg-card border-b border-border px-6 py-4">
         <div className="flex items-center justify-center space-x-8">
           {[
             { step: 1, title: "Download Template", icon: Download },
@@ -619,17 +621,17 @@ ${errorTaxes
                   status === "completed"
                     ? "text-green-600"
                     : status === "current"
-                      ? "text-blue-600 font-semibold"
-                      : "text-slate-400"
+                      ? "text-primary font-semibold"
+                      : "text-muted-foreground"
                 }`}
               >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center ${
                     status === "completed"
-                      ? "bg-green-100 text-green-600"
+                      ? "bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400"
                       : status === "current"
-                        ? "bg-blue-100 text-blue-600"
-                        : "bg-slate-100 text-slate-400"
+                        ? "bg-primary/10 text-primary"
+                        : "bg-muted text-muted-foreground"
                   }`}
                 >
                   {status === "completed" ? (
@@ -639,7 +641,9 @@ ${errorTaxes
                   )}
                 </div>
                 <span className="text-sm font-medium">{title}</span>
-                {step < 3 && <ArrowRight className="h-4 w-4 text-slate-300" />}
+                {step < 3 && (
+                  <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                )}
               </div>
             );
           })}
@@ -650,7 +654,7 @@ ${errorTaxes
       <div className="flex-1 p-6">
         {/* Step 1: Download Template */}
         {currentStep === 1 && (
-          <div className="max-w-2xl mx-auto space-y-6">
+          <div className="w-full mx-auto space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -688,7 +692,7 @@ ${errorTaxes
 
         {/* Step 2: Upload File */}
         {currentStep === 2 && (
-          <div className="max-w-2xl mx-auto space-y-6">
+          <div className="w-full mx-auto space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">

@@ -64,6 +64,7 @@ export function BulkUploadEmployees({ onClose }: BulkUploadEmployeesProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [employeeData, setEmployeeData] = useState<EmployeeData[]>([]);
+  console.log("employeeData", employeeData);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterType, setFilterType] = useState<"all" | "valid" | "error">(
     "all",
@@ -936,17 +937,19 @@ ${errorEmployees
   }, [filterType, employeeData.length]);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-background">
       {/* Fixed Header */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4">
+      <div className="bg-card border-b border-border px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" onClick={onClose} className="p-2">
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <div className="flex items-center gap-2">
-              <Users className="h-6 w-6 text-blue-600" />
-              <h1 className="text-xl font-semibold">Bulk Upload Employees</h1>
+              <Users className="h-6 w-6 text-primary" />
+              <h1 className="text-xl font-semibold text-foreground">
+                Bulk Upload Employees
+              </h1>
             </div>
           </div>
           <Button variant="ghost" size="sm" onClick={onClose} className="p-2">
@@ -956,7 +959,7 @@ ${errorEmployees
       </div>
 
       {/* Step Indicators */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4">
+      <div className="bg-card border-b border-border px-6 py-4">
         <div className="flex items-center justify-center space-x-8">
           {[
             { step: 1, title: "Download Template", icon: Download },
@@ -971,17 +974,17 @@ ${errorEmployees
                   status === "completed"
                     ? "text-green-600"
                     : status === "current"
-                      ? "text-blue-600 font-semibold"
-                      : "text-slate-400"
+                      ? "text-primary font-semibold"
+                      : "text-muted-foreground"
                 }`}
               >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center ${
                     status === "completed"
-                      ? "bg-green-100 text-green-600"
+                      ? "bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400"
                       : status === "current"
-                        ? "bg-blue-100 text-blue-600"
-                        : "bg-slate-100 text-slate-400"
+                        ? "bg-primary/10 text-primary"
+                        : "bg-muted text-muted-foreground"
                   }`}
                 >
                   {status === "completed" ? (
@@ -991,7 +994,9 @@ ${errorEmployees
                   )}
                 </div>
                 <span className="text-sm font-medium">{title}</span>
-                {step < 3 && <ArrowRight className="h-4 w-4 text-slate-300" />}
+                {step < 3 && (
+                  <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                )}
               </div>
             );
           })}
@@ -1002,16 +1007,16 @@ ${errorEmployees
       <div className="flex-1 p-6">
         {/* Step 1: Download Template */}
         {currentStep === 1 && (
-          <div className="max-w-2xl mx-auto space-y-6">
+          <div className="w-full mx-auto space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <FileSpreadsheet className="h-5 w-5 text-blue-600" />
+                  <FileSpreadsheet className="h-5 w-5 text-primary" />
                   Step 1: Download Template
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="text-slate-600">
+                <p className="text-muted-foreground">
                   Download the standard employee upload template and fill in the
                   required details.
                 </p>
@@ -1024,10 +1029,10 @@ ${errorEmployees
                   Download Template (.xlsx)
                 </Button>
 
-                <Alert className="border-blue-200 bg-blue-50">
-                  <Info className="h-4 w-4 text-blue-600" />
+                <Alert className="border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/20">
+                  <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                   <AlertDescription>
-                    <div className="text-blue-700 text-sm">
+                    <div className="text-blue-700 dark:text-blue-300 text-sm">
                       <strong>Important:</strong> Do not rename or remove any
                       columns. Sample data is provided in row 2.
                     </div>
@@ -1040,20 +1045,20 @@ ${errorEmployees
 
         {/* Step 2: Upload File */}
         {currentStep === 2 && (
-          <div className="max-w-2xl mx-auto space-y-6">
+          <div className="w-full mx-auto space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Upload className="h-5 w-5 text-blue-600" />
+                  <Upload className="h-5 w-5 text-primary" />
                   Step 2: Upload File
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="file-upload">Upload Filled Template</Label>
-                  <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center">
-                    <Upload className="h-8 w-8 mx-auto text-slate-400 mb-2" />
-                    <p className="text-sm text-slate-600 mb-2">
+                  <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
+                    <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+                    <p className="text-sm text-muted-foreground mb-2">
                       Drag and drop your file here, or click to browse
                     </p>
                     <Input
@@ -1075,9 +1080,9 @@ ${errorEmployees
                 </div>
 
                 {uploadedFile && (
-                  <div className="flex items-center gap-2 p-3 bg-green-50 rounded-lg">
-                    <FileText className="h-4 w-4 text-green-600" />
-                    <span className="text-sm text-green-700">
+                  <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
+                    <FileText className="h-4 w-4 text-green-600 dark:text-green-400" />
+                    <span className="text-sm text-green-700 dark:text-green-300">
                       {uploadedFile.name} (
                       {(uploadedFile.size / 1024).toFixed(1)} KB)
                     </span>
@@ -1086,9 +1091,9 @@ ${errorEmployees
 
                 {!uploadedFile && (
                   <div className="space-y-3">
-                    <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg">
-                      <Info className="h-4 w-4 text-blue-600" />
-                      <span className="text-sm text-blue-700">
+                    <div className="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
+                      <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                      <span className="text-sm text-blue-700 dark:text-blue-300">
                         No file uploaded yet. You can upload a CSV file or use
                         the demo data below.
                       </span>
@@ -1104,10 +1109,10 @@ ${errorEmployees
                   </div>
                 )}
 
-                <Alert className="border-orange-200 bg-orange-50">
-                  <AlertCircle className="h-4 w-4 text-orange-600" />
+                <Alert className="border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-950/20">
+                  <AlertCircle className="h-4 w-4 text-orange-600 dark:text-orange-400" />
                   <AlertDescription>
-                    <div className="text-orange-700 text-sm">
+                    <div className="text-orange-700 dark:text-orange-300 text-sm">
                       <strong>Supported formats:</strong> .xlsx, .csv files only
                     </div>
                   </AlertDescription>
@@ -1123,7 +1128,7 @@ ${errorEmployees
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Eye className="h-5 w-5 text-blue-600" />
+                  <Eye className="h-5 w-5 text-primary" />
                   Step 3: Preview & Confirm
                 </CardTitle>
               </CardHeader>
@@ -1155,7 +1160,7 @@ ${errorEmployees
                   <div className="flex items-center gap-2">
                     <Label
                       htmlFor="filter-type"
-                      className="text-sm font-medium text-slate-700"
+                      className="text-sm font-medium text-foreground"
                     >
                       Filter:
                     </Label>
@@ -1167,7 +1172,7 @@ ${errorEmployees
                           e.target.value as "all" | "valid" | "error",
                         )
                       }
-                      className="border border-slate-300 rounded-md px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-w-[140px]"
+                      className="border border-border rounded-md px-3 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary min-w-[140px]"
                     >
                       <option value="all">All Records</option>
                       <option value="valid">Valid Records</option>
@@ -1176,11 +1181,11 @@ ${errorEmployees
                   </div>
                 </div>
 
-                <div className="border rounded-lg overflow-hidden">
+                <div className="border border-border rounded-lg overflow-hidden">
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
-                        <TableRow className="bg-slate-50">
+                        <TableRow className="bg-muted/50">
                           <TableHead>Name</TableHead>
                           <TableHead>Email</TableHead>
                           <TableHead>Phone</TableHead>
@@ -1197,7 +1202,11 @@ ${errorEmployees
                         {currentRecords.map((employee) => (
                           <TableRow
                             key={employee.id}
-                            className={!employee.isValid ? "bg-red-50" : ""}
+                            className={
+                              !employee.isValid
+                                ? "bg-red-50 dark:bg-red-950/20"
+                                : ""
+                            }
                           >
                             <TableCell>
                               <TooltipProvider>
@@ -1206,7 +1215,7 @@ ${errorEmployees
                                     <span
                                       className={
                                         !employee.name
-                                          ? "bg-red-200 px-2 py-1 rounded text-sm"
+                                          ? "bg-red-200 dark:bg-red-800/30 px-2 py-1 rounded text-sm"
                                           : ""
                                       }
                                     >
@@ -1232,7 +1241,7 @@ ${errorEmployees
                                             error.includes("email") ||
                                             error.includes("Email"),
                                         )
-                                          ? "bg-red-200 px-2 py-1 rounded text-sm"
+                                          ? "bg-red-200 dark:bg-red-800/30 px-2 py-1 rounded text-sm"
                                           : ""
                                       }
                                     >
@@ -1262,7 +1271,7 @@ ${errorEmployees
                                             error.includes("phone") ||
                                             error.includes("Phone"),
                                         )
-                                          ? "bg-red-200 px-2 py-1 rounded text-sm"
+                                          ? "bg-red-200 dark:bg-red-800/30 px-2 py-1 rounded text-sm"
                                           : ""
                                       }
                                     >
@@ -1298,7 +1307,7 @@ ${errorEmployees
                                             error.includes("date") ||
                                             error.includes("Date"),
                                         )
-                                          ? "bg-red-200 px-2 py-1 rounded text-sm"
+                                          ? "bg-red-200 dark:bg-red-800/30 px-2 py-1 rounded text-sm"
                                           : ""
                                       }
                                     >
@@ -1330,7 +1339,7 @@ ${errorEmployees
                                             error.includes("salary") ||
                                             error.includes("Salary"),
                                         )
-                                          ? "bg-red-200 px-2 py-1 rounded text-sm"
+                                          ? "bg-red-200 dark:bg-red-800/30 px-2 py-1 rounded text-sm"
                                           : ""
                                       }
                                     >
@@ -1358,7 +1367,7 @@ ${errorEmployees
                                   {employee.errors.map((error, index) => (
                                     <div
                                       key={index}
-                                      className="text-xs text-red-600 bg-red-50 px-2 py-1 rounded"
+                                      className="text-xs text-red-600 bg-red-50 dark:bg-red-950/20 px-2 py-1 rounded"
                                     >
                                       {error}
                                     </div>
@@ -1441,7 +1450,7 @@ ${errorEmployees
       </div>
 
       {/* Fixed Footer */}
-      <div className="bg-white border-t border-slate-200 px-6 py-4">
+      <div className="bg-card border-t border-border px-6 py-4">
         <div className="flex justify-between items-center">
           <div>
             {currentStep > 1 && (

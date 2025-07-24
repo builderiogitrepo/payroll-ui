@@ -441,7 +441,7 @@ export default function StatutorySettings() {
               {activeTab === "pf" && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Employee Contribution
                     </Label>
                     <p className="text-lg font-semibold">
@@ -449,7 +449,7 @@ export default function StatutorySettings() {
                     </p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Employer Contribution
                     </Label>
                     <p className="text-lg font-semibold">
@@ -457,7 +457,7 @@ export default function StatutorySettings() {
                     </p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Salary Limit
                     </Label>
                     <p className="text-lg font-semibold">
@@ -465,7 +465,7 @@ export default function StatutorySettings() {
                     </p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Applicable Employees
                     </Label>
                     <p className="text-lg font-semibold">
@@ -498,7 +498,7 @@ export default function StatutorySettings() {
                       Salary Range
                     </Label>
                     <p className="text-lg font-semibold">
-                      ���{selectedConfig.slabFrom?.toLocaleString()} -
+                      ₹{selectedConfig.slabFrom?.toLocaleString()} -
                       {selectedConfig.slabTo
                         ? ` ₹${selectedConfig.slabTo.toLocaleString()}`
                         : " No Limit"}

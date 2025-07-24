@@ -322,17 +322,19 @@ export function BulkUploadAttendance({ onClose }: BulkUploadAttendanceProps) {
   }, [filterType, attendanceData.length]);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-background">
       {/* Fixed Header */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4">
+      <div className="bg-card border-b border-border px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" onClick={onClose} className="p-2">
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <div className="flex items-center gap-2">
-              <Users className="h-6 w-6 text-blue-600" />
-              <h1 className="text-xl font-semibold">Bulk Upload Attendance</h1>
+              <Users className="h-6 w-6 text-primary" />
+              <h1 className="text-xl font-semibold text-foreground">
+                Bulk Upload Attendance
+              </h1>
             </div>
           </div>
           <Button variant="ghost" size="sm" onClick={onClose} className="p-2">
@@ -341,7 +343,7 @@ export function BulkUploadAttendance({ onClose }: BulkUploadAttendanceProps) {
         </div>
       </div>
       {/* Step Indicators */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4">
+      <div className="bg-card border-b border-border px-6 py-4">
         <div className="flex items-center justify-center space-x-8">
           {[
             { step: 1, title: "Download Template", icon: Download },
@@ -356,17 +358,17 @@ export function BulkUploadAttendance({ onClose }: BulkUploadAttendanceProps) {
                   status === "completed"
                     ? "text-green-600"
                     : status === "current"
-                      ? "text-blue-600 font-semibold"
-                      : "text-slate-400"
+                      ? "text-primary font-semibold"
+                      : "text-muted-foreground"
                 }`}
               >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center ${
                     status === "completed"
-                      ? "bg-green-100 text-green-600"
+                      ? "bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400"
                       : status === "current"
-                        ? "bg-blue-100 text-blue-600"
-                        : "bg-slate-100 text-slate-400"
+                        ? "bg-primary/10 text-primary"
+                        : "bg-muted text-muted-foreground"
                   }`}
                 >
                   {status === "completed" ? (
@@ -376,7 +378,9 @@ export function BulkUploadAttendance({ onClose }: BulkUploadAttendanceProps) {
                   )}
                 </div>
                 <span className="text-sm font-medium">{title}</span>
-                {step < 3 && <ArrowRight className="h-4 w-4 text-slate-300" />}
+                {step < 3 && (
+                  <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                )}
               </div>
             );
           })}
@@ -386,16 +390,16 @@ export function BulkUploadAttendance({ onClose }: BulkUploadAttendanceProps) {
       <div className="flex-1 p-6">
         {/* Step 1: Download Template */}
         {currentStep === 1 && (
-          <div className="max-w-2xl mx-auto space-y-6">
+          <div className="w-full mx-auto space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <FileSpreadsheet className="h-5 w-5 text-blue-600" />
+                  <FileSpreadsheet className="h-5 w-5 text-primary" />
                   Step 1: Download Template
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="text-slate-600">
+                <p className="text-muted-foreground">
                   Download the standard attendance upload template and fill in
                   the required details.
                 </p>
@@ -406,10 +410,10 @@ export function BulkUploadAttendance({ onClose }: BulkUploadAttendanceProps) {
                   <Download className="h-4 w-4 mr-2" />
                   Download Template (.csv)
                 </Button>
-                <Alert className="border-blue-200 bg-blue-50">
-                  <Info className="h-4 w-4 text-blue-600" />
+                <Alert className="border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/20">
+                  <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                   <AlertDescription>
-                    <div className="text-blue-700 text-sm">
+                    <div className="text-blue-700 dark:text-blue-300 text-sm">
                       <strong>Important:</strong> Do not rename or remove any
                       columns. Sample data is provided in row 2.
                     </div>
@@ -421,20 +425,20 @@ export function BulkUploadAttendance({ onClose }: BulkUploadAttendanceProps) {
         )}
         {/* Step 2: Upload File */}
         {currentStep === 2 && (
-          <div className="max-w-2xl mx-auto space-y-6">
+          <div className="w-full mx-auto space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Upload className="h-5 w-5 text-blue-600" />
+                  <Upload className="h-5 w-5 text-primary" />
                   Step 2: Upload File
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="file-upload">Upload Filled Template</Label>
-                  <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center">
-                    <Upload className="h-8 w-8 mx-auto text-slate-400 mb-2" />
-                    <p className="text-sm text-slate-600 mb-2">
+                  <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
+                    <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+                    <p className="text-sm text-muted-foreground mb-2">
                       Drag and drop your file here, or click to browse
                     </p>
                     <Input

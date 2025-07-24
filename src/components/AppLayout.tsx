@@ -16,6 +16,7 @@ import {
   Search,
   ChevronDown,
   ChevronRight,
+  LayoutDashboard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +29,8 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ThemeToggleCompact } from "@/components/ui/theme-toggle";
+import { useTheme } from "@/contexts/ThemeContext";
 import jnetLogo from "@/assets/images/jnet-logo.png";
 import {
   Tooltip,
@@ -37,6 +40,12 @@ import {
 } from "@/components/ui/tooltip";
 
 const navigationItems = [
+  {
+    title: "Dashboard",
+    path: "/dashboard",
+    icon: LayoutDashboard,
+    description: "Analytics and insights overview",
+  },
   {
     title: "Employee Information",
     path: "/employees",
@@ -105,6 +114,7 @@ export function AppLayout() {
   const [fontSize, setFontSize] = useState("normal");
   const [payrollSettingsOpen, setPayrollSettingsOpen] = useState(true);
   const location = useLocation();
+  const { theme } = useTheme();
 
   // Apply font size class to html
   React.useEffect(() => {
@@ -126,7 +136,7 @@ export function AppLayout() {
   const isCollapsed = !sidebarOpen && window.innerWidth >= 1024;
 
   return (
-    <div className="h-screen flex bg-slate-50">
+    <div className="h-screen flex bg-background">
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
@@ -135,124 +145,151 @@ export function AppLayout() {
         />
       )}
 
-      {/* Professional Sidebar */}
+      {/* Modern Sidebar with Gradient */}
       <div
         className={cn(
-          "bg-slate-900 text-slate-100 transition-all duration-300 flex flex-col shadow-xl z-50 overflow-x-hidden min-w-0", // added min-w-0
-          "fixed lg:relative h-full",
+          "transition-all duration-300 flex flex-col shadow-2xl z-50 overflow-x-hidden min-w-0",
+          "fixed lg:relative h-full backdrop-blur-md",
           sidebarOpen ? "w-64" : "w-16 lg:w-16",
           "transform lg:transform-none",
           sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
           "lg:z-auto z-50",
         )}
+        style={{
+          background:
+            theme === "dark"
+              ? "linear-gradient(180deg, rgba(30, 34, 45, 0.95) 0%, rgba(30, 34, 45, 0.98) 100%)"
+              : "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.98) 100%)",
+          borderRight:
+            theme === "dark"
+              ? "1px solid rgba(255, 255, 255, 0.1)"
+              : "1px solid rgba(0, 0, 0, 0.1)",
+        }}
       >
-        {/* Professional Header */}
-        <div className="p-4 border-b border-slate-700 bg-slate-800 min-w-0">
+        {/* Modern Header with Gradient */}
+        <div
+          className="p-4 border-b min-w-0 transition-all duration-300"
+          style={{
+            background:
+              theme === "dark"
+                ? "linear-gradient(135deg, rgba(108, 92, 231, 0.2) 0%, rgba(255, 118, 117, 0.2) 100%)"
+                : "linear-gradient(135deg, rgba(30, 144, 255, 0.1) 0%, rgba(0, 201, 167, 0.1) 100%)",
+            borderBottom:
+              theme === "dark"
+                ? "1px solid rgba(255, 255, 255, 0.1)"
+                : "1px solid rgba(0, 0, 0, 0.1)",
+          }}
+        >
           <div className="flex items-center justify-between">
             {sidebarOpen && (
-              <div>
-                <h1 className="text-xl font-bold text-white tracking-tight">
+              <div className="space-y-1">
+                <h1
+                  className="text-xl font-bold tracking-tight transition-colors duration-300"
+                  style={{
+                    background:
+                      theme === "dark"
+                        ? "linear-gradient(135deg, #1E90FF 0%, #00C9A7 100%)"
+                        : "linear-gradient(135deg, #6C5CE7 0%, #FF7675 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
+                >
                   JNET
                 </h1>
-                <p className="text-slate-300 text-sm font-medium">
+                <p className="text-muted-foreground text-sm font-medium transition-colors duration-300">
                   Payroll System
                 </p>
               </div>
             )}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="text-slate-300 hover:text-white hover:bg-slate-700"
-            >
-              <Menu
-                className={cn(
-                  "transition-all duration-200",
-                  sidebarOpen ? "h-5 w-5" : "h-6 w-6",
-                )}
-              />
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-all duration-300"
+              >
+                <Menu
+                  className={cn(
+                    "transition-all duration-200",
+                    sidebarOpen ? "h-5 w-5" : "h-6 w-6",
+                  )}
+                />
+              </Button>
+            </div>
           </div>
         </div>
 
-        {/* Professional Navigation */}
+        {/* Modern Navigation */}
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto min-w-0">
           {navigationItems.map((item, idx) => {
+            // Payroll Settings section
             if (item.section) {
-              // Section header and grouped children
-              const isActiveParent = item.children.some(
+              const isActiveParent = item.children?.some(
                 (child) => location.pathname === child.path,
               );
-              // Collapsed sidebar: show flyout on icon hover
+
               if (isCollapsed) {
                 return (
                   <TooltipProvider key={item.section}>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button
-                          type="button"
                           className={cn(
-                            "flex items-center justify-center w-full h-12 rounded-lg transition-all duration-200 group min-w-0",
-                            isActiveParent && "bg-blue-50 text-blue-700",
+                            "flex items-center justify-center w-full h-12 rounded-lg transition-all duration-300 group min-w-0",
+                            "hover:bg-accent/50 hover:scale-105",
+                            isActiveParent && "bg-primary/20 text-primary",
                           )}
+                          onClick={() =>
+                            setPayrollSettingsOpen((open) => !open)
+                          }
                         >
                           <Settings className="h-5 w-5" />
                         </button>
                       </TooltipTrigger>
-                      <TooltipContent side="right" className="p-0 fixed">
-                        <div className="bg-white shadow-lg rounded min-w-[180px] py-2">
-                          <div className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-400">
-                            {item.section}
-                          </div>
-                          {item.children.map((child) => {
-                            const Icon = child.icon;
-                            const isActive = location.pathname === child.path;
-                            return (
-                              <Link
-                                key={child.path}
-                                to={child.path}
-                                className={cn(
-                                  "flex items-center gap-3 px-4 py-2 text-sm rounded transition-all duration-200",
-                                  isActive
-                                    ? "bg-blue-600 text-white font-medium"
-                                    : "text-slate-700 hover:bg-blue-50 hover:text-blue-700",
-                                )}
-                              >
-                                <Icon className="h-4 w-4" />
-                                {child.title}
-                              </Link>
-                            );
-                          })}
+                      <TooltipContent side="right" className="p-2">
+                        <div className="text-sm font-medium">
+                          {item.section}
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          {item.children?.map((child, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center gap-2 py-1"
+                            >
+                              <child.icon className="h-3 w-3" />
+                              <span>{child.title}</span>
+                            </div>
+                          ))}
                         </div>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
                 );
               }
-              // Expanded sidebar: modern parent/child styling
+
               return (
-                <div key={item.section} className="mt-4">
+                <div key={item.section} className="space-y-1">
                   <button
-                    type="button"
                     className={cn(
-                      "w-full flex items-center justify-between px-3 py-2 text-base font-bold tracking-wide text-slate-400 hover:text-blue-600 focus:outline-none",
+                      "flex items-center justify-between w-full px-3 py-2 text-sm rounded-lg transition-all duration-300",
+                      "hover:scale-105 hover:shadow-md",
+                      "text-muted-foreground hover:bg-accent/50 hover:text-primary",
                       isActiveParent &&
-                        "text-blue-600 font-bold bg-slate-800/10 rounded",
+                        "text-primary font-bold bg-primary/10 rounded-lg",
                     )}
                     onClick={() => setPayrollSettingsOpen((open) => !open)}
                   >
-                    <span className="flex items-center gap-2">
-                      <Settings className="h-5 w-5" />
-                      {item.section}
-                    </span>
-                    {payrollSettingsOpen ? (
-                      <ChevronDown className="h-4 w-4" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4" />
-                    )}
+                    <span>{item.section}</span>
+                    <ChevronRight
+                      className={cn(
+                        "h-4 w-4 transition-transform duration-200",
+                        payrollSettingsOpen && "rotate-90",
+                      )}
+                    />
                   </button>
                   {payrollSettingsOpen && (
-                    <div className="space-y-1">
+                    <div className="mt-2 ml-4 space-y-1">
                       {item.children.map((child) => {
                         const Icon = child.icon;
                         const isActive = location.pathname === child.path;
@@ -261,20 +298,15 @@ export function AppLayout() {
                             key={child.path}
                             to={child.path}
                             className={cn(
-                              "flex items-center gap-3 pl-8 pr-3 py-3 rounded-lg transition-all duration-200 group text-sm",
-                              "hover:bg-slate-800 hover:text-white",
+                              "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all duration-300",
+                              "hover:scale-105 hover:shadow-md",
                               isActive
-                                ? "bg-blue-600 text-white font-medium"
-                                : "text-slate-400",
+                                ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white font-medium shadow-lg"
+                                : "text-muted-foreground hover:bg-accent/50 hover:text-primary",
                             )}
-                            onClick={() => {
-                              if (window.innerWidth < 1024) {
-                                setSidebarOpen(false);
-                              }
-                            }}
                           >
-                            <Icon className="flex-shrink-0 h-4 w-4" />
-                            <span>{child.title}</span>
+                            <Icon className="h-4 w-4" />
+                            {child.title}
                           </Link>
                         );
                       })}
@@ -283,154 +315,148 @@ export function AppLayout() {
                 </div>
               );
             }
+
+            // Regular navigation item
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
+
+            if (isCollapsed) {
+              return (
+                <TooltipProvider key={item.path}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link
+                        to={item.path}
+                        className={cn(
+                          "flex items-center justify-center w-full h-12 rounded-lg transition-all duration-300 group min-w-0",
+                          "hover:bg-accent/50 hover:scale-105",
+                          isActive && "bg-primary/20 text-primary",
+                        )}
+                      >
+                        <Icon className="h-5 w-5" />
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="p-2">
+                      <div className="text-sm font-medium">{item.title}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {item.description}
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              );
+            }
 
             return (
               <Link
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 group",
-                  "hover:bg-slate-800 hover:text-white",
-                  "min-h-[44px] lg:min-h-auto", // Touch-friendly minimum height on mobile
+                  "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all duration-300",
+                  "hover:scale-105 hover:shadow-md",
                   isActive
-                    ? "bg-blue-600 text-white shadow-lg font-medium"
-                    : "text-slate-300",
+                    ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white font-medium shadow-lg"
+                    : "text-muted-foreground hover:bg-accent/50 hover:text-primary",
                 )}
-                onClick={() => {
-                  // Close sidebar on mobile when navigation item is clicked
-                  if (window.innerWidth < 1024) {
-                    setSidebarOpen(false);
-                  }
-                }}
               >
-                <Icon
-                  className={cn(
-                    "flex-shrink-0 transition-all duration-200",
-                    sidebarOpen ? "h-4 w-4" : "h-6 w-6",
-                  )}
-                />
-                {sidebarOpen && (
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{item.title}</p>
-                    <p className="text-xs text-slate-400 truncate">
-                      {item.description}
-                    </p>
-                  </div>
-                )}
+                <Icon className="h-4 w-4" />
+                {item.title}
               </Link>
             );
           })}
         </nav>
-
-        {/* Professional User Profile */}
-        <div className="p-4 border-t border-slate-700 bg-slate-800">
-          {sidebarOpen ? (
-            <div className="flex items-center gap-3">
-              <Avatar className="h-9 w-9 ring-2 ring-slate-600">
-                <AvatarImage src="/placeholder-avatar.jpg" />
-                <AvatarFallback className="bg-slate-700 text-white">
-                  HR
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-white truncate">
-                  HR Admin
-                </p>
-                <p className="text-xs text-slate-400 truncate">
-                  admin@company.com
-                </p>
-              </div>
-            </div>
-          ) : (
-            <Avatar className="h-9 w-9 mx-auto ring-2 ring-slate-600">
-              <AvatarImage src="/placeholder-avatar.jpg" />
-              <AvatarFallback className="bg-slate-700 text-white">
-                HR
-              </AvatarFallback>
-            </Avatar>
-          )}
-        </div>
       </div>
 
-      {/* Main Content */}
-      <div
-        className={cn(
-          "flex-1 flex flex-col overflow-hidden transition-all duration-300",
-          "lg:ml-0",
-          !sidebarOpen && "lg:ml-0",
-        )}
-      >
-        {/* Professional Top Bar */}
-        <header className="bg-white border-b border-slate-200 px-4 lg:px-6 py-4 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              {/* Mobile Burger Menu */}
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="lg:hidden h-9 w-9 p-0 hover:bg-slate-100"
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
-
-              <div className="relative flex-1 max-w-lg">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
-                <Input
-                  placeholder="Search..."
-                  className="pl-10 bg-slate-50 border-slate-200 focus:border-blue-500 focus:ring-blue-500 text-sm h-10 lg:placeholder:text-base"
-                />
-              </div>
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Modern Header */}
+        <header
+          className="h-16 px-6 flex items-center justify-between border-b transition-all duration-300"
+          style={{
+            background:
+              theme === "dark"
+                ? "rgba(30, 34, 45, 0.8)"
+                : "rgba(255, 255, 255, 0.8)",
+            borderBottom:
+              theme === "dark"
+                ? "1px solid rgba(255, 255, 255, 0.1)"
+                : "1px solid rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(12px)",
+          }}
+        >
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search..."
+                className="pl-10 w-80 bg-background/50 border-border/50 backdrop-blur-sm transition-all duration-300"
+              />
             </div>
-            <div className="flex items-center gap-2 lg:gap-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="relative h-9 w-9 p-0 hover:bg-slate-100"
-              >
-                <Bell className="h-4 w-4" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
-                  3
-                </span>
-              </Button>
+          </div>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="flex items-center gap-2 h-9 px-2 lg:px-3 hover:bg-slate-100"
-                  >
-                    <Avatar className="h-7 w-7">
-                      <AvatarImage src="/placeholder-avatar.jpg" />
-                      <AvatarFallback className="text-xs">HR</AvatarFallback>
-                    </Avatar>
-                    <span className="hidden lg:inline text-sm font-medium">
-                      HR Admin
-                    </span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem>
-                    <User className="mr-2 h-4 w-4" />
-                    Profile
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Settings className="mr-2 h-4 w-4" />
-                    Settings
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Sign out</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-all duration-300"
+            >
+              <Bell className="h-5 w-5" />
+              <span className="absolute -top-1 -right-1 h-3 w-3 bg-primary rounded-full animate-pulse" />
+            </Button>
+
+            <ThemeToggleCompact />
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="relative h-8 w-8 rounded-full transition-all duration-300 hover:scale-105"
+                >
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="/avatars/01.png" alt="@user" />
+                    <AvatarFallback className="bg-gradient-to-r from-primary-500 to-primary-600 text-white">
+                      U
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-56 backdrop-blur-md transition-all duration-300"
+                align="end"
+                forceMount
+                style={{
+                  background:
+                    theme === "dark"
+                      ? "rgba(30, 34, 45, 0.95)"
+                      : "rgba(255, 255, 255, 0.95)",
+                  border:
+                    theme === "dark"
+                      ? "1px solid rgba(255, 255, 255, 0.1)"
+                      : "1px solid rgba(0, 0, 0, 0.1)",
+                }}
+              >
+                <DropdownMenuItem className="transition-all duration-300 hover:bg-accent/50">
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="transition-all duration-300 hover:bg-accent/50">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="transition-all duration-300 hover:bg-destructive/20 text-destructive">
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </header>
 
-        {/* Page Content */}
-        <main className="flex-1 overflow-auto bg-slate-50">
-          <Outlet />
+        {/* Main Content */}
+        <main className="flex-1 overflow-auto p-6 transition-all duration-300">
+          <div className="animate-fade-in">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

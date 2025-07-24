@@ -258,7 +258,7 @@ const columns: Column[] = [
           <div
             className={`h-2 rounded-full ${
               value >= 90
-                ? "bg-green-500"
+                ? "bg-blue-500"
                 : value >= 70
                   ? "bg-blue-500"
                   : "bg-orange-500"
@@ -274,9 +274,7 @@ const columns: Column[] = [
     key: "payableAmount",
     label: "Payable Amount",
     render: (value) => (
-      <span className="font-bold text-green-600">
-        ₹{value.toLocaleString()}
-      </span>
+      <span className="font-bold text-blue-600">₹{value.toLocaleString()}</span>
     ),
   },
   {
@@ -409,7 +407,7 @@ export default function VariablePay() {
       >
         <div className="flex gap-2">
           <Button
-            className="bg-green-600 hover:bg-green-700 text-white font-semibold flex items-center gap-2"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold flex items-center gap-2"
             onClick={() => setShowBulkUpload(true)}
           >
             <Upload className="h-4 w-4" />
@@ -479,19 +477,19 @@ export default function VariablePay() {
               {/* Basic Info */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-sm font-medium text-slate-600">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Department
                   </Label>
                   <p>{selectedEmployee.department}</p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-slate-600">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Business Unit
                   </Label>
                   <p>{selectedEmployee.businessUnit}</p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-slate-600">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Manager
                   </Label>
                   <p>{selectedEmployee.manager}</p>
@@ -558,7 +556,7 @@ export default function VariablePay() {
                   </div>
                   <div className="flex justify-between text-lg">
                     <span className="font-semibold">Final Payable Amount</span>
-                    <span className="font-bold text-green-600">
+                    <span className="font-bold text-blue-600">
                       ₹{selectedEmployee.payableAmount.toLocaleString()}
                     </span>
                   </div>

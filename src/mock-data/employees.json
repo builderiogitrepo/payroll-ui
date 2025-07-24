@@ -1,0 +1,222 @@
+{
+  "employees": [
+    {
+      "id": "E1001",
+      "empId": "E1001",
+      "name": "John Smith",
+      "designation": "Software Engineer",
+      "department": "Technology",
+      "location": "Mumbai",
+      "businessUnit": "JNET",
+      "employmentType": "Full-time",
+      "status": "Active",
+      "joiningDate": "2023-01-15",
+      "salary": 1200000,
+      "email": "john.smith@company.com",
+      "phone": "+91 9876543210",
+      "reportingManager": "Sarah Wilson",
+      "officeLocation": "Andheri East",
+      "experienceYears": 3,
+      "skills": ["React", "Node.js", "MongoDB"],
+      "ctcBreakdown": [
+        { "type": "basic", "amount": 600000 },
+        { "type": "hra", "amount": 240000 },
+        { "type": "medical", "amount": 50000 },
+        { "type": "conveyance", "amount": 30000 },
+        { "type": "special", "amount": 280000 }
+      ]
+    },
+    {
+      "id": "E1002",
+      "empId": "E1002",
+      "name": "Priya Sharma",
+      "designation": "Senior Developer",
+      "department": "Technology",
+      "location": "Bangalore",
+      "businessUnit": "JNET",
+      "employmentType": "Full-time",
+      "status": "Active",
+      "joiningDate": "2022-03-10",
+      "salary": 1600000,
+      "email": "priya.sharma@company.com",
+      "phone": "+91 9876543211",
+      "reportingManager": "Sarah Wilson",
+      "officeLocation": "Koramangala",
+      "experienceYears": 5,
+      "skills": ["Python", "Django", "AWS"],
+      "ctcBreakdown": [
+        { "type": "basic", "amount": 800000 },
+        { "type": "hra", "amount": 320000 },
+        { "type": "medical", "amount": 60000 },
+        { "type": "conveyance", "amount": 40000 },
+        { "type": "special", "amount": 380000 }
+      ]
+    },
+    {
+      "id": "T1001",
+      "empId": "T1001",
+      "name": "Rajesh Kumar",
+      "designation": "Sales Executive",
+      "department": "Sales",
+      "location": "Delhi",
+      "businessUnit": "Telecom",
+      "employmentType": "Full-time",
+      "status": "Active",
+      "joiningDate": "2023-06-01",
+      "salary": 800000,
+      "email": "rajesh.kumar@company.com",
+      "phone": "+91 9876543212",
+      "reportingManager": "Michael Chen",
+      "officeLocation": "Connaught Place",
+      "experienceYears": 2,
+      "skills": ["Sales", "Customer Relations", "CRM"],
+      "ctcBreakdown": [
+        { "type": "basic", "amount": 400000 },
+        { "type": "hra", "amount": 160000 },
+        { "type": "medical", "amount": 40000 },
+        { "type": "conveyance", "amount": 25000 },
+        { "type": "special", "amount": 175000 }
+      ]
+    },
+    {
+      "id": "E1003",
+      "empId": "E1003",
+      "name": "Sarah Wilson",
+      "designation": "Team Lead",
+      "department": "Technology",
+      "location": "Mumbai",
+      "businessUnit": "JNET",
+      "employmentType": "Full-time",
+      "status": "Active",
+      "joiningDate": "2021-01-20",
+      "salary": 2200000,
+      "email": "sarah.wilson@company.com",
+      "phone": "+91 9876543213",
+      "reportingManager": "David Brown",
+      "officeLocation": "Andheri East",
+      "experienceYears": 8,
+      "skills": ["Leadership", "React", "Architecture"],
+      "ctcBreakdown": [
+        { "type": "basic", "amount": 1100000 },
+        { "type": "hra", "amount": 440000 },
+        { "type": "medical", "amount": 80000 },
+        { "type": "conveyance", "amount": 50000 },
+        { "type": "special", "amount": 530000 }
+      ]
+    },
+    {
+      "id": "E1004",
+      "empId": "E1004",
+      "name": "Michael Chen",
+      "designation": "Sales Manager",
+      "department": "Sales",
+      "location": "Chennai",
+      "businessUnit": "Telecom",
+      "employmentType": "Full-time",
+      "status": "Active",
+      "joiningDate": "2020-09-15",
+      "salary": 1800000,
+      "email": "michael.chen@company.com",
+      "phone": "+91 9876543214",
+      "reportingManager": "David Brown",
+      "officeLocation": "T. Nagar",
+      "experienceYears": 6,
+      "skills": ["Sales Management", "Team Leadership", "Strategy"],
+      "ctcBreakdown": [
+        { "type": "basic", "amount": 900000 },
+        { "type": "hra", "amount": 360000 },
+        { "type": "medical", "amount": 70000 },
+        { "type": "conveyance", "amount": 45000 },
+        { "type": "special", "amount": 445000 }
+      ]
+    },
+    {
+      "id": "T1002",
+      "empId": "T1002",
+      "name": "Anita Desai",
+      "designation": "Telecaller",
+      "department": "Operations",
+      "location": "Mumbai",
+      "businessUnit": "Telecom",
+      "employmentType": "Full-time",
+      "status": "Active",
+      "joiningDate": "2023-08-01",
+      "salary": 400000,
+      "email": "anita.desai@company.com",
+      "phone": "+91 9876543215",
+      "reportingManager": "Rajesh Kumar",
+      "officeLocation": "Andheri West",
+      "experienceYears": 1,
+      "skills": ["Customer Service", "Communication", "CRM"],
+      "ctcBreakdown": [
+        { "type": "basic", "amount": 200000 },
+        { "type": "hra", "amount": 80000 },
+        { "type": "medical", "amount": 20000 },
+        { "type": "conveyance", "amount": 15000 },
+        { "type": "special", "amount": 85000 }
+      ]
+    },
+    {
+      "id": "E1005",
+      "empId": "E1005",
+      "name": "Ravi Patel",
+      "designation": "QA Engineer",
+      "department": "Technology",
+      "location": "Bangalore",
+      "businessUnit": "JNET",
+      "employmentType": "Full-time",
+      "status": "Active",
+      "joiningDate": "2023-03-15",
+      "salary": 1000000,
+      "email": "ravi.patel@company.com",
+      "phone": "+91 9876543216",
+      "reportingManager": "Sarah Wilson",
+      "officeLocation": "Koramangala",
+      "experienceYears": 2,
+      "skills": ["Manual Testing", "Automation", "Selenium"],
+      "ctcBreakdown": [
+        { "type": "basic", "amount": 500000 },
+        { "type": "hra", "amount": 200000 },
+        { "type": "medical", "amount": 40000 },
+        { "type": "conveyance", "amount": 25000 },
+        { "type": "special", "amount": 235000 }
+      ]
+    }
+  ],
+  "lookups": [
+    {
+      "departments": [
+        { "id": "D1001", "name": "Technology" },
+        { "id": "D1002", "name": "Sales" },
+        { "id": "D1003", "name": "Operations" },
+        { "id": "D1004", "name": "HR" },
+        { "id": "D1005", "name": "Finance" },
+        { "id": "D1006", "name": "Marketing" }
+      ],
+      "locations": [
+        { "id": "L1001", "name": "Mumbai" },
+        { "id": "L1002", "name": "Bangalore" },
+        { "id": "L1003", "name": "Delhi" },
+        { "id": "L1004", "name": "Chennai" },
+        { "id": "L1005", "name": "Hyderabad" },
+        { "id": "L1006", "name": "Pune" }
+      ],
+      "businessUnits": [
+        { "id": "BU1001", "name": "JNET" },
+        { "id": "BU1002", "name": "Telecom" }
+      ],
+      "employmentTypes": [
+        { "id": "ET1001", "name": "Full-time" },
+        { "id": "ET1002", "name": "Part-time" },
+        { "id": "ET1003", "name": "Contract" },
+        { "id": "ET1004", "name": "Intern" }
+      ],
+      "statuses": [
+        { "id": "S1001", "name": "Active" },
+        { "id": "S1002", "name": "Inactive" },
+        { "id": "S1003", "name": "Terminated" },
+        { "id": "S1004", "name": "On Leave" }
+      ]
+    }
+  ]
+}

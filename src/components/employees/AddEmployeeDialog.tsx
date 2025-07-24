@@ -71,6 +71,7 @@ interface FormData {
   businessUnit: string;
 
   // Personal Information
+  empId: string;
   name: string;
   dateOfBirth: string;
   gender: string;
@@ -202,25 +203,35 @@ export function AddEmployeeDialog({
               {/* Personal Information Tab */}
               <TabsContent value="personal" className="space-y-4">
                 {/* Business Unit Selection */}
-                <div className="space-y-2">
-                  <Label htmlFor="businessUnit">Business Unit *</Label>
-                  <Select
-                    value={formData.businessUnit}
-                    onValueChange={(value) =>
-                      onInputChange("businessUnit", value)
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select business unit" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="JNET">JNET</SelectItem>
-                      <SelectItem value="Telecom">Telecom</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="empId">Employee ID *</Label>
+                    <Input
+                      id="empId"
+                      value={formData.empId}
+                      onChange={(e) => onInputChange("empId", e.target.value)}
+                      placeholder="Enter employee ID (e.g., E1001, T1001)"
+                      className="font-mono"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="businessUnit">Business Unit *</Label>
+                    <Select
+                      value={formData.businessUnit}
+                      onValueChange={(value) =>
+                        onInputChange("businessUnit", value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select business unit" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="IT">IT</SelectItem>
+                        <SelectItem value="Telecom">Telecom</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <div className="space-y-2">
                     <Label htmlFor="name">Name *</Label>
                     <Input

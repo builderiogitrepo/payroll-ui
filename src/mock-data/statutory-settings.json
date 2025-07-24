@@ -1,0 +1,217 @@
+{
+  "pfConfig": [
+    {
+      "id": "PF001",
+      "state": "All States",
+      "employeeContribution": 12,
+      "employerContribution": 12,
+      "salaryLimit": 15000,
+      "pensionLimit": 15000,
+      "adminCharges": 0.5,
+      "edliCharges": 0.5,
+      "status": "Active",
+      "applicableEmployees": 85
+    }
+  ],
+  "ptSlabs": [
+    {
+      "id": "PT001",
+      "state": "Maharashtra",
+      "slabFrom": 0,
+      "slabTo": 5000,
+      "monthlyPTAmount": 0,
+      "monthsApplicable": 12,
+      "annualCap": 2500,
+      "employees": 8,
+      "status": "Active"
+    },
+    {
+      "id": "PT002",
+      "state": "Maharashtra",
+      "slabFrom": 5001,
+      "slabTo": 10000,
+      "monthlyPTAmount": 150,
+      "monthsApplicable": 12,
+      "annualCap": 2500,
+      "employees": 15,
+      "status": "Active"
+    },
+    {
+      "id": "PT003",
+      "state": "Maharashtra",
+      "slabFrom": 10001,
+      "slabTo": 25000,
+      "monthlyPTAmount": 200,
+      "monthsApplicable": 12,
+      "annualCap": 2500,
+      "employees": 42,
+      "status": "Active"
+    },
+    {
+      "id": "PT004",
+      "state": "Karnataka",
+      "slabFrom": 0,
+      "slabTo": 15000,
+      "monthlyPTAmount": 0,
+      "monthsApplicable": 12,
+      "annualCap": 2400,
+      "employees": 3,
+      "status": "Active"
+    },
+    {
+      "id": "PT005",
+      "state": "Karnataka",
+      "slabFrom": 15001,
+      "slabTo": 25000,
+      "monthlyPTAmount": 150,
+      "monthsApplicable": 12,
+      "annualCap": 2400,
+      "employees": 7,
+      "status": "Active"
+    },
+    {
+      "id": "PT006",
+      "state": "Delhi",
+      "slabFrom": 0,
+      "slabTo": 10000,
+      "monthlyPTAmount": 0,
+      "monthsApplicable": 12,
+      "annualCap": 2400,
+      "employees": 2,
+      "status": "Active"
+    },
+    {
+      "id": "PT007",
+      "state": "Delhi",
+      "slabFrom": 10001,
+      "slabTo": 20000,
+      "monthlyPTAmount": 200,
+      "monthsApplicable": 12,
+      "annualCap": 2400,
+      "employees": 5,
+      "status": "Active"
+    }
+  ],
+  "esicConfig": [
+    {
+      "id": "ESI001",
+      "state": "All States",
+      "employeeContribution": 0.75,
+      "employerContribution": 3.25,
+      "salaryLimit": 21000,
+      "medicalBenefit": true,
+      "cashBenefit": true,
+      "status": "Active",
+      "applicableEmployees": 45
+    }
+  ],
+  "tdsSlabs": [
+    {
+      "id": "TDS001",
+      "fiscalYear": "FY 2024-25",
+      "slabFrom": 0,
+      "slabTo": 300000,
+      "taxRate": 0,
+      "surcharge": 0,
+      "cess": 0,
+      "status": "Active"
+    },
+    {
+      "id": "TDS002",
+      "fiscalYear": "FY 2024-25",
+      "slabFrom": 300001,
+      "slabTo": 600000,
+      "taxRate": 5,
+      "surcharge": 0,
+      "cess": 4,
+      "status": "Active"
+    },
+    {
+      "id": "TDS003",
+      "fiscalYear": "FY 2024-25",
+      "slabFrom": 600001,
+      "slabTo": 900000,
+      "taxRate": 10,
+      "surcharge": 0,
+      "cess": 4,
+      "status": "Active"
+    },
+    {
+      "id": "TDS004",
+      "fiscalYear": "FY 2024-25",
+      "slabFrom": 900001,
+      "slabTo": 1200000,
+      "taxRate": 15,
+      "surcharge": 0,
+      "cess": 4,
+      "status": "Active"
+    },
+    {
+      "id": "TDS005",
+      "fiscalYear": "FY 2024-25",
+      "slabFrom": 1200001,
+      "slabTo": 1500000,
+      "taxRate": 20,
+      "surcharge": 0,
+      "cess": 4,
+      "status": "Active"
+    },
+    {
+      "id": "TDS006",
+      "fiscalYear": "FY 2024-25",
+      "slabFrom": 1500001,
+      "slabTo": null,
+      "taxRate": 30,
+      "surcharge": 0,
+      "cess": 4,
+      "status": "Active"
+    }
+  ],
+  "states": [
+    "Maharashtra",
+    "Karnataka",
+    "Delhi",
+    "Tamil Nadu",
+    "Telangana",
+    "Gujarat",
+    "Uttar Pradesh",
+    "West Bengal",
+    "All States"
+  ],
+  "fiscalYears": ["FY 2023-24", "FY 2024-25", "FY 2025-26"],
+  "statuses": ["Active", "Inactive", "Draft"],
+  "statutoryComponents": [
+    {
+      "id": "SC001",
+      "name": "Provident Fund (PF)",
+      "code": "PF",
+      "type": "Deduction",
+      "category": "Statutory",
+      "description": "Employee and employer contribution to provident fund"
+    },
+    {
+      "id": "SC002",
+      "name": "Employee State Insurance (ESI)",
+      "code": "ESI",
+      "type": "Deduction",
+      "category": "Statutory",
+      "description": "Employee and employer contribution to ESI"
+    },
+    {
+      "id": "SC003",
+      "name": "Professional Tax (PT)",
+      "code": "PT",
+      "type": "Deduction",
+      "category": "Statutory",
+      "description": "State-wise professional tax deduction"
+    },
+    {
+      "id": "SC004",
+      "name": "Tax Deducted at Source (TDS)",
+      "code": "TDS",
+      "type": "Deduction",
+      "category": "Statutory",
+      "description": "Income tax deducted at source"
+    }
+  ]
+}

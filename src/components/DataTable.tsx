@@ -196,7 +196,7 @@ export function DataTable({
 
   // Mobile Card Component
   const MobileCard = ({ item }: { item: any }) => (
-    <Card className="mobile-card hover-lift mb-3">
+    <Card className="border border-border shadow-sm">
       <CardContent className="p-4">
         <div className="flex justify-between items-start mb-3">
           <div className="mobile-card-header">
@@ -240,7 +240,7 @@ export function DataTable({
             .slice(0, 4) // Show max 4 fields on mobile
             .map((column) => (
               <div key={column.key} className="flex justify-between text-sm">
-                <span className="text-gray-600">{column.label}:</span>
+                <span className="text-muted-foreground">{column.label}:</span>
                 <span className="font-medium">
                   {column.render
                     ? column.render(item[column.key], item)
@@ -328,7 +328,7 @@ export function DataTable({
                     <h4 className="font-medium text-sm">Filter Options</h4>
                     {filters.map((filter) => (
                       <div key={filter.key} className="space-y-2">
-                        <label className="text-xs font-medium text-slate-700">
+                        <label className="text-xs font-medium text-muted-foreground">
                           {filter.label}
                         </label>
                         {filter.type === "select" ? (
@@ -386,7 +386,7 @@ export function DataTable({
                     {Object.values(activeFilters).some(
                       (value) => value && value !== "all",
                     ) && (
-                      <div className="pt-2 border-t">
+                      <div className="pt-2 border-t border-border">
                         <Button
                           variant="ghost"
                           size="sm"
@@ -490,7 +490,9 @@ export function DataTable({
         ) ||
           activeSmartFilter) && (
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm text-gray-600">Active filters:</span>
+            <span className="text-sm text-muted-foreground">
+              Active filters:
+            </span>
             {Object.entries(activeFilters)
               .filter(([_, value]) => value && value !== "all")
               .map(([key, value]) => {
@@ -550,7 +552,7 @@ export function DataTable({
                           paginatedData.length > 0
                         }
                         onCheckedChange={(checked) =>
-                          handleSelectAll(checked as boolean)
+                          handleSelectAll(checked === true)
                         }
                       />
                     </TableHead>
@@ -573,7 +575,10 @@ export function DataTable({
                         <Checkbox
                           checked={selectedItems.has(item.id || item.empId)}
                           onCheckedChange={(checked) =>
-                            handleSelectItem(item.id || item.empId, checked)
+                            handleSelectItem(
+                              item.id || item.empId,
+                              checked === true,
+                            )
                           }
                         />
                       </TableCell>
@@ -639,20 +644,20 @@ export function DataTable({
 
       {/* Desktop View */}
       <div className="hidden md:block">
-        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+        <div className="bg-background border border-border rounded-xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow className="sticky-header bg-slate-50">
+                <TableRow className="sticky-header bg-muted/50">
                   {showBulkActions && (
-                    <TableHead className="w-12 bg-slate-50 font-semibold text-slate-700">
+                    <TableHead className="w-12 bg-muted/50 font-semibold text-foreground">
                       <Checkbox
                         checked={
                           selectedItems.size === paginatedData.length &&
                           paginatedData.length > 0
                         }
                         onCheckedChange={(checked) =>
-                          handleSelectAll(checked as boolean)
+                          handleSelectAll(checked === true)
                         }
                       />
                     </TableHead>
@@ -663,7 +668,7 @@ export function DataTable({
                       <TableHead
                         key={column.key}
                         className={cn(
-                          "bg-slate-50 font-semibold text-slate-700 py-4",
+                          "bg-muted/50 font-semibold text-foreground py-4",
                           column.className,
                           column.sticky && "sticky-column",
                         )}
@@ -671,7 +676,7 @@ export function DataTable({
                         {column.label}
                       </TableHead>
                     ))}
-                  <TableHead className="w-20 bg-slate-50 font-semibold text-slate-700">
+                  <TableHead className="w-20 bg-muted/50 font-semibold text-foreground">
                     Actions
                   </TableHead>
                 </TableRow>
@@ -680,7 +685,7 @@ export function DataTable({
                 {paginatedData.map((item, index) => (
                   <TableRow
                     key={item.id || item.empId || index}
-                    className="hover:bg-slate-50 transition-colors duration-150 border-b border-slate-100"
+                    className="hover:bg-muted/50 transition-colors duration-100 border-b border-border"
                     style={{ height: "var(--table-row-height)" }}
                   >
                     {showBulkActions && (
@@ -688,7 +693,10 @@ export function DataTable({
                         <Checkbox
                           checked={selectedItems.has(item.id || item.empId)}
                           onCheckedChange={(checked) =>
-                            handleSelectItem(item.id || item.empId, checked)
+                            handleSelectItem(
+                              item.id || item.empId,
+                              checked === true,
+                            )
                           }
                         />
                       </TableCell>

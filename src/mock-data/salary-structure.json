@@ -1,0 +1,337 @@
+{
+  "salaryStructures": [
+    {
+      "id": "SS001",
+      "structureName": "Senior Developer - JNET",
+      "businessUnit": "JNET",
+      "offerType": "Full-time",
+      "status": "Active",
+      "assignedRoles": "Senior Developer, Tech Lead",
+      "totalEmployees": 12,
+      "components": {
+        "earnings": [
+          {
+            "name": "Basic Pay",
+            "type": "Percentage",
+            "basis": "CTC",
+            "value": 50,
+            "taxable": true,
+            "pfApplicable": true
+          },
+          {
+            "name": "HRA",
+            "type": "Percentage",
+            "basis": "Basic",
+            "value": 40,
+            "taxable": true,
+            "pfApplicable": false
+          },
+          {
+            "name": "Medical Allowance",
+            "type": "Fixed",
+            "basis": "-",
+            "value": 5000,
+            "taxable": true,
+            "pfApplicable": false
+          },
+          {
+            "name": "Conveyance",
+            "type": "Fixed",
+            "basis": "-",
+            "value": 3000,
+            "taxable": true,
+            "pfApplicable": false
+          },
+          {
+            "name": "Special Allowance",
+            "type": "Percentage",
+            "basis": "CTC",
+            "value": 10,
+            "taxable": true,
+            "pfApplicable": false
+          }
+        ],
+        "deductions": [
+          {
+            "component": "PF",
+            "source": "Statutory Components",
+            "enabled": true,
+            "configuration": "12% of Basic (₹15,000 limit)",
+            "basis": "Basic",
+            "applicabilityRule": "Always",
+            "managedIn": "Statutory Components"
+          },
+          {
+            "component": "ESI",
+            "source": "Statutory Components",
+            "enabled": true,
+            "configuration": "0.75% of Gross (₹21,000 limit)",
+            "basis": "Gross",
+            "applicabilityRule": "Gross Salary < ₹21,000",
+            "managedIn": "Statutory Components"
+          },
+          {
+            "component": "Professional Tax",
+            "source": "Statutory Components",
+            "enabled": true,
+            "configuration": "State-wise slabs (Maharashtra: ₹200 for ₹10,001-₹25,000)",
+            "basis": "Gross",
+            "applicabilityRule": "Based on State & Salary Slab",
+            "managedIn": "Statutory Components"
+          }
+        ]
+      }
+    },
+    {
+      "id": "SS002",
+      "structureName": "Software Engineer - JNET",
+      "businessUnit": "JNET",
+      "offerType": "Full-time",
+      "status": "Active",
+      "assignedRoles": "Software Engineer, Junior Developer",
+      "totalEmployees": 25,
+      "components": {
+        "earnings": [
+          {
+            "name": "Basic Pay",
+            "type": "Percentage",
+            "basis": "CTC",
+            "value": 50,
+            "taxable": true,
+            "pfApplicable": true
+          },
+          {
+            "name": "HRA",
+            "type": "Percentage",
+            "basis": "Basic",
+            "value": 40,
+            "taxable": true,
+            "pfApplicable": false
+          },
+          {
+            "name": "Medical Allowance",
+            "type": "Fixed",
+            "basis": "-",
+            "value": 3000,
+            "taxable": true,
+            "pfApplicable": false
+          },
+          {
+            "name": "Conveyance",
+            "type": "Fixed",
+            "basis": "-",
+            "value": 2000,
+            "taxable": true,
+            "pfApplicable": false
+          },
+          {
+            "name": "Special Allowance",
+            "type": "Percentage",
+            "basis": "CTC",
+            "value": 8,
+            "taxable": true,
+            "pfApplicable": false
+          }
+        ],
+        "deductions": [
+          {
+            "component": "PF",
+            "source": "Statutory Components",
+            "enabled": true,
+            "configuration": "12% Employee + 12% Employer on Basic (₹15,000 limit)",
+            "basis": "Basic",
+            "applicabilityRule": "Always",
+            "managedIn": "Statutory Components"
+          },
+          {
+            "component": "ESI",
+            "source": "Statutory Components",
+            "enabled": true,
+            "configuration": "0.75% of Gross (₹21,000 limit)",
+            "basis": "Gross",
+            "applicabilityRule": "Gross Salary < ₹21,000",
+            "managedIn": "Statutory Components"
+          },
+          {
+            "component": "Professional Tax",
+            "source": "Statutory Components",
+            "enabled": true,
+            "configuration": "State-wise slabs (Maharashtra: ₹200 for ₹10,001-₹25,000)",
+            "basis": "Gross",
+            "applicabilityRule": "Based on State & Salary Slab",
+            "managedIn": "Statutory Components"
+          }
+        ]
+      }
+    },
+    {
+      "id": "SS003",
+      "structureName": "Sales Executive - Telecom",
+      "businessUnit": "Telecom",
+      "offerType": "Full-time",
+      "status": "Active",
+      "assignedRoles": "Sales Executive, Field Executive",
+      "totalEmployees": 18,
+      "components": {
+        "earnings": [
+          {
+            "name": "Basic Pay",
+            "type": "Percentage",
+            "basis": "CTC",
+            "value": 50,
+            "taxable": true,
+            "pfApplicable": true
+          },
+          {
+            "name": "HRA",
+            "type": "Percentage",
+            "basis": "Basic",
+            "value": 40,
+            "taxable": true,
+            "pfApplicable": false
+          },
+          {
+            "name": "Medical Allowance",
+            "type": "Fixed",
+            "basis": "-",
+            "value": 2000,
+            "taxable": true,
+            "pfApplicable": false
+          },
+          {
+            "name": "Conveyance",
+            "type": "Fixed",
+            "basis": "-",
+            "value": 1500,
+            "taxable": true,
+            "pfApplicable": false
+          },
+          {
+            "name": "Special Allowance",
+            "type": "Percentage",
+            "basis": "CTC",
+            "value": 6,
+            "taxable": true,
+            "pfApplicable": false
+          }
+        ],
+        "deductions": [
+          {
+            "component": "PF",
+            "source": "Statutory Components",
+            "enabled": true,
+            "configuration": "12% Employee + 12% Employer on Basic (₹15,000 limit)",
+            "basis": "Basic",
+            "applicabilityRule": "Always",
+            "managedIn": "Statutory Components"
+          },
+          {
+            "component": "ESI",
+            "source": "Statutory Components",
+            "enabled": true,
+            "configuration": "0.75% of Gross (₹21,000 limit)",
+            "basis": "Gross",
+            "applicabilityRule": "Gross Salary < ₹21,000",
+            "managedIn": "Statutory Components"
+          },
+          {
+            "component": "Professional Tax",
+            "source": "Statutory Components",
+            "enabled": true,
+            "configuration": "State-wise slabs (Maharashtra: ₹200 for ₹10,001-₹25,000)",
+            "basis": "Gross",
+            "applicabilityRule": "Based on State & Salary Slab",
+            "managedIn": "Statutory Components"
+          }
+        ]
+      }
+    }
+  ],
+  "salaryComponents": [
+    {
+      "id": "SC001",
+      "name": "Basic Pay",
+      "type": "Earning",
+      "category": "Core Salary",
+      "taxable": true,
+      "pfApplicable": true,
+      "esiApplicable": true,
+      "status": "Active"
+    },
+    {
+      "id": "SC002",
+      "name": "HRA",
+      "type": "Earning",
+      "category": "Allowance",
+      "taxable": true,
+      "pfApplicable": false,
+      "esiApplicable": true,
+      "status": "Active"
+    },
+    {
+      "id": "SC003",
+      "name": "Medical Allowance",
+      "type": "Earning",
+      "category": "Allowance",
+      "taxable": true,
+      "pfApplicable": false,
+      "esiApplicable": true,
+      "status": "Active"
+    },
+    {
+      "id": "SC004",
+      "name": "Conveyance",
+      "type": "Earning",
+      "category": "Allowance",
+      "taxable": true,
+      "pfApplicable": false,
+      "esiApplicable": true,
+      "status": "Active"
+    },
+    {
+      "id": "SC005",
+      "name": "Special Allowance",
+      "type": "Earning",
+      "category": "Allowance",
+      "taxable": true,
+      "pfApplicable": false,
+      "esiApplicable": true,
+      "status": "Active"
+    },
+    {
+      "id": "SC006",
+      "name": "PF",
+      "type": "Deduction",
+      "category": "Statutory",
+      "taxable": false,
+      "pfApplicable": false,
+      "esiApplicable": false,
+      "status": "Active"
+    },
+    {
+      "id": "SC007",
+      "name": "ESI",
+      "type": "Deduction",
+      "category": "Statutory",
+      "taxable": false,
+      "pfApplicable": false,
+      "esiApplicable": false,
+      "status": "Active"
+    },
+    {
+      "id": "SC008",
+      "name": "Professional Tax",
+      "type": "Deduction",
+      "category": "Statutory",
+      "taxable": false,
+      "pfApplicable": false,
+      "esiApplicable": false,
+      "status": "Active"
+    }
+  ],
+  "businessUnits": ["JNET", "Telecom"],
+  "offerTypes": ["Full-time", "Part-time", "Contract", "Intern"],
+  "statuses": ["Active", "Inactive", "Draft"],
+  "componentTypes": ["Percentage", "Fixed"],
+  "basisTypes": ["CTC", "Basic", "Gross", "-"]
+}

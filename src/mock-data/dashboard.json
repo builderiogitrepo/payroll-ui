@@ -1,0 +1,216 @@
+{
+  "status": "success",
+  "message": "Dashboard data fetched successfully",
+  "data": {
+    "overview": {
+      "totalEmployees": 1250,
+      "activeEmployees": 1180,
+      "totalPayroll": 45000000,
+      "averageSalary": 360000,
+      "departments": 8,
+      "locations": 6
+    },
+    "payrollStats": {
+      "currentMonth": {
+        "totalGross": 45000000,
+        "totalNet": 31500000,
+        "totalDeductions": 13500000,
+        "averagePerEmployee": 360000
+      },
+      "previousMonth": {
+        "totalGross": 43500000,
+        "totalNet": 30450000,
+        "totalDeductions": 13050000,
+        "averagePerEmployee": 348000
+      }
+    },
+    "attendanceStats": {
+      "currentMonth": {
+        "averageAttendance": 94.5,
+        "totalPresentDays": 24850,
+        "totalAbsentDays": 1450,
+        "overtimeHours": 1250
+      },
+      "previousMonth": {
+        "averageAttendance": 92.8,
+        "totalPresentDays": 24350,
+        "totalAbsentDays": 1850,
+        "overtimeHours": 1100
+      }
+    },
+    "departmentStats": [
+      {
+        "name": "Technology",
+        "employees": 450,
+        "avgSalary": 420000,
+        "attendance": 96.2,
+        "growth": 12.5
+      },
+      {
+        "name": "Sales",
+        "employees": 280,
+        "avgSalary": 380000,
+        "attendance": 91.8,
+        "growth": 8.3
+      },
+      {
+        "name": "Operations",
+        "employees": 200,
+        "avgSalary": 320000,
+        "attendance": 94.1,
+        "growth": 15.2
+      },
+      {
+        "name": "HR",
+        "employees": 80,
+        "avgSalary": 350000,
+        "attendance": 95.5,
+        "growth": 5.7
+      },
+      {
+        "name": "Finance",
+        "employees": 120,
+        "avgSalary": 400000,
+        "attendance": 93.8,
+        "growth": 9.1
+      },
+      {
+        "name": "Marketing",
+        "employees": 120,
+        "avgSalary": 360000,
+        "attendance": 92.4,
+        "growth": 11.3
+      }
+    ],
+    "topPerformers": [
+      {
+        "id": "E1001",
+        "name": "Sarah Wilson",
+        "designation": "Team Lead",
+        "department": "Technology",
+        "performance": 98.5,
+        "salary": 2200000,
+        "avatar": "/placeholder-avatar-E1001.jpg"
+      },
+      {
+        "id": "E1002",
+        "name": "Priya Sharma",
+        "designation": "Senior Developer",
+        "department": "Technology",
+        "performance": 96.8,
+        "salary": 1600000,
+        "avatar": "/placeholder-avatar-E1002.jpg"
+      },
+      {
+        "id": "E1003",
+        "name": "Michael Chen",
+        "designation": "Sales Manager",
+        "department": "Sales",
+        "performance": 95.2,
+        "salary": 1800000,
+        "avatar": "/placeholder-avatar-E1003.jpg"
+      },
+      {
+        "id": "E1004",
+        "name": "Rajesh Kumar",
+        "designation": "Sales Executive",
+        "department": "Sales",
+        "performance": 94.7,
+        "salary": 800000,
+        "avatar": "/placeholder-avatar-E1004.jpg"
+      },
+      {
+        "id": "E1005",
+        "name": "Anita Desai",
+        "designation": "Telecaller",
+        "department": "Operations",
+        "performance": 93.9,
+        "salary": 400000,
+        "avatar": "/placeholder-avatar-E1005.jpg"
+      }
+    ],
+    "recentActivities": [
+      {
+        "id": 1,
+        "type": "payroll",
+        "message": "December 2024 payroll processed successfully",
+        "timestamp": "2024-12-31T10:30:00Z",
+        "status": "completed"
+      },
+      {
+        "id": 2,
+        "type": "employee",
+        "message": "New employee John Smith joined Technology team",
+        "timestamp": "2024-12-30T14:20:00Z",
+        "status": "completed"
+      },
+      {
+        "id": 3,
+        "type": "attendance",
+        "message": "Attendance marked for 1,180 employees",
+        "timestamp": "2024-12-30T09:15:00Z",
+        "status": "completed"
+      },
+      {
+        "id": 4,
+        "type": "adjustment",
+        "message": "Overtime allowance processed for 45 employees",
+        "timestamp": "2024-12-29T16:45:00Z",
+        "status": "completed"
+      },
+      {
+        "id": 5,
+        "type": "variable",
+        "message": "Q3 variable pay calculated for 280 employees",
+        "timestamp": "2024-12-29T11:30:00Z",
+        "status": "completed"
+      }
+    ],
+    "kpis": {
+      "employeeRetention": 94.2,
+      "averageTenure": 3.8,
+      "satisfactionScore": 4.2,
+      "productivityIndex": 87.5,
+      "costPerEmployee": 420000,
+      "revenuePerEmployee": 2800000
+    },
+    "charts": {
+      "payrollTrend": [
+        { "month": "Jan", "gross": 42000000, "net": 29400000 },
+        { "month": "Feb", "gross": 42500000, "net": 29750000 },
+        { "month": "Mar", "gross": 43000000, "net": 30100000 },
+        { "month": "Apr", "gross": 43500000, "net": 30450000 },
+        { "month": "May", "gross": 44000000, "net": 30800000 },
+        { "month": "Jun", "gross": 44500000, "net": 31150000 },
+        { "month": "Jul", "gross": 44800000, "net": 31360000 },
+        { "month": "Aug", "gross": 44900000, "net": 31430000 },
+        { "month": "Sep", "gross": 45000000, "net": 31500000 },
+        { "month": "Oct", "gross": 45100000, "net": 31570000 },
+        { "month": "Nov", "gross": 45200000, "net": 31640000 },
+        { "month": "Dec", "gross": 45000000, "net": 31500000 }
+      ],
+      "attendanceTrend": [
+        { "month": "Jan", "attendance": 92.5 },
+        { "month": "Feb", "attendance": 93.1 },
+        { "month": "Mar", "attendance": 93.8 },
+        { "month": "Apr", "attendance": 94.2 },
+        { "month": "May", "attendance": 94.7 },
+        { "month": "Jun", "attendance": 95.1 },
+        { "month": "Jul", "attendance": 95.3 },
+        { "month": "Aug", "attendance": 95.6 },
+        { "month": "Sep", "attendance": 95.8 },
+        { "month": "Oct", "attendance": 96.0 },
+        { "month": "Nov", "attendance": 96.2 },
+        { "month": "Dec", "attendance": 94.5 }
+      ],
+      "departmentDistribution": [
+        { "department": "Technology", "employees": 450, "percentage": 36 },
+        { "department": "Sales", "employees": 280, "percentage": 22.4 },
+        { "department": "Operations", "employees": 200, "percentage": 16 },
+        { "department": "Finance", "employees": 120, "percentage": 9.6 },
+        { "department": "Marketing", "employees": 120, "percentage": 9.6 },
+        { "department": "HR", "employees": 80, "percentage": 6.4 }
+      ]
+    }
+  }
+}

@@ -613,7 +613,7 @@ export default function TDSUpload() {
                 <div className="flex items-center gap-2">
                   <FileText className="h-4 w-4 text-blue-600" />
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       TDS ID
                     </Label>
                     <p className="">{selectedTDS.id}</p>
@@ -622,7 +622,7 @@ export default function TDSUpload() {
                 <div className="flex items-center gap-2">
                   <Building className="h-4 w-4 text-green-600" />
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Department
                     </Label>
                     <p>{selectedTDS.department}</p>
@@ -631,7 +631,7 @@ export default function TDSUpload() {
                 <div className="flex items-center gap-2">
                   <Target className="h-4 w-4 text-purple-600" />
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Designation
                     </Label>
                     <p>{selectedTDS.designation}</p>

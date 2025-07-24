@@ -301,8 +301,8 @@ export default function PayrollRuns() {
     <div className="space-y-6">
       <PageHeader
         title="Payroll Runs"
-        description="Execute and manage payroll processing for employees"
-        icon={<Calculator className="h-6 w-6 text-blue-600" />}
+        description="Process and manage monthly payroll runs for all employees"
+        gradient="ocean"
       >
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
@@ -464,7 +464,7 @@ export default function PayrollRuns() {
                 <div className="flex items-center gap-2">
                   <Building className="h-4 w-4 text-blue-600" />
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Department
                     </Label>
                     <p>{selectedEmployee.department}</p>
@@ -473,7 +473,7 @@ export default function PayrollRuns() {
                 <div className="flex items-center gap-2">
                   <Target className="h-4 w-4 text-green-600" />
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Designation
                     </Label>
                     <p>{selectedEmployee.designation}</p>
@@ -482,7 +482,7 @@ export default function PayrollRuns() {
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-purple-600" />
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Days Present
                     </Label>
                     <p>{selectedEmployee.daysPresent}</p>

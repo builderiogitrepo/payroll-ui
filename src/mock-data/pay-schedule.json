@@ -1,0 +1,41 @@
+{
+  "payScheduleConfigurations": [
+    {
+      "id": "config-it-1",
+      "businessUnit": "it-business-unit",
+      "workWeek": ["MON", "TUE", "WED", "THU", "FRI"],
+      "salaryCalcType": "actual",
+      "orgWorkingDays": "22",
+      "payFrequency": "monthly",
+      "payDayType": "lastWorkingDay",
+      "payDayValue": "1",
+      "firstPayrollMonth": "April-2025",
+      "firstPayrollDate": "30/04/2025",
+      "lastUpdated": "2024-06-01 10:00:00"
+    },
+    {
+      "id": "config-telecom-2",
+      "businessUnit": "telecom-business-unit",
+      "workWeek": ["MON", "TUE", "WED", "THU", "FRI", "SAT"],
+      "salaryCalcType": "actual",
+      "orgWorkingDays": "26",
+      "payFrequency": "monthly",
+      "payDayType": "lastWorkingDay",
+      "payDayValue": "1",
+      "firstPayrollMonth": "April-2025",
+      "firstPayrollDate": "30/04/2025",
+      "lastUpdated": "2024-06-01 10:00:00"
+    }
+  ],
+  "businessUnits": [
+    { "value": "it-business-unit", "label": "IT Business Unit" },
+    { "value": "telecom-business-unit", "label": "Telecom Business Unit" },
+    { "value": "hr-business-unit", "label": "HR Business Unit" },
+    { "value": "finance-business-unit", "label": "Finance Business Unit" }
+  ],
+  "weekDays": ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+  "payFrequencies": ["monthly", "bi-weekly", "weekly"],
+  "payDayTypes": ["lastWorkingDay", "specificDay"],
+  "orgWorkingDaysOptions": ["22", "24", "26"],
+  "payrollMonths": ["April-2025", "May-2025", "June-2025"]
+}

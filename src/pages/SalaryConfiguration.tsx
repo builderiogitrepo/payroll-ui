@@ -463,7 +463,7 @@ const salaryStructureColumns: Column[] = [
     label: "Assigned Roles",
     render: (value) => (
       <div className="max-w-[200px]">
-        <span className="text-sm text-gray-600">{value}</span>
+        <span className="text-sm text-muted-foreground">{value}</span>
       </div>
     ),
   },
@@ -755,7 +755,7 @@ export default function SalaryConfiguration() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Structure Name
                   </Label>
                   <p className="text-lg font-semibold">
@@ -763,7 +763,7 @@ export default function SalaryConfiguration() {
                   </p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Business Unit
                   </Label>
                   <p className="text-lg font-semibold">
@@ -771,13 +771,13 @@ export default function SalaryConfiguration() {
                   </p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Offer Type
                   </Label>
                   <Badge variant="outline">{selectedStructure.offerType}</Badge>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Status
                   </Label>
                   <Badge
@@ -804,13 +804,13 @@ export default function SalaryConfiguration() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Assigned Roles
                   </Label>
                   <p className="text-sm">{selectedStructure.assignedRoles}</p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Total Employees
                   </Label>
                   <div className="flex items-center gap-2">
@@ -839,13 +839,13 @@ export default function SalaryConfiguration() {
                   (earning: any, index: number) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
                     >
                       <div className="flex items-center gap-3">
                         <DollarSign className="h-4 w-4 text-green-600" />
                         <div>
                           <p className="font-medium">{earning.name}</p>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-muted-foreground">
                             {earning.type} - {earning.basis}
                           </p>
                         </div>
@@ -889,19 +889,19 @@ export default function SalaryConfiguration() {
                   (deduction: any, index: number) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
                     >
                       <div className="flex items-center gap-3">
                         <CreditCard className="h-4 w-4 text-red-600" />
                         <div>
                           <p className="font-medium">{deduction.component}</p>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-muted-foreground">
                             {deduction.basis} - {deduction.applicabilityRule}
                           </p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                           {deduction.configuration}
                         </p>
                         <Badge variant="outline" className="text-xs mt-1">
@@ -1793,7 +1793,7 @@ export default function SalaryConfiguration() {
             <DialogTitle>Edit Configuration</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               Edit functionality will be implemented here.
             </p>
           </div>

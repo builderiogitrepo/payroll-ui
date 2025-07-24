@@ -1,0 +1,183 @@
+{
+  "status": "success",
+  "message": "Lookups fetched successfully",
+  "data": {
+    "departments": [
+      "Technology",
+      "Sales",
+      "Operations",
+      "HR",
+      "Finance",
+      "Marketing"
+    ],
+    "designations": [
+      "Software Engineer",
+      "Senior Developer",
+      "Team Lead",
+      "Sales Executive",
+      "Sales Manager",
+      "Telecaller",
+      "QA Engineer",
+      "HR Manager",
+      "Finance Analyst"
+    ],
+    "businessUnits": [
+      "JNET",
+      "Telecom",
+      "IT Business Unit",
+      "HR Business Unit",
+      "Finance Business Unit"
+    ],
+    "locations": [
+      "Mumbai",
+      "Bangalore",
+      "Delhi",
+      "Chennai",
+      "Hyderabad",
+      "Pune"
+    ],
+    "employmentTypes": ["Full-time", "Part-time", "Contract", "Intern"],
+    "statuses": [
+      "Active",
+      "Inactive",
+      "Terminated",
+      "On Leave",
+      "Draft",
+      "Completed",
+      "In-Progress",
+      "Failed",
+      "Pending Approval",
+      "Approved",
+      "Rejected",
+      "Finalized"
+    ],
+    "months": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "fiscalYears": ["FY 2023-24", "FY 2024-25", "FY 2025-26"],
+    "payheadTypes": ["Earning", "Deduction"],
+    "adjustmentTypes": ["Earning", "Deduction"],
+    "payFrequencies": ["monthly", "bi-weekly", "weekly"],
+    "weekDays": ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+    "leaveTypes": [
+      { "id": "LT001", "name": "Casual Leave", "code": "CL" },
+      { "id": "LT002", "name": "Sick Leave", "code": "SL" },
+      { "id": "LT003", "name": "Earned Leave", "code": "EL" },
+      { "id": "LT004", "name": "Maternity Leave", "code": "ML" },
+      { "id": "LT005", "name": "Paternity Leave", "code": "PL" }
+    ],
+    "performanceLevels": [
+      { "id": "PL001", "name": "Outstanding", "payablePercent": 95 },
+      { "id": "PL002", "name": "Exceeded Expectations", "payablePercent": 85 },
+      { "id": "PL003", "name": "Met Expectations", "payablePercent": 75 },
+      { "id": "PL004", "name": "Below Expectations", "payablePercent": 60 },
+      { "id": "PL005", "name": "Unsatisfactory", "payablePercent": 0 }
+    ],
+    "payDayTypes": ["lastWorkingDay", "specificDay"],
+    "orgWorkingDaysOptions": ["22", "24", "26"],
+    "componentTypes": ["Percentage", "Fixed"],
+    "basisTypes": ["CTC", "Basic", "Gross", "-"],
+    "columnConfigs": {
+      "employees": [
+        "empId",
+        "name",
+        "designation",
+        "department",
+        "location",
+        "businessUnit",
+        "employmentType",
+        "status",
+        "joiningDate",
+        "salary"
+      ],
+      "payrollRuns": [
+        "empId",
+        "name",
+        "designation",
+        "department",
+        "daysPresent",
+        "salaryDays",
+        "grossSalary",
+        "earnings",
+        "deductions",
+        "tdsDeducted",
+        "netPay",
+        "payslipStatus",
+        "status",
+        "month",
+        "fiscalYear"
+      ],
+      "attendance": [
+        "empId",
+        "name",
+        "designation",
+        "department",
+        "reportingManager",
+        "totalWorkingDays",
+        "daysPresent",
+        "weeklyOffs",
+        "holidays",
+        "approvedPaidLeaves",
+        "lopDays",
+        "payableDays",
+        "businessUnit",
+        "attendancePercentage",
+        "month",
+        "fiscalYear"
+      ],
+      "salaryStructure": [
+        "structureName",
+        "businessUnit",
+        "offerType",
+        "status",
+        "assignedRoles",
+        "totalEmployees"
+      ],
+      "variablePay": [
+        "empId",
+        "name",
+        "designation",
+        "department",
+        "grossCTC",
+        "variablePercent",
+        "annualVariablePay",
+        "quarterlyAmount",
+        "fyPeriod",
+        "fiscalYear",
+        "payablePercent",
+        "payableAmount",
+        "manager",
+        "performance",
+        "businessUnit"
+      ],
+      "adjustments": [
+        "empId",
+        "name",
+        "designation",
+        "department",
+        "month",
+        "fiscalYear",
+        "adjustmentType",
+        "payheadName",
+        "units",
+        "amount",
+        "reason",
+        "approvedBy",
+        "status",
+        "taxable",
+        "createdDate"
+      ]
+    }
+  }
+}

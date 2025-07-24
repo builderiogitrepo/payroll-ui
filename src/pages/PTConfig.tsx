@@ -352,8 +352,8 @@ const columns: Column[] = [
     label: "Monthly PT",
     render: (value) => (
       <div className="flex items-center gap-1">
-        <IndianRupee className="h-3 w-3 text-green-600" />
-        <span className="font-medium text-green-600">₹{value}</span>
+        <IndianRupee className="h-3 w-3 text-blue-600" />
+        <span className="font-medium text-blue-600">₹{value}</span>
       </div>
     ),
   },
@@ -459,7 +459,6 @@ export default function PTConfig() {
       <PageHeader
         title="PT Configuration"
         description="Configure Professional Tax slabs by state and salary ranges"
-        icon={<CreditCard className="h-6 w-6 text-blue-600" />}
       >
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
@@ -509,7 +508,7 @@ export default function PTConfig() {
                 </div>
                 <div className="flex items-center gap-2">
                   {selectedSlab.status === "Active" ? (
-                    <CheckCircle className="h-4 w-4 text-green-600" />
+                    <CheckCircle className="h-4 w-4 text-blue-600" />
                   ) : (
                     <AlertCircle className="h-4 w-4 text-orange-600" />
                   )}
@@ -568,7 +567,7 @@ export default function PTConfig() {
                   </div>
                   <div className="flex justify-between">
                     <span>Monthly PT Amount</span>
-                    <span className="font-medium text-green-600">
+                    <span className="font-medium text-blue-600">
                       ₹{selectedSlab.monthlyPTAmount}
                     </span>
                   </div>
