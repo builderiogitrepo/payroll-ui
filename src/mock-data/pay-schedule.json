@@ -11,7 +11,10 @@
       "payDayValue": "1",
       "firstPayrollMonth": "April-2025",
       "firstPayrollDate": "30/04/2025",
-      "lastUpdated": "2024-06-01 10:00:00"
+      "lastUpdated": "2024-06-01 10:00:00",
+      "theme": "ocean",
+      "colorScheme": "blue",
+      "status": "active"
     },
     {
       "id": "config-telecom-2",
@@ -24,18 +27,57 @@
       "payDayValue": "1",
       "firstPayrollMonth": "April-2025",
       "firstPayrollDate": "30/04/2025",
-      "lastUpdated": "2024-06-01 10:00:00"
+      "lastUpdated": "2024-06-01 10:00:00",
+      "theme": "ocean",
+      "colorScheme": "blue",
+      "status": "active"
     }
   ],
   "businessUnits": [
-    { "value": "it-business-unit", "label": "IT Business Unit" },
-    { "value": "telecom-business-unit", "label": "Telecom Business Unit" },
-    { "value": "hr-business-unit", "label": "HR Business Unit" },
-    { "value": "finance-business-unit", "label": "Finance Business Unit" }
+    {
+      "value": "it-business-unit",
+      "label": "IT Business Unit",
+      "icon": "Monitor",
+      "theme": "ocean",
+      "colorScheme": "blue"
+    },
+    {
+      "value": "telecom-business-unit",
+      "label": "Telecom Business Unit",
+      "icon": "Phone",
+      "theme": "ocean",
+      "colorScheme": "blue"
+    },
+    {
+      "value": "hr-business-unit",
+      "label": "HR Business Unit",
+      "icon": "Building",
+      "theme": "ocean",
+      "colorScheme": "blue"
+    },
+    {
+      "value": "finance-business-unit",
+      "label": "Finance Business Unit",
+      "icon": "Building",
+      "theme": "ocean",
+      "colorScheme": "blue"
+    }
   ],
   "weekDays": ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
   "payFrequencies": ["monthly", "bi-weekly", "weekly"],
   "payDayTypes": ["lastWorkingDay", "specificDay"],
   "orgWorkingDaysOptions": ["22", "24", "26"],
-  "payrollMonths": ["April-2025", "May-2025", "June-2025"]
+  "payrollMonths": ["April-2025", "May-2025", "June-2025"],
+  "theme": {
+    "name": "ocean",
+    "primaryColor": "#0066cc",
+    "secondaryColor": "#0099ff",
+    "accentColor": "#66b3ff",
+    "gradient": "linear-gradient(135deg, #0066cc 0%, #0099ff 100%)",
+    "darkMode": {
+      "primaryColor": "#1e3a8a",
+      "secondaryColor": "#3b82f6",
+      "accentColor": "#60a5fa"
+    }
+  }
 }

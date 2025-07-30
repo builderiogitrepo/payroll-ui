@@ -490,8 +490,10 @@ export default function PTConfig() {
           onOpenChange={() => setSelectedSlab(null)}
         >
           <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>PT Slab Details - {selectedSlab.state}</DialogTitle>
+            <DialogHeader className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-b border-border">
+              <DialogTitle className="text-foreground">
+                PT Slab Details - {selectedSlab.state}
+              </DialogTitle>
             </DialogHeader>
 
             <div className="space-y-6">
@@ -500,10 +502,10 @@ export default function PTConfig() {
                 <div className="flex items-center gap-2">
                   <Target className="h-4 w-4 text-blue-600" />
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Slab ID
                     </Label>
-                    <p className="">{selectedSlab.id}</p>
+                    <p className="text-foreground">{selectedSlab.id}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -513,7 +515,7 @@ export default function PTConfig() {
                     <AlertCircle className="h-4 w-4 text-orange-600" />
                   )}
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Status
                     </Label>
                     <Badge
@@ -530,19 +532,21 @@ export default function PTConfig() {
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-blue-600" />
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       State
                     </Label>
-                    <span className="font-medium">{selectedSlab.state}</span>
+                    <span className="font-medium text-foreground">
+                      {selectedSlab.state}
+                    </span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4 text-purple-600" />
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Affected Employees
                     </Label>
-                    <p className="text-lg font-semibold">
+                    <p className="text-lg font-semibold text-foreground">
                       {selectedSlab.employees}
                     </p>
                   </div>
@@ -555,7 +559,7 @@ export default function PTConfig() {
                   <Settings className="h-5 w-5 text-blue-600" />
                   Slab Configuration
                 </h3>
-                <div className="bg-slate-50 p-4 rounded-lg space-y-3">
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg space-y-3 border border-blue-200 dark:border-blue-700">
                   <div className="flex justify-between">
                     <span>Salary Range</span>
                     <span className="font-medium">

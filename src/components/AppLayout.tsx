@@ -145,10 +145,10 @@ export function AppLayout() {
         />
       )}
 
-      {/* Modern Sidebar with Gradient */}
+      {/* Modern Sidebar with Ocean Theme Gradient */}
       <div
         className={cn(
-          "transition-all duration-300 flex flex-col shadow-2xl z-50 overflow-x-hidden min-w-0",
+          "transition-all duration-200 ease-out flex flex-col shadow-2xl z-50 overflow-x-hidden min-w-0",
           "fixed lg:relative h-full backdrop-blur-md",
           sidebarOpen ? "w-64" : "w-16 lg:w-16",
           "transform lg:transform-none",
@@ -158,26 +158,26 @@ export function AppLayout() {
         style={{
           background:
             theme === "dark"
-              ? "linear-gradient(180deg, rgba(30, 34, 45, 0.95) 0%, rgba(30, 34, 45, 0.98) 100%)"
-              : "linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.98) 100%)",
+              ? "linear-gradient(180deg, rgba(0, 26, 51, 0.95) 0%, rgba(0, 102, 204, 0.8) 50%, rgba(0, 153, 255, 0.6) 100%)"
+              : "linear-gradient(180deg, rgba(0, 102, 204, 0.1) 0%, rgba(0, 153, 255, 0.15) 50%, rgba(102, 179, 255, 0.1) 100%)",
           borderRight:
             theme === "dark"
-              ? "1px solid rgba(255, 255, 255, 0.1)"
-              : "1px solid rgba(0, 0, 0, 0.1)",
+              ? "1px solid rgba(0, 153, 255, 0.3)"
+              : "1px solid rgba(0, 102, 204, 0.2)",
         }}
       >
-        {/* Modern Header with Gradient */}
+        {/* Modern Header with Ocean Theme Gradient */}
         <div
-          className="p-4 border-b min-w-0 transition-all duration-300"
+          className="p-4 border-b min-w-0 transition-all duration-200 ease-out"
           style={{
             background:
               theme === "dark"
-                ? "linear-gradient(135deg, rgba(108, 92, 231, 0.2) 0%, rgba(255, 118, 117, 0.2) 100%)"
-                : "linear-gradient(135deg, rgba(30, 144, 255, 0.1) 0%, rgba(0, 201, 167, 0.1) 100%)",
+                ? "linear-gradient(135deg, rgba(0, 102, 204, 0.3) 0%, rgba(0, 153, 255, 0.2) 50%, rgba(102, 179, 255, 0.1) 100%)"
+                : "linear-gradient(135deg, rgba(0, 102, 204, 0.15) 0%, rgba(0, 153, 255, 0.1) 50%, rgba(102, 179, 255, 0.05) 100%)",
             borderBottom:
               theme === "dark"
-                ? "1px solid rgba(255, 255, 255, 0.1)"
-                : "1px solid rgba(0, 0, 0, 0.1)",
+                ? "1px solid rgba(0, 153, 255, 0.3)"
+                : "1px solid rgba(0, 102, 204, 0.2)",
           }}
         >
           <div className="flex items-center justify-between">
@@ -193,7 +193,10 @@ export function AppLayout() {
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
+                    color: "transparent",
                   }}
+                  // Force re-render on theme change to fix gradient text issue
+                  key={theme}
                 >
                   JNET
                 </h1>
@@ -207,11 +210,16 @@ export function AppLayout() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-all duration-300"
+                className={cn(
+                  "transition-all duration-200 ease-out",
+                  theme === "dark"
+                    ? "text-muted-foreground hover:text-white hover:bg-blue-500/20 hover:border hover:border-blue-400/20"
+                    : "text-muted-foreground hover:text-blue-600 hover:bg-blue-500/20 hover:border hover:border-blue-400/20",
+                )}
               >
                 <Menu
                   className={cn(
-                    "transition-all duration-200",
+                    "transition-all duration-200 ease-out",
                     sidebarOpen ? "h-5 w-5" : "h-6 w-6",
                   )}
                 />
@@ -220,8 +228,18 @@ export function AppLayout() {
           </div>
         </div>
 
-        {/* Modern Navigation */}
-        <nav className="flex-1 p-3 space-y-1 overflow-y-auto min-w-0">
+        {/* Modern Navigation with Ocean Theme */}
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto min-w-0 relative scrollbar-thin scrollbar-thumb-blue-400/30 scrollbar-track-transparent hover:scrollbar-thumb-blue-400/50">
+          {/* Subtle ocean wave effect overlay */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-5 animate-ocean-wave"
+            style={{
+              background:
+                theme === "dark"
+                  ? "radial-gradient(circle at 20% 80%, rgba(0, 153, 255, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(102, 179, 255, 0.1) 0%, transparent 50%)"
+                  : "radial-gradient(circle at 20% 80%, rgba(0, 102, 204, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(0, 153, 255, 0.05) 0%, transparent 50%)",
+            }}
+          />
           {navigationItems.map((item, idx) => {
             // Payroll Settings section
             if (item.section) {
@@ -236,9 +254,12 @@ export function AppLayout() {
                       <TooltipTrigger asChild>
                         <button
                           className={cn(
-                            "flex items-center justify-center w-full h-12 rounded-lg transition-all duration-300 group min-w-0",
-                            "hover:bg-accent/50 hover:scale-105",
-                            isActiveParent && "bg-primary/20 text-primary",
+                            "flex items-center justify-center w-full h-12 rounded-lg transition-all duration-200 ease-out group min-w-0",
+                            theme === "dark"
+                              ? "hover:bg-blue-500/20 hover:scale-[1.02] hover:border hover:border-blue-400/20 hover:text-white"
+                              : "hover:bg-blue-500/20 hover:scale-[1.02] hover:border hover:border-blue-400/20 hover:text-blue-600",
+                            isActiveParent &&
+                              "bg-blue-600/30 text-blue-600 border border-blue-400/30",
                           )}
                           onClick={() =>
                             setPayrollSettingsOpen((open) => !open)
@@ -272,18 +293,20 @@ export function AppLayout() {
                 <div key={item.section} className="space-y-1">
                   <button
                     className={cn(
-                      "flex items-center justify-between w-full px-3 py-2 text-sm rounded-lg transition-all duration-300",
-                      "hover:scale-105 hover:shadow-md",
-                      "text-muted-foreground hover:bg-accent/50 hover:text-primary",
+                      "flex items-center justify-between w-full px-3 py-2 text-sm rounded-lg transition-all duration-200 ease-out",
+                      "hover:scale-[1.02] hover:shadow-sm",
+                      theme === "dark"
+                        ? "text-muted-foreground hover:bg-blue-500/20 hover:text-white hover:border hover:border-blue-400/20"
+                        : "text-muted-foreground hover:bg-blue-500/20 hover:text-blue-600 hover:border hover:border-blue-400/20",
                       isActiveParent &&
-                        "text-primary font-bold bg-primary/10 rounded-lg",
+                        "text-white font-bold bg-blue-600/20 rounded-lg border border-blue-400/30",
                     )}
                     onClick={() => setPayrollSettingsOpen((open) => !open)}
                   >
                     <span>{item.section}</span>
                     <ChevronRight
                       className={cn(
-                        "h-4 w-4 transition-transform duration-200",
+                        "h-4 w-4 transition-transform duration-200 ease-out",
                         payrollSettingsOpen && "rotate-90",
                       )}
                     />
@@ -298,11 +321,13 @@ export function AppLayout() {
                             key={child.path}
                             to={child.path}
                             className={cn(
-                              "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all duration-300",
-                              "hover:scale-105 hover:shadow-md",
+                              "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all duration-200 ease-out",
+                              "hover:scale-[1.02] hover:shadow-sm",
                               isActive
-                                ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white font-medium shadow-lg"
-                                : "text-muted-foreground hover:bg-accent/50 hover:text-primary",
+                                ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium shadow-lg border border-blue-400/30 shadow-blue-500/25"
+                                : theme === "dark"
+                                  ? "text-muted-foreground hover:bg-blue-500/20 hover:text-white hover:border hover:border-blue-400/20"
+                                  : "text-muted-foreground hover:bg-blue-500/20 hover:text-blue-600 hover:border hover:border-blue-400/20",
                             )}
                           >
                             <Icon className="h-4 w-4" />
@@ -328,9 +353,12 @@ export function AppLayout() {
                       <Link
                         to={item.path}
                         className={cn(
-                          "flex items-center justify-center w-full h-12 rounded-lg transition-all duration-300 group min-w-0",
-                          "hover:bg-accent/50 hover:scale-105",
-                          isActive && "bg-primary/20 text-primary",
+                          "flex items-center justify-center w-full h-12 rounded-lg transition-all duration-200 ease-out group min-w-0",
+                          theme === "dark"
+                            ? "hover:bg-blue-500/20 hover:scale-[1.02] hover:border hover:border-blue-400/20 hover:text-white"
+                            : "hover:bg-blue-500/20 hover:scale-[1.02] hover:border hover:border-blue-400/20 hover:text-blue-600",
+                          isActive &&
+                            "bg-blue-600/30 text-blue-600 border border-blue-400/30",
                         )}
                       >
                         <Icon className="h-5 w-5" />
@@ -352,11 +380,13 @@ export function AppLayout() {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all duration-300",
-                  "hover:scale-105 hover:shadow-md",
+                  "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all duration-200 ease-out",
+                  "hover:scale-[1.02] hover:shadow-sm",
                   isActive
-                    ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white font-medium shadow-lg"
-                    : "text-muted-foreground hover:bg-accent/50 hover:text-primary",
+                    ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium shadow-lg border border-blue-400/30 shadow-blue-500/25"
+                    : theme === "dark"
+                      ? "text-muted-foreground hover:bg-blue-500/20 hover:text-white hover:border hover:border-blue-400/20"
+                      : "text-muted-foreground hover:bg-blue-500/20 hover:text-blue-600 hover:border hover:border-blue-400/20",
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -424,16 +454,6 @@ export function AppLayout() {
                 className="w-56 backdrop-blur-md transition-all duration-300"
                 align="end"
                 forceMount
-                style={{
-                  background:
-                    theme === "dark"
-                      ? "rgba(30, 34, 45, 0.95)"
-                      : "rgba(255, 255, 255, 0.95)",
-                  border:
-                    theme === "dark"
-                      ? "1px solid rgba(255, 255, 255, 0.1)"
-                      : "1px solid rgba(0, 0, 0, 0.1)",
-                }}
               >
                 <DropdownMenuItem className="transition-all duration-300 hover:bg-accent/50">
                   <User className="mr-2 h-4 w-4" />

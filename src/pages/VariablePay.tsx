@@ -466,8 +466,8 @@ export default function VariablePay() {
           onOpenChange={() => setSelectedEmployee(null)}
         >
           <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>
+            <DialogHeader className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-b border-border">
+              <DialogTitle className="text-foreground">
                 Variable Pay Details - {selectedEmployee.name} (
                 {selectedEmployee.empId})
               </DialogTitle>
@@ -495,7 +495,7 @@ export default function VariablePay() {
                   <p>{selectedEmployee.manager}</p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-slate-600">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Performance Rating
                   </Label>
                   <Badge
@@ -522,7 +522,7 @@ export default function VariablePay() {
                 <h3 className="text-lg font-semibold mb-4">
                   Variable Pay Calculation
                 </h3>
-                <div className="space-y-3 bg-slate-50 p-4 rounded-lg">
+                <div className="space-y-3 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-700">
                   <div className="flex justify-between">
                     <span>Annual Gross CTC</span>
                     <span className="font-medium">
@@ -574,8 +574,8 @@ export default function VariablePay() {
           onOpenChange={() => setEditingAward(null)}
         >
           <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>
+            <DialogHeader className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-b border-border">
+              <DialogTitle className="text-foreground">
                 Edit Performance Award - {editingAward.name}
               </DialogTitle>
             </DialogHeader>
@@ -583,7 +583,7 @@ export default function VariablePay() {
             <div className="space-y-4">
               <div>
                 <Label>Period: {editingAward.fyPeriod}</Label>
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-muted-foreground">
                   Quarterly Amount: ₹
                   {editingAward.quarterlyAmount.toLocaleString()}
                 </p>
@@ -601,17 +601,24 @@ export default function VariablePay() {
                   defaultValue={editingAward.payablePercent}
                   className="mt-1"
                 />
-                <p className="text-sm text-slate-500 mt-1">
+                <p className="text-sm text-muted-foreground mt-1">
                   Based on performance rating. Current payable: ₹
                   {editingAward.payableAmount.toLocaleString()}
                 </p>
               </div>
 
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setEditingAward(null)}>
+              <div className="flex justify-end gap-2 pt-4 border-t border-border bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setEditingAward(null)}
+                  className="border-blue-200 hover:bg-blue-50 dark:border-blue-700 dark:hover:bg-blue-900/20"
+                >
                   Cancel
                 </Button>
-                <Button onClick={() => setEditingAward(null)}>
+                <Button
+                  onClick={() => setEditingAward(null)}
+                  className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0 shadow-lg"
+                >
                   Update Performance Award
                 </Button>
               </div>

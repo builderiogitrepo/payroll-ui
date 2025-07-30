@@ -154,6 +154,16 @@ export default {
             boxShadow: "0 0 30px rgba(30, 144, 255, 0.6)",
           },
         },
+        "ocean-wave": {
+          "0%, 100%": {
+            transform: "translateY(0px)",
+            opacity: "0.3",
+          },
+          "50%": {
+            transform: "translateY(-2px)",
+            opacity: "0.5",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -161,6 +171,7 @@ export default {
         "fade-in": "fade-in 0.2s ease-out",
         "slide-in": "slide-in 0.2s ease-out",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "ocean-wave": "ocean-wave 3s ease-in-out infinite",
       },
       backgroundImage: {
         "gradient-primary": "linear-gradient(135deg, #0066cc 0%, #0099ff 100%)",

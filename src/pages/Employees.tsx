@@ -536,7 +536,7 @@ export default function Employees() {
           </PageHeader>
 
           {/* Enhanced Statistics Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="hidden grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="group hover:shadow-lg transition-all duration-150">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">

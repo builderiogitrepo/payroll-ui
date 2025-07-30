@@ -153,9 +153,9 @@ export function AddEmployeeDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-none h-[98vh] max-h-[98vh] flex flex-col">
         {/* Fixed Header */}
-        <DialogHeader className="flex-shrink-0 border-b border-slate-200 pb-4">
-          <DialogTitle className="flex items-center gap-2 text-xl">
-            <Plus className="h-6 w-6 text-blue-600" />
+        <DialogHeader className="flex-shrink-0 border-b border-border pb-4 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20">
+          <DialogTitle className="flex items-center gap-2 text-xl text-foreground">
+            <Plus className="h-6 w-6 text-blue-600 dark:text-blue-400" />
             Create New Employee
           </DialogTitle>
         </DialogHeader>
@@ -890,10 +890,10 @@ export function AddEmployeeDialog({
                   );
 
                   return (
-                    <Card className="bg-white shadow-lg rounded-2xl border border-slate-200 p-0">
-                      <CardHeader className="pb-2 border-b border-slate-100 flex flex-row items-center justify-between">
-                        <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                          <IndianRupee className="h-5 w-5 text-green-600" />
+                    <Card className="bg-card shadow-lg rounded-2xl border border-border p-0">
+                      <CardHeader className="pb-2 border-b border-border flex flex-row items-center justify-between">
+                        <CardTitle className="flex items-center gap-2 text-lg font-semibold text-foreground">
+                          <IndianRupee className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                           <span>Salary Structure Breakdown</span>
                         </CardTitle>
                       </CardHeader>
@@ -902,70 +902,70 @@ export function AddEmployeeDialog({
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-3">
                               <div className="flex items-center justify-between">
-                                <span>
+                                <span className="text-foreground">
                                   Basic Pay
                                   <InfoTip text="50% of Annual Gross" />
                                 </span>
-                                <span className="font-bold text-lg text-slate-900">
+                                <span className="font-bold text-lg text-foreground">
                                   ₹{basic.toLocaleString()}
                                 </span>
                               </div>
                               <div className="flex items-center justify-between">
-                                <span>
+                                <span className="text-foreground">
                                   HRA
                                   <InfoTip text="40% of Basic" />
                                 </span>
-                                <span className="font-bold text-slate-900">
+                                <span className="font-bold text-foreground">
                                   ₹{hra.toLocaleString()}
                                 </span>
                               </div>
                               <div className="flex items-center justify-between">
-                                <span>
+                                <span className="text-foreground">
                                   Medical Allowance
                                   <InfoTip text="20% of Basic" />
                                 </span>
-                                <span className="font-bold text-slate-900">
+                                <span className="font-bold text-foreground">
                                   ₹{medical.toLocaleString()}
                                 </span>
                               </div>
                             </div>
                             <div className="space-y-3">
                               <div className="flex items-center justify-between">
-                                <span>
+                                <span className="text-foreground">
                                   Conveyance Allowance
                                   <InfoTip text="20% of Basic" />
                                 </span>
-                                <span className="font-bold text-slate-900">
+                                <span className="font-bold text-foreground">
                                   ₹{conveyance.toLocaleString()}
                                 </span>
                               </div>
                               <div className="flex items-center justify-between">
-                                <span>
+                                <span className="text-foreground">
                                   Special Allowance
                                   <InfoTip text="10% of Basic" />
                                 </span>
-                                <span className="font-bold text-slate-900">
+                                <span className="font-bold text-foreground">
                                   ₹{special.toLocaleString()}
                                 </span>
                               </div>
                               <div className="flex items-center justify-between">
-                                <span>
+                                <span className="text-foreground">
                                   Other Allowance
                                   <InfoTip text="10% of Basic" />
                                 </span>
-                                <span className="font-bold text-slate-900">
+                                <span className="font-bold text-foreground">
                                   ₹{other.toLocaleString()}
                                 </span>
                               </div>
                             </div>
                           </div>
-                          <hr className="my-4 border-slate-200" />
+                          <hr className="my-4 border-border" />
                           <div className="flex flex-col md:flex-row md:justify-between md:items-center text-lg font-semibold">
-                            <span className="flex items-center gap-2 text-slate-700">
-                              <IndianRupee className="h-5 w-5 text-green-600" />
+                            <span className="flex items-center gap-2 text-foreground">
+                              <IndianRupee className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                               Total Annual Gross
                             </span>
-                            <span className="text-green-600 text-2xl font-bold">
+                            <span className="text-blue-600 dark:text-blue-400 text-2xl font-bold">
                               ₹{total.toLocaleString()}
                             </span>
                           </div>
@@ -975,10 +975,10 @@ export function AddEmployeeDialog({
                   );
                 })()}
 
-                <Alert className="border-blue-200 bg-blue-50">
-                  <Info className="h-4 w-4 text-blue-600" />
+                <Alert className="border-blue-200 bg-blue-50 dark:border-blue-700 dark:bg-blue-900/20">
+                  <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                   <AlertDescription>
-                    <div className="text-blue-700 text-sm">
+                    <div className="text-blue-700 dark:text-blue-300 text-sm">
                       <strong>Info:</strong> Deductions and tax rules are
                       auto-applied based on payroll configuration.
                     </div>
@@ -990,14 +990,19 @@ export function AddEmployeeDialog({
         </div>
 
         {/* Fixed Footer */}
-        <div className="flex-shrink-0 border-t border-slate-200 p-6 bg-slate-50">
+        <div className="flex-shrink-0 border-t border-border p-6 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20">
           <div className="flex justify-end gap-3">
-            <Button variant="outline" onClick={onCancel} size="lg">
+            <Button
+              variant="outline"
+              onClick={onCancel}
+              size="lg"
+              className="border-blue-200 hover:bg-blue-50 dark:border-blue-700 dark:hover:bg-blue-900/20"
+            >
               <X className="h-4 w-4 mr-2" />
               Cancel
             </Button>
             <Button
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0 shadow-lg"
               onClick={onSubmit}
               size="lg"
             >

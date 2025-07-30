@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import EmployeeList from "@/components/EmployeeList";
 import {
   Users,
   DollarSign,
@@ -437,6 +438,12 @@ export default function Dashboard() {
           >
             Activities
           </TabsTrigger>
+          <TabsTrigger
+            value="redux-demo"
+            className="transition-all duration-300"
+          >
+            Redux Demo
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -669,6 +676,10 @@ export default function Dashboard() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="redux-demo" className="space-y-6">
+          <EmployeeList />
         </TabsContent>
       </Tabs>
     </div>

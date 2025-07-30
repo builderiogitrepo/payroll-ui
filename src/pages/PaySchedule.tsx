@@ -316,10 +316,10 @@ export default function PaySchedule() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-background">
       <div
         className={cn(
-          "transition-all duration-300 ease-in-out",
+          "transition-all duration-200 ease-out",
           isPanelOpen ? "mr-80" : "mr-0",
         )}
       >
@@ -327,14 +327,17 @@ export default function PaySchedule() {
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">
+              <h1 className="text-2xl font-bold text-foreground">
                 Pay Schedule Overview
               </h1>
-              <p className="text-sm text-slate-600 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 Manage payroll configurations for different business units
               </p>
             </div>
-            <Button onClick={openAddPanel} className="flex items-center gap-2">
+            <Button
+              onClick={openAddPanel}
+              className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0 shadow-lg"
+            >
               <Plus className="h-4 w-4" />
               Add Configuration
             </Button>
@@ -342,21 +345,21 @@ export default function PaySchedule() {
 
           {/* Configuration Grid */}
           {configurations.length === 0 ? (
-            <Card className="shadow-sm border-slate-200">
+            <Card className="shadow-sm border-border bg-card">
               <CardContent className="flex flex-col items-center justify-center py-12">
-                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-                  <Settings className="h-8 w-8 text-slate-400" />
+                <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-4">
+                  <Settings className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                <h3 className="text-lg font-semibold text-foreground mb-2">
                   No configurations yet
                 </h3>
-                <p className="text-sm text-slate-600 text-center mb-6 max-w-md">
+                <p className="text-sm text-muted-foreground text-center mb-6 max-w-md">
                   Get started by creating your first payroll configuration for a
                   business unit.
                 </p>
                 <Button
                   onClick={openAddPanel}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0 shadow-lg"
                 >
                   <Plus className="h-4 w-4" />
                   Add Configuration
@@ -373,12 +376,12 @@ export default function PaySchedule() {
                 return (
                   <Card
                     key={config.id}
-                    className="shadow-sm border-slate-200 hover:shadow-md transition-shadow"
+                    className="shadow-sm border-border bg-card hover:shadow-md transition-all duration-200 ease-out hover:scale-[1.02]"
                   >
                     <CardHeader className="pb-3">
-                      <CardTitle className="text-base font-semibold text-slate-900 flex items-center justify-between">
+                      <CardTitle className="text-base font-semibold text-foreground flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <BusinessUnitIcon className="h-4 w-4 text-blue-600" />
+                          <BusinessUnitIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                           {businessUnitInfo.label}
                         </div>
                         <div className="flex items-center gap-1">
@@ -386,7 +389,7 @@ export default function PaySchedule() {
                             variant="outline"
                             size="sm"
                             onClick={() => openEditPanel(config)}
-                            className="h-7 px-2 text-xs"
+                            className="h-7 px-2 text-xs border-blue-200 hover:bg-blue-50 dark:border-blue-700 dark:hover:bg-blue-900/20"
                           >
                             <Edit3 className="h-3 w-3" />
                           </Button>
@@ -394,7 +397,7 @@ export default function PaySchedule() {
                             variant="outline"
                             size="sm"
                             onClick={() => deleteConfiguration(config.id)}
-                            className="h-7 px-2 text-xs text-red-600 hover:text-red-700"
+                            className="h-7 px-2 text-xs text-red-600 hover:text-red-700 border-red-200 hover:bg-red-50 dark:border-red-700 dark:hover:bg-red-900/20"
                           >
                             <X className="h-3 w-3" />
                           </Button>
@@ -404,41 +407,41 @@ export default function PaySchedule() {
                     <CardContent className="pt-0 space-y-3">
                       <div className="grid grid-cols-2 gap-3 text-sm">
                         <div>
-                          <span className="text-xs font-medium text-slate-600">
+                          <span className="text-xs font-medium text-muted-foreground">
                             Work Week
                           </span>
-                          <p className="text-slate-900">
+                          <p className="text-foreground">
                             {(config.workWeek || []).join(", ")}
                           </p>
                         </div>
                         <div>
-                          <span className="text-xs font-medium text-slate-600">
+                          <span className="text-xs font-medium text-muted-foreground">
                             Pay Frequency
                           </span>
-                          <p className="text-slate-900">
+                          <p className="text-foreground">
                             {config.payFrequency}
                           </p>
                         </div>
                         <div>
-                          <span className="text-xs font-medium text-slate-600">
+                          <span className="text-xs font-medium text-muted-foreground">
                             Pay Day
                           </span>
-                          <p className="text-slate-900">
+                          <p className="text-foreground">
                             {config.payDayType === "lastWorkingDay"
                               ? "Last working day"
                               : `Day ${config.payDayValue}`}
                           </p>
                         </div>
                         <div>
-                          <span className="text-xs font-medium text-slate-600">
+                          <span className="text-xs font-medium text-muted-foreground">
                             First Payroll
                           </span>
-                          <p className="text-slate-900">
+                          <p className="text-foreground">
                             {config.firstPayrollDate}
                           </p>
                         </div>
                       </div>
-                      <div className="pt-2 border-t border-slate-100 flex items-center gap-2 text-xs text-slate-500">
+                      <div className="pt-2 border-t border-border flex items-center gap-2 text-xs text-muted-foreground">
                         <Clock className="h-3 w-3" />
                         Updated: {config.lastUpdated}
                       </div>
@@ -454,23 +457,23 @@ export default function PaySchedule() {
       {/* Side Panel */}
       <div
         className={cn(
-          "fixed top-0 right-0 h-full w-[32rem] bg-white shadow-xl border-l border-slate-200 transform transition-transform duration-300 ease-in-out z-50",
+          "fixed top-0 right-0 h-full w-[32rem] bg-card shadow-xl border-l border-border transform transition-transform duration-200 ease-out z-50",
           isPanelOpen ? "translate-x-0" : "translate-x-full",
         )}
       >
         <div className="h-full flex flex-col">
           {/* Panel Header */}
-          <div className="flex items-center justify-between p-4 border-b border-slate-200">
+          <div className="flex items-center justify-between p-4 border-b border-border bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20">
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={closePanel}
-                className="h-8 w-8 p-0"
+                className="h-8 w-8 p-0 hover:bg-blue-100 dark:hover:bg-blue-900/20"
               >
                 <ArrowLeft className="h-4 w-4" />
               </Button>
-              <h2 className="text-lg font-semibold text-slate-900">
+              <h2 className="text-lg font-semibold text-foreground">
                 {editingConfig ? "Edit Configuration" : "Add Configuration"}
               </h2>
             </div>
@@ -520,10 +523,10 @@ export default function PaySchedule() {
                       key={d.value}
                       type="button"
                       className={cn(
-                        "px-3 py-1.5 rounded border text-xs font-medium transition-colors",
+                        "px-3 py-1.5 rounded border text-xs font-medium transition-all duration-200 ease-out",
                         formData.workWeek.includes(d.value)
-                          ? "bg-blue-100 border-blue-300 text-blue-700"
-                          : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100",
+                          ? "bg-blue-100 border-blue-300 text-blue-700 dark:bg-blue-900/30 dark:border-blue-600 dark:text-blue-300"
+                          : "bg-card border-border text-muted-foreground hover:bg-blue-50 hover:border-blue-200 dark:hover:bg-blue-900/20 dark:hover:border-blue-600",
                       )}
                       onClick={() => {
                         setFormData((f) => {
@@ -650,7 +653,7 @@ export default function PaySchedule() {
                     <span className="text-sm">of every month</span>
                   </div>
                 </div>
-                <div className="text-xs text-slate-600 bg-slate-50 p-2 rounded mt-2">
+                <div className="text-xs text-muted-foreground bg-blue-50 dark:bg-blue-900/20 p-2 rounded mt-2 border border-blue-200 dark:border-blue-700">
                   <b>Note:</b> When payday falls on a non-working day or a
                   holiday, employees will get paid on the previous working day.
                 </div>
@@ -708,12 +711,12 @@ export default function PaySchedule() {
                   </SelectContent>
                 </Select>
                 {/* Calendar UI */}
-                <div className="mt-2 border rounded p-2 w-full">
+                <div className="mt-2 border border-border rounded p-2 w-full bg-card">
                   {/* Simple calendar for the selected month */}
-                  <div className="text-center text-xs font-medium mb-1">
+                  <div className="text-center text-xs font-medium mb-1 text-foreground">
                     {formData.firstPayrollMonth}
                   </div>
-                  <div className="grid grid-cols-7 gap-1 text-xs text-slate-500 mb-1">
+                  <div className="grid grid-cols-7 gap-1 text-xs text-muted-foreground mb-1">
                     {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map(
                       (d) => (
                         <div key={d}>{d}</div>
@@ -757,13 +760,13 @@ export default function PaySchedule() {
                           <div
                             key={d}
                             className={cn(
-                              "w-7 h-7 flex items-center justify-center rounded cursor-pointer",
+                              "w-7 h-7 flex items-center justify-center rounded cursor-pointer transition-all duration-200 ease-out",
                               isSelected
-                                ? "bg-green-200 border border-green-600 text-green-900 font-bold"
+                                ? "bg-blue-200 border border-blue-600 text-blue-900 font-bold dark:bg-blue-800 dark:border-blue-400 dark:text-blue-100"
                                 : "",
                               isPayDate
-                                ? "border border-green-600"
-                                : "hover:bg-slate-100",
+                                ? "border border-blue-400 dark:border-blue-500"
+                                : "hover:bg-blue-50 dark:hover:bg-blue-900/20",
                             )}
                             onClick={() =>
                               setFormData((f) => ({
@@ -785,12 +788,19 @@ export default function PaySchedule() {
           </div>
 
           {/* Panel Footer */}
-          <div className="p-4 border-t border-slate-200 bg-slate-50">
+          <div className="p-4 border-t border-border bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20">
             <div className="flex gap-3">
-              <Button variant="outline" onClick={closePanel} className="flex-1">
+              <Button
+                variant="outline"
+                onClick={closePanel}
+                className="flex-1 border-blue-200 hover:bg-blue-50 dark:border-blue-700 dark:hover:bg-blue-900/20"
+              >
                 Cancel
               </Button>
-              <Button onClick={handleSubmit} className="flex-1">
+              <Button
+                onClick={handleSubmit}
+                className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0 shadow-lg"
+              >
                 {editingConfig ? "Update" : "Create"} Configuration
               </Button>
             </div>

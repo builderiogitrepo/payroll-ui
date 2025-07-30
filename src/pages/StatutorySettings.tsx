@@ -429,8 +429,8 @@ export default function StatutorySettings() {
           onOpenChange={() => setSelectedConfig(null)}
         >
           <DialogContent className="sm:max-w-2xl lg:max-w-4xl">
-            <DialogHeader>
-              <DialogTitle>
+            <DialogHeader className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-b border-border">
+              <DialogTitle className="text-foreground">
                 {activeTab === "pf" && "EPF Configuration"}
                 {activeTab === "pt" && "Professional Tax Configuration"}
                 {activeTab === "esic" && "ESIC Configuration"}
@@ -478,26 +478,26 @@ export default function StatutorySettings() {
               {activeTab === "pt" && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       State
                     </Label>
-                    <p className="text-lg font-semibold">
+                    <p className="text-lg font-semibold text-foreground">
                       {selectedConfig.state}
                     </p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Monthly PT Amount
                     </Label>
-                    <p className="text-lg font-semibold">
+                    <p className="text-lg font-semibold text-foreground">
                       ₹{selectedConfig.monthlyPTAmount}
                     </p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Salary Range
                     </Label>
-                    <p className="text-lg font-semibold">
+                    <p className="text-lg font-semibold text-foreground">
                       ₹{selectedConfig.slabFrom?.toLocaleString()} -
                       {selectedConfig.slabTo
                         ? ` ₹${selectedConfig.slabTo.toLocaleString()}`
@@ -505,10 +505,10 @@ export default function StatutorySettings() {
                     </p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Affected Employees
                     </Label>
-                    <p className="text-lg font-semibold">
+                    <p className="text-lg font-semibold text-foreground">
                       {selectedConfig.employees}
                     </p>
                   </div>
@@ -518,31 +518,31 @@ export default function StatutorySettings() {
               {activeTab === "esic" && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Employee Contribution
                     </Label>
-                    <p className="text-lg font-semibold">
+                    <p className="text-lg font-semibold text-foreground">
                       {selectedConfig.employeeContribution}%
                     </p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Employer Contribution
                     </Label>
-                    <p className="text-lg font-semibold">
+                    <p className="text-lg font-semibold text-foreground">
                       {selectedConfig.employerContribution}%
                     </p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Salary Limit
                     </Label>
-                    <p className="text-lg font-semibold">
+                    <p className="text-lg font-semibold text-foreground">
                       ₹{selectedConfig.salaryLimit?.toLocaleString()}
                     </p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Medical Benefit
                     </Label>
                     <Badge
@@ -563,8 +563,8 @@ export default function StatutorySettings() {
       {/* Add Configuration Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
         <DialogContent className="sm:max-w-xl lg:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>
+          <DialogHeader className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-b border-border">
+            <DialogTitle className="text-foreground">
               Add New{" "}
               {activeTab === "pf" ? "PF" : activeTab === "pt" ? "PT" : "ESIC"}{" "}
               Configuration
@@ -575,14 +575,18 @@ export default function StatutorySettings() {
               Configuration form for {activeTab.toUpperCase()} would be
               implemented here.
             </p>
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2 pt-4 border-t border-border bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-4">
               <Button
                 variant="outline"
                 onClick={() => setIsAddDialogOpen(false)}
+                className="border-blue-200 hover:bg-blue-50 dark:border-blue-700 dark:hover:bg-blue-900/20"
               >
                 Cancel
               </Button>
-              <Button onClick={() => setIsAddDialogOpen(false)}>
+              <Button
+                onClick={() => setIsAddDialogOpen(false)}
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0 shadow-lg"
+              >
                 Create Configuration
               </Button>
             </div>

@@ -509,8 +509,8 @@ const pfColumns: Column[] = [
         variant="outline"
         className={`text-xs ${
           value === "With Minimum Wage Rule"
-            ? "border-green-200 text-green-700 bg-green-50"
-            : "border-blue-200 text-blue-700 bg-blue-50"
+            ? "border-primary/20 text-primary bg-primary/10"
+            : "border-muted text-muted-foreground bg-muted/50"
         }`}
       >
         {value}
@@ -539,7 +539,7 @@ const pfColumns: Column[] = [
     key: "epsPercentage",
     label: "EPS %",
     render: (value) => (
-      <span className="font-medium text-purple-600">{value}%</span>
+      <span className="font-medium text-primary">{value}%</span>
     ),
   },
   {
@@ -555,7 +555,7 @@ const pfColumns: Column[] = [
     key: "epsCap",
     label: "EPS Cap",
     render: (value) => (
-      <span className="font-medium text-purple-600">
+      <span className="font-medium text-primary">
         ₹{value.toLocaleString()}
       </span>
     ),
@@ -584,7 +584,7 @@ const ptColumns: Column[] = [
     label: "State",
     render: (value) => (
       <div className="flex items-center gap-2">
-        <MapPin className="h-4 w-4 text-blue-600" />
+        <MapPin className="h-4 w-4 text-primary" />
         <span className="font-medium">{value}</span>
       </div>
     ),
@@ -748,7 +748,7 @@ export default function SalaryConfiguration() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Settings className="h-5 w-5 text-blue-600" />
+                <Settings className="h-5 w-5 text-primary" />
                 Structure Details
               </CardTitle>
             </CardHeader>
@@ -797,7 +797,7 @@ export default function SalaryConfiguration() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-green-600" />
+                <Users className="h-5 w-5 text-primary" />
                 Employee Information
               </CardTitle>
             </CardHeader>
@@ -814,7 +814,7 @@ export default function SalaryConfiguration() {
                     Total Employees
                   </Label>
                   <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4 text-purple-600" />
+                    <Users className="h-4 w-4 text-primary" />
                     <span className="text-lg font-semibold">
                       {selectedStructure.totalEmployees}
                     </span>
@@ -829,7 +829,7 @@ export default function SalaryConfiguration() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-green-600" />
+                <TrendingUp className="h-5 w-5 text-primary" />
                 Earnings Components
               </CardTitle>
             </CardHeader>
@@ -842,7 +842,7 @@ export default function SalaryConfiguration() {
                       className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
                     >
                       <div className="flex items-center gap-3">
-                        <DollarSign className="h-4 w-4 text-green-600" />
+                        <DollarSign className="h-4 w-4 text-primary" />
                         <div>
                           <p className="font-medium">{earning.name}</p>
                           <p className="text-sm text-muted-foreground">
@@ -879,7 +879,7 @@ export default function SalaryConfiguration() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5 text-red-600" />
+                <Shield className="h-5 w-5 text-primary" />
                 Deduction Components
               </CardTitle>
             </CardHeader>
@@ -892,7 +892,7 @@ export default function SalaryConfiguration() {
                       className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
                     >
                       <div className="flex items-center gap-3">
-                        <CreditCard className="h-4 w-4 text-red-600" />
+                        <CreditCard className="h-4 w-4 text-primary" />
                         <div>
                           <p className="font-medium">{deduction.component}</p>
                           <p className="text-sm text-muted-foreground">
@@ -922,22 +922,22 @@ export default function SalaryConfiguration() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white border-b border-slate-200 px-6 py-6 shadow-sm">
+      <div className="bg-background border-b border-border px-6 py-6 shadow-sm">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <Settings className="h-8 w-8 text-blue-600" />
+            <Settings className="h-8 w-8 text-primary" />
             <div>
-              <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+              <h1 className="text-3xl font-bold text-foreground tracking-tight">
                 Salary Configuration
               </h1>
             </div>
           </div>
           <Link
             to="/payheads"
-            className="inline-flex items-center gap-2 text-blue-700 font-medium hover:underline hover:text-blue-900 transition-colors text-base"
+            className="inline-flex items-center gap-2 text-primary font-medium hover:underline hover:text-primary/80 transition-colors text-base"
           >
             Payhead Configuration
-            <Settings className="h-5 w-5 text-black-200" />
+            <Settings className="h-5 w-5" />
           </Link>
         </div>
         {/* Parent Tabs - Underline Style */}
@@ -947,17 +947,17 @@ export default function SalaryConfiguration() {
             onValueChange={setSelectedTab}
             className="w-full mt-8"
           >
-            <TabsList className="flex border-b border-slate-200 bg-transparent p-0 gap-8 justify-start w-full">
+            <TabsList className="flex border-b border-border bg-transparent p-0 gap-8 justify-start w-full">
               <TabsTrigger
                 value="salary-structure"
-                className="relative px-0 pb-2 text-lg font-medium text-slate-700 data-[state=active]:text-blue-700 data-[state=active]:font-semibold data-[state=active]:after:content-[''] data-[state=active]:after:absolute data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:bottom-0 data-[state=active]:after:h-1 data-[state=active]:after:bg-blue-600 data-[state=active]:after:rounded-full focus:outline-none"
+                className="relative px-0 pb-2 text-lg font-medium text-muted-foreground data-[state=active]:text-primary data-[state=active]:font-semibold data-[state=active]:after:content-[''] data-[state=active]:after:absolute data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:bottom-0 data-[state=active]:after:h-1 data-[state=active]:after:bg-primary data-[state=active]:after:rounded-full focus:outline-none"
                 style={{ background: "none", border: "none" }}
               >
                 Salary Structures
               </TabsTrigger>
               <TabsTrigger
                 value="statutory-components"
-                className="relative px-0 pb-2 text-lg font-medium text-slate-700 data-[state=active]:text-blue-700 data-[state=active]:font-semibold data-[state=active]:after:content-[''] data-[state=active]:after:absolute data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:bottom-0 data-[state=active]:after:h-1 data-[state=active]:after:bg-blue-600 data-[state=active]:after:rounded-full focus:outline-none"
+                className="relative px-0 pb-2 text-lg font-medium text-muted-foreground data-[state=active]:text-primary data-[state=active]:font-semibold data-[state=active]:after:content-[''] data-[state=active]:after:absolute data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:bottom-0 data-[state=active]:after:h-1 data-[state=active]:after:bg-primary data-[state=active]:after:rounded-full focus:outline-none"
                 style={{ background: "none", border: "none" }}
               >
                 Statutory Components
@@ -976,7 +976,7 @@ export default function SalaryConfiguration() {
                   <div className="flex items-center gap-2">
                     <Button
                       onClick={handleAdd}
-                      className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
+                      className="flex items-center gap-2 bg-primary hover:bg-primary/90"
                     >
                       <Plus className="h-4 w-4" />
                       Add Structure
@@ -988,50 +988,50 @@ export default function SalaryConfiguration() {
             </TabsContent>
 
             <TabsContent value="statutory-components" className="space-y-6">
-              <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-lg p-4 border border-slate-200">
+              <div className="bg-gradient-to-r from-muted/50 to-primary/5 rounded-lg p-4 border border-border">
                 <Tabs
                   value={selectedStatutoryTab}
                   onValueChange={setSelectedStatutoryTab}
                   className="w-full"
                 >
-                  <TabsList className="grid w-full grid-cols-3 mb-6 bg-white shadow-sm border border-slate-200 rounded-lg p-1">
+                  <TabsList className="grid w-full grid-cols-3 mb-6 bg-background shadow-sm border border-border rounded-lg p-1">
                     <TabsTrigger
                       value="pf-config"
-                      className="flex items-center gap-2 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:shadow-sm rounded-md transition-all duration-200 hover:bg-slate-50"
+                      className="flex items-center gap-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-md transition-all duration-200 hover:bg-muted"
                     >
                       <Shield className="h-4 w-4" />
-                      <span className="font-medium">PF Configuration</span>
+                      PF Configuration
                     </TabsTrigger>
                     <TabsTrigger
                       value="pt-config"
-                      className="flex items-center gap-2 data-[state=active]:bg-green-50 data-[state=active]:text-green-700 data-[state=active]:shadow-sm rounded-md transition-all duration-200 hover:bg-slate-50"
+                      className="flex items-center gap-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-md transition-all duration-200 hover:bg-muted"
                     >
                       <MapPin className="h-4 w-4" />
-                      <span className="font-medium">Professional Tax</span>
+                      Professional Tax
                     </TabsTrigger>
                     <TabsTrigger
                       value="esic-config"
-                      className="flex items-center gap-2 data-[state=active]:bg-purple-50 data-[state=active]:text-purple-700 data-[state=active]:shadow-sm rounded-md transition-all duration-200 hover:bg-slate-50"
+                      className="flex items-center gap-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-md transition-all duration-200 hover:bg-muted"
                     >
                       <CreditCard className="h-4 w-4" />
-                      <span className="font-medium">ESIC Configuration</span>
+                      ESIC Configuration
                     </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="pf-config" className="space-y-6">
                     {/* With Maximum Wage Rule Section */}
-                    <Card className="border-green-200 bg-green-50/30">
+                    <Card className="border-primary/20 bg-primary/10">
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="p-2 bg-green-100 rounded-lg">
-                              <Shield className="h-5 w-5 text-green-600" />
+                            <div className="p-2 bg-primary/20 rounded-lg">
+                              <Shield className="h-5 w-5 text-primary" />
                             </div>
                             <div>
-                              <CardTitle className="text-green-800">
+                              <CardTitle className="text-foreground">
                                 With Maximum Wage Rule
                               </CardTitle>
-                              <p className="text-sm text-green-600 mt-1">
+                              <p className="text-sm text-muted-foreground mt-1">
                                 PF contribution base is capped at the specified
                                 wage limit
                               </p>
@@ -1236,10 +1236,10 @@ export default function SalaryConfiguration() {
                             </div>
                           </div>
 
-                          <Alert className="border-green-200 bg-green-50">
-                            <Shield className="h-4 w-4 text-green-600" />
+                          <Alert className="border-primary/20 bg-primary/10">
+                            <Shield className="h-4 w-4 text-primary" />
                             <AlertDescription>
-                              <div className="text-green-700 text-sm">
+                              <div className="text-foreground text-sm">
                                 <strong>Note:</strong> The remaining employer
                                 contribution after EPS will be automatically
                                 adjusted towards EPF.
@@ -1251,18 +1251,18 @@ export default function SalaryConfiguration() {
                     </Card>
 
                     {/* Without Maximum PF Wage Rule Section */}
-                    <Card className="border-blue-200 bg-blue-50/30">
+                    <Card className="border-primary/20 bg-primary/10">
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="p-2 bg-blue-100 rounded-lg">
-                              <Shield className="h-5 w-5 text-blue-600" />
+                            <div className="p-2 bg-primary/20 rounded-lg">
+                              <Shield className="h-5 w-5 text-primary" />
                             </div>
                             <div>
-                              <CardTitle className="text-blue-800">
+                              <CardTitle className="text-foreground">
                                 Without Maximum PF Wage Rule
                               </CardTitle>
-                              <p className="text-sm text-blue-600 mt-1">
+                              <p className="text-sm text-muted-foreground mt-1">
                                 PF contribution base uses actual wage
                                 calculation basis without any cap
                               </p>
@@ -1451,10 +1451,10 @@ export default function SalaryConfiguration() {
                             </div>
                           </div>
 
-                          <Alert className="border-blue-200 bg-blue-50">
-                            <Shield className="h-4 w-4 text-blue-600" />
+                          <Alert className="border-primary/20 bg-primary/10">
+                            <Shield className="h-4 w-4 text-primary" />
                             <AlertDescription>
-                              <div className="text-blue-700 text-sm">
+                              <div className="text-foreground text-sm">
                                 <strong>Note:</strong> The remaining employer
                                 contribution after EPS will be automatically
                                 adjusted towards EPF.
@@ -1479,18 +1479,18 @@ export default function SalaryConfiguration() {
 
                   <TabsContent value="esic-config" className="space-y-6">
                     {/* ESIC Configuration Section */}
-                    <Card className="border-purple-200 bg-purple-50/30">
+                    <Card className="border-primary/20 bg-primary/10">
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="p-2 bg-purple-100 rounded-lg">
-                              <CreditCard className="h-5 w-5 text-purple-600" />
+                            <div className="p-2 bg-primary/20 rounded-lg">
+                              <CreditCard className="h-5 w-5 text-primary" />
                             </div>
                             <div>
-                              <CardTitle className="text-purple-800">
+                              <CardTitle className="text-foreground">
                                 ESIC Configuration
                               </CardTitle>
-                              <p className="text-sm text-purple-600 mt-1">
+                              <p className="text-sm text-muted-foreground mt-1">
                                 Configure Employee State Insurance Corporation
                                 settings
                               </p>
@@ -1704,13 +1704,13 @@ export default function SalaryConfiguration() {
 
                             {/* Notes Section */}
                             <div className="space-y-4">
-                              <h4 className="font-semibold text-purple-900">
+                              <h4 className="font-semibold text-foreground">
                                 Important Notes
                               </h4>
-                              <Alert className="border-purple-200 bg-purple-50">
-                                <Info className="h-4 w-4 text-purple-600" />
+                              <Alert className="border-primary/20 bg-primary/10">
+                                <Info className="h-4 w-4 text-primary" />
                                 <AlertDescription>
-                                  <div className="text-purple-700 text-sm space-y-1">
+                                  <div className="text-foreground text-sm space-y-1">
                                     <div>
                                       • ESI is applicable only if monthly gross
                                       salary is ≤ ₹21,000.
@@ -1746,7 +1746,7 @@ export default function SalaryConfiguration() {
                                 Cancel
                               </Button>
                               <Button
-                                className="bg-purple-600 hover:bg-purple-700"
+                                className="bg-primary hover:bg-primary/90"
                                 onClick={() => {
                                   // Handle form submission
                                   console.log("ESIC Config Data:", esicConfig);
@@ -1774,7 +1774,7 @@ export default function SalaryConfiguration() {
         <DialogContent className="sm:max-w-2xl lg:max-w-4xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Settings className="h-5 w-5 text-blue-600" />
+              <Settings className="h-5 w-5 text-primary" />
               {selectedTab === "salary-structure"
                 ? "Salary Structure Details"
                 : selectedTab === "statutory-components"

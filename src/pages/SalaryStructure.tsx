@@ -660,8 +660,8 @@ export default function SalaryStructure() {
           onOpenChange={() => setSelectedStructure(null)}
         >
           <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>
+            <DialogHeader className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-b border-border">
+              <DialogTitle className="text-foreground">
                 Salary Structure Details - {selectedStructure.structureName}
               </DialogTitle>
             </DialogHeader>
@@ -676,25 +676,29 @@ export default function SalaryStructure() {
               <TabsContent value="overview" className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Structure ID
                     </Label>
-                    <p className="">{selectedStructure.id}</p>
+                    <p className="text-foreground">{selectedStructure.id}</p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Business Unit
                     </Label>
-                    <p>{selectedStructure.businessUnit}</p>
+                    <p className="text-foreground">
+                      {selectedStructure.businessUnit}
+                    </p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Offer Type
                     </Label>
-                    <p>{selectedStructure.offerType}</p>
+                    <p className="text-foreground">
+                      {selectedStructure.offerType}
+                    </p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Status
                     </Label>
                     <Badge
@@ -709,16 +713,18 @@ export default function SalaryStructure() {
                   </div>
 
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Assigned Roles
                     </Label>
-                    <p>{selectedStructure.assignedRoles}</p>
+                    <p className="text-foreground">
+                      {selectedStructure.assignedRoles}
+                    </p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-slate-600">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       Total Employees
                     </Label>
-                    <p className="text-lg font-semibold">
+                    <p className="text-lg font-semibold text-foreground">
                       {selectedStructure.totalEmployees}
                     </p>
                   </div>
@@ -726,7 +732,7 @@ export default function SalaryStructure() {
               </TabsContent>
 
               <TabsContent value="earnings" className="space-y-4">
-                <h3 className="text-lg font-semibold text-green-700">
+                <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400">
                   Earnings Components
                 </h3>
                 <div className="space-y-3">
@@ -734,11 +740,11 @@ export default function SalaryStructure() {
                     (earning: any, index: number) => (
                       <div
                         key={index}
-                        className="flex justify-between items-center p-3 bg-green-50 rounded-lg"
+                        className="flex justify-between items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700"
                       >
                         <div>
                           <span className="font-medium">{earning.name}</span>
-                          <div className="text-sm text-green-600">
+                          <div className="text-sm text-blue-600 dark:text-blue-400">
                             {earning.type}{" "}
                             {earning.basis !== "-" && `of ${earning.basis}`}
                           </div>
@@ -855,8 +861,10 @@ export default function SalaryStructure() {
       {/* Add/Configure Structure Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
         <DialogContent className="w-full max-w-xl h-auto max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Create New Salary Structure</DialogTitle>
+          <DialogHeader className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-b border-border">
+            <DialogTitle className="text-foreground">
+              Create New Salary Structure
+            </DialogTitle>
           </DialogHeader>
 
           <Tabs defaultValue="basic" className="w-full">
@@ -917,10 +925,13 @@ export default function SalaryStructure() {
 
             <TabsContent value="earnings" className="space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-green-700">
+                <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400">
                   Earnings Configuration
                 </h3>
-                <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                <Button
+                  size="sm"
+                  className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0 shadow-lg"
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   Add Earning
                 </Button>
@@ -1189,11 +1200,18 @@ export default function SalaryStructure() {
             </TabsContent>
           </Tabs>
 
-          <div className="flex justify-end gap-2 pt-6 border-t">
-            <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+          <div className="flex justify-end gap-2 pt-6 border-t border-border bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-4">
+            <Button
+              variant="outline"
+              onClick={() => setIsAddDialogOpen(false)}
+              className="border-blue-200 hover:bg-blue-50 dark:border-blue-700 dark:hover:bg-blue-900/20"
+            >
               Cancel
             </Button>
-            <Button onClick={() => setIsAddDialogOpen(false)}>
+            <Button
+              onClick={() => setIsAddDialogOpen(false)}
+              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0 shadow-lg"
+            >
               Save Salary Structure
             </Button>
           </div>

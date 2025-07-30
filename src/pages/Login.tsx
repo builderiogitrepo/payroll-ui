@@ -13,6 +13,13 @@ import {
   BarChart3,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "@/store/hooks";
+import {
+  loginStart,
+  loginSuccess,
+  loginFailure,
+} from "@/store/slices/authSlice";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,15 +31,62 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login attempt:", { email, password, rememberMe });
 
-    // For demo purposes, navigate to dashboard immediately
-    // In a real app, you would validate credentials first
-    navigate("/dashboard");
+    if (!email || !password) {
+      toast({
+        title: "Validation Error",
+        description: "Please enter both email and password.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    dispatch(loginStart());
+
+    try {
+      // Simulate API call delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Mock user data based on email
+      const mockUser = {
+        id: "1",
+        name: email.split("@")[0] || "User",
+        email: email,
+        role: "admin",
+      };
+
+      // Dispatch success action
+      dispatch(loginSuccess(mockUser));
+
+      // Show success toast
+      toast({
+        title: "Login Successful! 🎉",
+        description: `Welcome back, ${mockUser.name}! You have been successfully logged in.`,
+      });
+
+      // Navigate to dashboard after a short delay
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1500);
+    } catch (error) {
+      dispatch(loginFailure("Login failed. Please try again."));
+      toast({
+        title: "Login Failed",
+        description:
+          "Invalid credentials. Please check your email and password.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -470,9 +524,17 @@ const Login = () => {
                 {/* Login Button */}
                 <Button
                   type="submit"
-                  className="w-full h-12 bg-gradient-to-r from-primary to-primary-600 hover:from-primary-600 hover:to-primary-700 text-primary-foreground font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                  disabled={isLoading}
+                  className="w-full h-12 bg-gradient-to-r from-primary to-primary-600 hover:from-primary-600 hover:to-primary-700 text-primary-foreground font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Login
+                  {isLoading ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Logging in...</span>
+                    </div>
+                  ) : (
+                    "Login"
+                  )}
                 </Button>
               </form>
 
